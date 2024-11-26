@@ -1,0 +1,42 @@
+.btn{
+    display:flex;
+    width: 100%; 
+    max-width: 125px;
+    padding: 0.5rem 2rem; 
+    justify-content: center;
+    font-family: "DM Serif Text", "Roboto", "Open Sans", sans-serif;
+    letter-spacing: 1.5px; 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
+.btn--primary{
+    background-color: white;
+    border-radius: 10px;
+    color: red;
+}
+
+.btn__primary--text {
+    
+  }
+
+.btn--large{
+
+}
+
+.btn--medium{
+
+}
+
+.btn--small{
+    
+}
+
+.btn:hover {
+    letter-spacing: 2.0px; 
+    transition: ease-in-out 0.3s; 
+    cursor: pointer; 
+    transform: translateY(-4px);  /* Moves the button up */
+    box-shadow: 0 0px 40px rgba(231, 202, 202, 0.2); 
+    
+}

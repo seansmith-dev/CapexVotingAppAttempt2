@@ -1,6 +1,7 @@
 import './Home.css'
 import HeroImage from '../../assets/HeroImage.png';
 import TimerImage from '../../assets/timer.png'
+import Button from '../../components/Button/Button';
 
 
 function Home() {
@@ -10,7 +11,7 @@ function Home() {
                 <div className="hero-content">
                     <h1 className="hero-content__heading">Welcome to Capex 2025</h1>
                     <p className="hero-content__text">We're super excited your here</p>
-
+                    <Button buttonType="primary" size="large"/> 
                 </div>
             </div>
 

@@ -15,6 +15,7 @@
     background-size: cover;
     background-position: center;
     
+    
 }
 
 .hero-content{
@@ -25,7 +26,9 @@
     color: #FF0000;
     
     font-family: 'Barlow'; 
-    gap: 2.0rem;  
+    gap: 2.0rem; 
+    
+    
 }
 
 .hero-content__heading{
@@ -40,6 +43,7 @@
     font-size: 1.5em; 
     font-family: 'Barlow'; 
     font-style: italic;
+    color: #FFF;
 }
 
 
