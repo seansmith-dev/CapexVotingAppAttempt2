@@ -2,19 +2,22 @@
     display:flex;
     width: 100%; 
     max-width: 125px;
-    padding: 0.5rem 2rem; 
+    padding: 0.8rem 2rem; 
     justify-content: center;
+    align-items: center;
     font-family: "DM Serif Text", "Roboto", "Open Sans", sans-serif;
     letter-spacing: 1.5px; 
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+   
 }
 
 
 .btn--primary{
     background-color: white;
-    border-radius: 10px;
+    border: 2px solid red;
     color: red;
 }
+
 
 .btn__primary--text {
     

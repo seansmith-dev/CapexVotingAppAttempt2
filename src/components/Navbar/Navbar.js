@@ -7,8 +7,7 @@ import Logo from "../Logo/Logo";
 const Nav = styled.nav`
     width: 100%;
     height: 55px; 
-    border-bottom: 2px solid #f1f1f1; 
-
+    background-color: black; 
     padding-right: 20px;
     display: flex; 
     gap: 2rem;

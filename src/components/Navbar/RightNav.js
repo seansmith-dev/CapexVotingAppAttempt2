@@ -8,11 +8,28 @@ const Ul = styled.ul`
     font-family: "DM Serif Text", "Roboto", "Open Sans", sans-serif;
     font-weight: 400;
     font-size: 15.2px;
-    color: rgb(36, 35, 35);
+    color: white;
     gap: 3rem; 
 
     li{
         padding: 18px 10px;
+    }
+
+    /* Define different colors for each item */
+    li:nth-child(1) {
+        color: #ff6347; /* Orange */
+    }
+    li:nth-child(2) {
+        color: #4caf50; /* Green */
+    }
+    li:nth-child(3) {
+        color: #2196f3; /* Blue */
+    }
+    li:nth-child(4) {
+        color: #ffeb3b; /* Yellow */
+    }
+    li:nth-child(5) {
+        color: #9c27b0; /* Purple */
     }
 
     @media (max-width: 768px){

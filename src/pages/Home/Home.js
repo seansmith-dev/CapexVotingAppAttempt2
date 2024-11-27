@@ -3,15 +3,16 @@ import HeroImage from '../../assets/HeroImage.png';
 import TimerImage from '../../assets/timer.png'
 import Button from '../../components/Button/Button';
 
-
 function Home() {
     return (
         <div className="home-wrapper">
             <div className="hero">
                 <div className="hero-content">
-                    <h1 className="hero-content__heading">Welcome to Capex 2025</h1>
+                    <h1 className="hero-content__heading">Capstone <span className= "hero-content__year">2025</span></h1>
+                    <div className='hero-content__btn-text-wrapper'>
                     <p className="hero-content__text">We're super excited your here</p>
                     <Button buttonType="primary" size="large"/> 
+                    </div>
                 </div>
             </div>
 
