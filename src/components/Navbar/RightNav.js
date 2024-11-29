@@ -13,6 +13,9 @@ const Ul = styled.ul`
 
     li{
         padding: 18px 10px;
+         text-decoration: underline;
+         text-decoration-thickness: 2px;
+         text-underline-offset: 8px;
     }
 
     /* Define different colors for each item */
@@ -55,6 +58,7 @@ const Ul = styled.ul`
             color: #fff;
             border-color: white;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            text-decoration: none;
         }
     }
 `;
