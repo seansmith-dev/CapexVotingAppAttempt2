@@ -1,16 +1,23 @@
 .btn{
-    display:flex;
-    width: 100%; 
-    max-width: 125px;
-    padding: 0.8rem 2rem; 
-    justify-content: center;
-    align-items: center;
+    display: inline-flex; 
+    align-items:center;
+    font-size: 2rem; 
+    padding: 0.5em 1em; 
+    gap: 0.3em; 
     font-family: "DM Serif Text", "Roboto", "Open Sans", sans-serif;
-    letter-spacing: 1.5px; 
+    letter-spacing: .1em; 
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-   
 }
 
+
+.btn__text {
+    font-size: 1em; 
+  }
+
+.svg{
+    width: 1em; 
+    fill: red; 
+}
 
 .btn--primary{
     background-color: white;
@@ -18,21 +25,24 @@
     color: red;
 }
 
-
-.btn__primary--text {
-    
-  }
-
-.btn--large{
-
+.btn--small{
+    font-size: 1rem;
 }
 
 .btn--medium{
-
+    font-size: 2rem;
 }
 
-.btn--small{
-    
+.btn--large{
+    font-size: 3rem;
+}
+
+.btn--extra-large{
+    font-size: 4rem; 
+}
+
+.btn--supersized{
+    font-size: 5rem;
 }
 
 .btn:hover {
@@ -43,3 +53,5 @@
     box-shadow: 0 0px 40px rgba(231, 202, 202, 0.2); 
     
 }
+
+
