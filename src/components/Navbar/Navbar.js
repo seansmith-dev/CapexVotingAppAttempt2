@@ -6,15 +6,20 @@ import Logo from "../Logo/Logo";
 
 const Nav = styled.nav`
     width: 100%;
-    height: 55px; 
     background-color: black; 
-    padding-right: 20px;
     display: flex; 
+    padding-right: 2rem; 
     gap: 2rem;
+
+
+    @media (min-width: 600px){
+        padding: 0 2rem; 
+    }
 
     .logoNavbar {
         
     }
+
 `
 
     
@@ -22,9 +27,7 @@ const Nav = styled.nav`
 const Navbar = () =>{
     return(
         <Nav>
-            <div className="logoNavbar ">
                 <Logo size="navbar"/> 
-            </div>
             <Burger />
         
         </Nav>

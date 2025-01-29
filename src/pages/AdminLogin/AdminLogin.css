@@ -1,0 +1,66 @@
+.admin-login{
+    padding: 4rem 1.5rem; 
+    text-align: center; 
+    background-image: url("../../assets/MarioKart/MarioTranslucent.jpg");
+    background-size: cover;
+    background-position: 40% 50%;
+    min-height: 100vh;
+    display: flex; 
+    flex-direction:column; 
+    justify-content: start; 
+    align-items: center;
+    text-align: center; 
+    border: 2px solid blue; 
+}
+
+.admin-login__title{
+    
+    margin-bottom: 3.5rem; 
+}
+
+.admin-login__subtitle{
+    color: white; 
+}
+
+.form{
+    align-self: center;
+    display: grid; 
+    border: 2px solid red; 
+     
+    background: yellow; 
+    opacity: 0.95;
+    padding: 4rem; 
+    text-align: left; 
+    color: red; 
+}
+
+.admin-login__username-label{
+    font-family: "Rockwell", "Barlow";
+    font-size: 1.2rem; 
+    font-weight: 700; 
+    margin-bottom: 0.3em; 
+}
+
+.margin--top{
+    margin-top: 1rem; 
+}
+
+.margin--bottom{
+    margin-bottom: 2rem; 
+}
+
+.admin-login__username-input, .admin-login__password-input{
+    font-family: "Rockwell", "Barlow";
+    font-size: 1.2rem; 
+    font-weight: 700; 
+    border-radius:5px; 
+    padding: 0.4rem; 
+    text-align: left; 
+}
+
+.login--btn{ 
+    justify-self: start;
+    border-radius: 0;
+}
+
+

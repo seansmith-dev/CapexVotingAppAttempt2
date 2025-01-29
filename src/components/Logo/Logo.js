@@ -1,13 +1,14 @@
 import React from "react"; 
-import './Logo.css'
+import { Link } from "react-router-dom"; // Import Link
+import './Logo.css';
+import logo from '../../assets/logo.png';
 
-function Logo({ size }){
-    return(
-
-            <div className={`logo logo--${size}`}></div>
-            
-       
-    )
+function Logo({ size }) {
+    return (
+        <Link to="/"> {/* Navigate to home on click */}
+            <img src={logo} alt="logo" className="logo"/>
+        </Link>
+    );
 }
 
 export default Logo;

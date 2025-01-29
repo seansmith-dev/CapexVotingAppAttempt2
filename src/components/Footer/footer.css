@@ -1,12 +1,36 @@
+/* ***********
+Typography
+********** */
+
+.footer-nav__list{
+    list-style-type:none;
+    font-family: "Open Sans", sans-serif;
+}
+
+.footer-header__text{
+    font-family: 'Barlow',Open Sans, Rockwell, sans-serif;
+}
+
+.footer{
+    color: white;
+}
+
+.footer__item{
+    font-size: 1rem;
+    font-weight:700;
+}
+
+/* ***********
+layout
+*********** */
+
 .footer{
     background-color: #343642;
-    color: white;
     padding: 2rem;
     display:flex;
     flex-direction:column; 
     justify-content: space-between;
     gap: 2rem; 
-    
     
 }
 
@@ -31,25 +55,8 @@
   }
 
 
-.footer-nav__list-container{
-   
-}
-
 .footer-nav__list{
     display:grid;
-    grid-template-areas: 
-    'one'
-    'two'
-    'three'
-    'four'
-    'five'
-    'six';
-    
-    list-style-type:none;
-    font-family: "Open Sans", sans-serif;
-    font-weight:700;
-    font-size: 0.75rem;
-
 }
 
 .footer-nav__list > li{
@@ -62,28 +69,17 @@
 .footer-nav__list li:nth-child(1){
     padding-top: 0;
     padding-bottom: 1rem; 
-    grid-area: one;
 }
 
-.footer-nav__list li:nth-child(2) {
-    grid-area: two;
+.footer-link{
+    text-decoration:none;
+    color: white; 
+    transform: scale(1);
 }
 
-.footer-nav__list li:nth-child(3) {
-    grid-area: three;
-}
 
-.footer-nav__list li:nth-child(4) {
-    grid-area: four;
-}
+/* No padding for the top element */
 
-.footer-nav__list li:nth-child(5) {
-    grid-area: five;
-}
-
-.footer-nav__list li:nth-child(6) {
-    grid-area: six;
-}
 
 @media (min-width: 768px) {
     .footer-header{

@@ -1,0 +1,159 @@
+.admin-page{
+    padding: 4rem 1.5rem; 
+    text-align: center; 
+    background-image: url("../../assets/MarioKart/BackgroundRepeatable/mariobackground.jpg");
+    background-size: 600px 600px;
+    background-position: 18% 40%;
+    min-height: 100vh;
+    display: flex; 
+    flex-direction:column; 
+    justify-content: start; 
+    align-items: center;
+    text-align: center; 
+    border: 2px solid blue; 
+    color: white; 
+}
+
+.admin-login__title{
+    
+    margin-bottom: 3.5rem; 
+}
+
+.admin-page__title{
+    margin-bottom: 0.2em; 
+    font-size: clamp(2.5rem, 5vw + 2rem, 4.5rem);
+}
+
+.leaderboard__team, .leaderboard__vote-no{
+    font-size: clamp(1.7rem, 3vw + 1rem, 2.3rem);
+    margin-bottom:0;
+}
+
+
+.leaderboard{
+    /* display:grid; 
+    grid-template-columns: 400px 200px; */
+    display: flex; 
+    flex-direction:column; 
+    gap:2rem;
+    width: 100%; 
+}
+
+.team{
+    display: flex; 
+    gap: 1.5rem; 
+    border-radius:10px;
+    padding-top: 0.5rem; 
+    padding-bottom: 0.5rem; 
+    transition: transform 500ms;
+    transform: scale(1);
+    align-self: center; 
+}
+
+.team:hover{
+    transform: scale(1.07);
+}
+
+.leaderboard__team{
+    padding-left: 0.8rem;
+    
+}
+
+.leaderboard__vote-no{
+    padding-right: 0.8rem;
+}
+
+.row{
+    display:flex; 
+    align-items: center; 
+    justify-content:space-between;
+    gap: 0.5rem;
+}
+
+
+.team:nth-child(10n+1) {
+    background-color: rgb(255, 255, 0);
+    color: rgb(233, 5, 233); 
+}
+
+.team:nth-child(10n+2) {
+    background-color: green;
+    color: white; /* Optional */
+}
+
+.team:nth-child(10n+3) {
+    background-color: blue;
+    color: rgb(255, 0, 17); /* Optional */
+}
+
+.team:nth-child(10n+4) {
+    background-color: rgb(9, 215, 98);
+    color: rgb(196, 200, 199); /* Optional */
+}
+
+.team:nth-child(10n+5) {
+    background-color: rgb(32, 3, 3);
+    color: rgb(229, 232, 236); /* Optional */
+}
+
+.team:nth-child(10n+6) {
+    background-color: rgb(224, 13, 13);
+    color: rgb(207, 214, 19); /* Optional */
+}
+
+.team:nth-child(10n+7) {
+    background-color: rgb(13, 224, 140);
+    color: rgb(26, 146, 226); /* Optional */
+}
+
+.team:nth-child(10n+8) {
+    background-color: rgb(189, 214, 233);
+    color: rgb(218, 14, 28); /* Optional */
+}
+
+.team:nth-child(10n+9) {
+    background-color: rgb(149, 113, 15);
+    color: rgb(239, 234, 243); /* Optional */
+}
+
+.team:nth-child(10n+10) {
+    background-color: rgb(110, 16, 197);
+    color: rgb(70, 180, 172); /* Optional */
+}
+
+
+
+@media (min-width:744px){
+    .admin-page{
+        background-size: contain;
+    }
+    .leaderboard{
+        display: grid; 
+        grid-template-columns: repeat(3,minmax(100px,250px));
+        max-width: 750px;
+
+    }
+
+    .leaderboard__team{
+        text-align:center;
+    }
+
+    .block{
+        display:block; 
+    }
+
+    .team:hover{
+        transform: scale(1.15);
+    }
+}
+
+@media (min-width:980px){
+    .leaderboard{
+        display: grid; 
+        grid-template-columns: repeat(4,minmax(100px,250px));
+        grid-auto-rows: 250px;
+        max-width: 1000px;
+
+    }
+
+}

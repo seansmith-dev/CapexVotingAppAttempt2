@@ -1,32 +1,15 @@
-.logo {
-    
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-image: url('../../assets/logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+
+
+/* ../../assets/logo.png */
+/* background-size: contain; */
+img{
+    max-width: 100%; 
     
 }
 
-.logo--navbar{
-    width: 10.7%;
-    /* Control Size Of Logo: Prevent logo from shrinking below 155px */
-    min-width: 109px;
-    /* Control Size Of Logo: Prevent logo from shrinking below 75px */
-    min-height: 60px;
-    
+.logo{
+    object-fit:cover; 
+    height: 60px; 
+    display: block;
 }
-
-.logo--footer{
-    width: 22.7%;
-    /* Control Size Of Logo: Prevent logo from shrinking below 155px */
-    min-width: 155px;
-    /* Control Size Of Logo: Prevent logo from shrinking below 75px */
-    min-height: 75px;
-    
-}
-
-
-
 

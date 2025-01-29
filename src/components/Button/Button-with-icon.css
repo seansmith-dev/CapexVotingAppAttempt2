@@ -1,0 +1,90 @@
+.btn-with-icon{
+    display: inline-flex; 
+    align-items:center; 
+    padding: 0.5em 1em; 
+    gap: 0.3em; 
+    font-size: 2rem; 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transform: scale(1);
+    cursor: pointer;
+    
+}
+
+
+
+
+.btn-with-icon__text {
+    letter-spacing: .1em; 
+    font-weight: 700;
+    font-family: "DM Serif Text", "Roboto", "Open Sans", sans-serif;
+  }
+
+.svg{
+    width: 1em; 
+    fill: red; 
+}
+
+.btn-with-icon--primary{
+    background-color: white;
+    border: 2px solid red;
+    color: red;
+}
+
+.btn-with-icon--small{
+    font-size: 1rem;
+}
+.btn-with-icon--medium-small{
+    font-size: 1.5rem;
+}
+
+.btn-with-icon--medium{
+    font-size: 2rem;
+}
+
+.btn-with-icon--medium-large{
+    font-size: 2.5rem;
+}
+
+.btn-with-icon--large{
+    font-size: 3rem;
+}
+
+.btn-with-icon--semi-extra-large{
+    font-size: 3.5rem;
+}
+
+.btn-with-icon--extra-large{
+    font-size: 4rem; 
+}
+
+.btn-with-icon--supersized{
+    font-size: 5rem;
+}
+
+
+.btn-with-icon--slim{
+    padding: 0.2em 1em; 
+}
+
+.btn-with-icon--wide{
+    padding: 1em 1em; 
+}
+
+.btn-with-icon:hover {
+
+    transition: ease-in-out 0.3s; 
+    cursor: pointer; 
+    transform: translateY(-4px);  /* Moves the button up */
+    box-shadow: 0 0px 40px rgba(231, 202, 202, 0.2); 
+    transform: scale(1.1);
+}
+
+.btn-with-icon:active{
+    color: black;
+    background: yellow; 
+}
+
+.btn-with-icon:focus{
+    background: rgb(9, 9, 8); 
+    border: 2px solid blue;
+}
