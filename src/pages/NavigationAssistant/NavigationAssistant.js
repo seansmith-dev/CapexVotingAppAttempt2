@@ -1,18 +1,16 @@
 "use client";
 import "./NavigationAssistant.css"; 
 
-import {useState} from "react";
 import{
     APIProvider, 
     Map, 
     AdvancedMarker, 
     Pin, 
-    InfoWindow,
 } from "@vis.gl/react-google-maps";
 
 function NavigationAssistant(){
     const position={ lat:-37.822633658037844, lng:145.03819507328128};
-    const infoWindowPos={ lat:-37.822733658037844, lng:145.03846507328128};
+    
 
     console.log(process.env.REACT_APP_GOOGLE_MAPS_API_ID);
 

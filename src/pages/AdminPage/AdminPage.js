@@ -1,5 +1,4 @@
 import "./AdminPage.css"; 
-import Button from "../../components/Button/Button.js";
 
 function AdminPage(){
     return(

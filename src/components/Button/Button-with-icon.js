@@ -1,6 +1,5 @@
-import React from 'react'
-import './Button-with-icon.css'
-import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import React from 'react';
+import './Button-with-icon.css';
 import { useNavigate } from 'react-router-dom';
 
 const ButtonWithIcon = (props) => {

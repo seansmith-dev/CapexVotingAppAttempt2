@@ -1,7 +1,4 @@
 import './Home.css'
-import HeroImage from '../../assets/HeroImage.png';
-import TimerImage from '../../assets/timer.png';
-import LegoBlocks from '../../assets/legoBlocks.jpeg';
 import AtcEntrance from '../../assets/atc-entrance.jpg';
 import AtcBuilding from '../../assets/ATCbuilding.jpg';
 import AtcBuildingLevel1And2 from '../../assets/ATCLevel1And2.jpg';
@@ -33,7 +30,7 @@ function Home() {
                             <p className="card__subtitle">Projects are located on the first and second floor of the ATC building</p>
                             
                             <Button buttonType="card" buttonSize="small" buttonText="Still Lost" buttonCardNo="one" buttonNavigateTo="navigation-assistant"/>
-                            <img href="#" src={AtcBuilding} className="card__img"/>
+                            <img href="#" src={AtcBuilding} className="card__img" alt="ATC building"/>
                             
                         </div>
                     </Link>
@@ -44,7 +41,7 @@ function Home() {
                             <p className="card__subtitle">First head to the ATC building entrance. You will than see a display of the projects inside.</p>
                             
                             <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="two" buttonNavigateTo="navigation-assistant"/>
-                            <img href="#" src={AtcEntrance} className="card__img"/>
+                            <img href="#" src={AtcEntrance} className="card__img" alt="ATC entrance"/>
                             
                         </div>
                     </Link>
@@ -55,7 +52,7 @@ function Home() {
                             <p className="card__subtitle">If your still unable to find your way, try out the navigation assistant below </p>
 
                             <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="three" buttonNavigateTo="navigation-assistant"/>
-                            <img href="#" src={AtcBuildingLevel1And2} className="card__img card-image-three--positioning"/>
+                            <img href="#" src={AtcBuildingLevel1And2} className="card__img card-image-three--positioning" alt="ATC building ATC level 1 and 2"/>
                             
                         </div>
                     </Link>
@@ -66,7 +63,7 @@ function Home() {
             <div className="about-wrapper">
                 <div className="about">
                     <h2 className="about__title">About Capstone<br/>2025</h2>
-                    <img href="#" src={AboutImage} className="about__img"/>
+                    <img href="#" src={AboutImage} className="about__img" alt="student desk"/>
                     <div className="about__text-container">
                         <p className="about__text">The Capstone 2025 Expo at Swinburne University in Hawthorn is an annual event that showcases the innovative projects developed by final-year students across various disciplines. This expo serves as a platform for students to present their work to industry professionals, faculty, and the broader community, highlighting the practical applications of their academic learning.</p>
                         <p className="about__text">Attendees can expect to explore a diverse range of projects, including engineering designs, digital technologies, creative arts, and more. The event not only demonstrates the students' technical skills and creativity but also emphasizes their readiness to tackle real-world challenges. The Capstone 2025 Expo reflects Swinburne's commitment to fostering industry-relevant education and providing students with opportunities to engage with potential employers and collaborators.</p>
