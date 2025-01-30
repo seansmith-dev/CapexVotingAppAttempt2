@@ -1,9 +1,18 @@
+import { useEffect, useState } from 'react';
 import './ProjectsList.css';
-import legoImage from '../../assets/legoBlocks.jpeg';
 import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
 import { Link } from 'react-router-dom';
 
-function ProjectsList(){
+function ProjectsList() {
+    const [projects, setProjects] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/projects')  // Calls the Vercel serverless function
+            .then(response => response.json())
+            .then(data => setProjects(data))
+            .catch(error => console.error("Error fetching projects:", error));
+    }, []);
+
     return (
         <div className="project-menu">
             <div className="project-menu__title-container">
@@ -11,121 +20,24 @@ function ProjectsList(){
                 <p className="page-subtitle pm-subtitle">Tap on a project from the list below</p>
             </div>
             <div className="project-list__wrapper">
-            <div className="project-list">
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                <Link to="/project-description">
-                    <div className="project-list__card">
-                        <h3 className="pl__card-title">Project 1</h3>
-                        <p className="pl__short-description">This is a project about antelopes and sausages where the sausages. Well you get the idea.</p>
-                        <p className="pl__faculty small--text">Computer science</p>
-                        <ButtonWithIcon buttonType="primary" size="medium-small" width="slim" className="pl__btn-layout" text="Vote" buttonNavigateTo="/project-description"/>
-                    </div>
-                </Link>
-                
-                
+                <div className="project-list">
+                    {projects.map((project) => (
+                        <Link key={project.project_id} to={`/project-description/${project.project_id}`}>
+                            <div className="project-list__card">
+                                <h3 className="pl__card-title">{project.project_number}</h3>
+                                <p className="pl__short-description">{project.short_description}</p>
+                                <p className="pl__faculty small--text">{project.faculty}</p>
+                                <ButtonWithIcon
+                                    buttonType="primary"
+                                    size="medium-small"
+                                    width="slim"
+                                    className="pl__btn-layout"
+                                    text="Vote"
+                                    buttonNavigateTo={`/project-description/${project.project_id}`}
+                                />
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>
