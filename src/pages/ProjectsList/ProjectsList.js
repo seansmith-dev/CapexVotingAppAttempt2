@@ -8,7 +8,10 @@ function ProjectsList() {
 
     useEffect(() => {
         fetch('/api/projects')  // Calls the Vercel serverless function
-            .then(response => response.json())
+        .then(response => {
+            console.log(response.status); // Check status code
+            return response.json();
+        })
             .then(data => setProjects(data))
             .catch(error => console.error("Error fetching projects:", error));
     }, []);
