@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProjectDescription.css';
 import ButtonWithIcon from '../../components/Button/Button-with-icon';
+import Loading from '../LoadingVote/Loading';
 
 function ProjectDescription() {
     const { projectId } = useParams(); // Get project ID from the URL
