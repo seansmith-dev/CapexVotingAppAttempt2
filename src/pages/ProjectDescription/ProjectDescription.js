@@ -47,8 +47,6 @@ function ProjectDescription() {
     const { firstPart, secondPart } = splitDescription(project.long_description);
     
 
-    const { firstPart, secondPart } = splitDescription(project.long_description);
-
     return (
         <div className="project-description">
             <div className="text-wrapper">
