@@ -4,7 +4,7 @@ export default function handler(req, res) {
     if (req.method === 'GET') {
         const projects = [
             {
-                "project-id": 1,
+                "project_id": 1,
                 "project_number": "1",
                 "title": "AI-Powered Chatbot",
                 "short_description": "A chatbot that uses AI to assist users.",
@@ -14,7 +14,7 @@ export default function handler(req, res) {
                 "no_votes": "4"
             },
             {
-                "project-id": 2,
+                "project_id": 2,
                 "project_number": "2",
                 "title": "Smart Traffic Management System",
                 "short_description": "A system to optimize city traffic flow.",
@@ -24,7 +24,7 @@ export default function handler(req, res) {
                 "no_votes": "5"
             },
             {
-                "project-id": 3,
+                "project_id": 3,
                 "project_number": "3",
                 "title": "Blockchain Voting System",
                 "short_description": "A secure, transparent e-voting system.",
@@ -34,7 +34,7 @@ export default function handler(req, res) {
                 "no_votes": "7"
             },
             {
-                "project-id": 4,
+                "project_id": 4,
                 "project_number": "4",
                 "title": "Autonomous Drone Delivery",
                 "short_description": "Drones for last-mile package delivery.",
@@ -44,7 +44,7 @@ export default function handler(req, res) {
                 "no_votes": "9"
             },
             {
-                "project-id": 5,
+                "project_id": 5,
                 "project_number": "5",
                 "title": "Wearable Health Monitor",
                 "short_description": "A smartwatch that tracks vital health metrics.",
@@ -54,7 +54,7 @@ export default function handler(req, res) {
                 "no_votes": "2"
             },
             {
-                "project-id": 6,
+                "project_id": 6,
                 "project_number": "6",
                 "title": "Augmented Reality Learning App",
                 "short_description": "An AR app for interactive learning.",
@@ -64,7 +64,7 @@ export default function handler(req, res) {
                 "no_votes": "3"
             },
             {
-                "project-id": 7,
+                "project_id": 7,
                 "project_number": "7",
                 "title": "Smart Home Automation",
                 "short_description": "AI-powered home automation system.",
@@ -74,7 +74,7 @@ export default function handler(req, res) {
                 "no_votes": "1"
             },
             {
-                "project-id": 8,
+                "project_id": 8,
                 "project_number": "8",
                 "title": "Eco-Friendly Water Purifier",
                 "short_description": "A solar-powered water purification system.",
@@ -84,7 +84,7 @@ export default function handler(req, res) {
                 "no_votes": "20"
             },
             {
-                "project-id": 9,
+                "project_id": 9,
                 "project_number": "9",
                 "title": "AI-Based Resume Screening",
                 "short_description": "An AI tool to assist HR in hiring.",
@@ -94,7 +94,7 @@ export default function handler(req, res) {
                 "no_votes": "11"
             },
             {
-                "project-id": 10,
+                "project_id": 10,
                 "project_number": "10",
                 "title": "IoT-Based Smart Farming",
                 "short_description": "A precision agriculture solution.",

@@ -8,7 +8,7 @@ function ProjectsList() {
 
     useEffect(() => {
         // Adjust fields as needed
-        const fields = "project-id, project_number,title,no_votes, short_description, faculty"; // specify the fields you want
+        const fields = "project_id, project_number,title,no_votes, short_description, faculty"; // specify the fields you want
         fetch(`/api/projects?fields=${fields}`)
             .then(response => {
                 console.log(response.status); 
