@@ -1,3 +1,5 @@
+// next.js function. Serverless function
+
 export default function handler(req, res) {
     if (req.method === 'GET') {
         const projects = [
@@ -102,6 +104,32 @@ export default function handler(req, res) {
                 "no_votes": "4"
             }
         ];
+
+        // Get fields to return from query parameters (if any)
+        const fields = req.query.fields ? req.query.fields.split(',') : null;
+
+        // Optionally filter projects based on `id` or other query params
+        const projectId = req.query.id;
+
+        // Filter projects by `id` if `id` query param is provided
+        const filteredProjects = projectId 
+            ? projects.filter(project => project['project-id'] === parseInt(projectId))
+            : projects;
+
+        // If specific fields are requested, return only those fields
+        const result = filteredProjects.map(project => {
+            if (fields) {
+                const filteredProject = {};
+                fields.forEach(field => {
+                    if (project[field]) {
+                        filteredProject[field] = project[field];
+                    }
+                });
+                return filteredProject;
+            }
+            return project; // Return full project data if no fields are specified
+        });
+
         res.status(200).json(projects);
     } else {
         res.status(405).json({ message: "Method not allowed" });

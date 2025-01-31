@@ -7,11 +7,13 @@ function ProjectsList() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        fetch('/api/projects')  // Calls the Vercel serverless function
-        .then(response => {
-            console.log(response.status); 
-            return response.json();
-        })
+        // Adjust fields as needed
+        const fields = "project-id, project_number,title,no_votes, short_description, faculty"; // specify the fields you want
+        fetch(`/api/projects?fields=${fields}`)
+            .then(response => {
+                console.log(response.status); 
+                return response.json();
+            })
             .then(data => setProjects(data))
             .catch(error => console.error("Error fetching projects:", error));
     }, []);
