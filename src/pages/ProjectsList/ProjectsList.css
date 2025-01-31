@@ -40,6 +40,7 @@
     transform: scale(1);
     transform-origin: center; 
     height: 100%; 
+    margin-bottom: 1.5rem; 
 }
 
 .pl__short-description{
@@ -62,5 +63,9 @@ short-description text, want the text to grow to fill available size in smallest
         grid-template-columns: repeat(2,minmax(0,500px));
 
         grid-gap: 1.5rem 1.5rem;  
+    }
+
+    .project-list__card{
+        margin-bottom: 0; 
     }
 }
