@@ -16,8 +16,27 @@ function ProjectDescription() {
     }, [projectId]);
 
     if (!project) {
-        return <Loading/>; // Display while fetching
+        return <Loading />; // Display while fetching
     }
+
+    // Function to split description into two paragraphs based on word count
+    const splitDescription = (description, wordLimit = 48) => {
+        const words = description.split(' ');
+
+        // Find the word index closest to the wordLimit but at the end of a sentence
+        let breakPoint = wordLimit;
+        while (breakPoint < words.length && !['.', '!', '?'].includes(words[breakPoint].slice(-1))) {
+            breakPoint++;
+        }
+
+        // If we can't find a good break, just split at the wordLimit
+        const firstPart = words.slice(0, breakPoint).join(' ');
+        const secondPart = words.slice(breakPoint).join(' ');
+
+        return { firstPart, secondPart };
+    };
+
+    const { firstPart, secondPart } = splitDescription(project.long_description);
 
     return (
         <div className="project-description">
@@ -53,7 +72,8 @@ function ProjectDescription() {
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
-                    <p className="about-project__text">{project.description}</p>
+                    <p className="about-project__text">{firstPart}</p>
+                    {secondPart && <p className="about-project__text">{secondPart}</p>}
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
