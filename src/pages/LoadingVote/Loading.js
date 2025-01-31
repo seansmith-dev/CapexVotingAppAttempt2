@@ -35,20 +35,19 @@ function Loading() {
 
                     const data = await response.json();
                     if (data.allowed) {
-                        setLoadingMessage("You are on campus. Processing your vote...");
                         setTimeout(() => navigate("/vote-success"), 2000);
                     } else {
-                        setLoadingMessage("You are not on campus. Voting is not allowed.");
+                        // setLoadingMessage("You are not on campus. Voting is not allowed.");
                         setTimeout(() => navigate("/not-allowed"), 2000);
                     }
                 } catch (error) {
-                    setLoadingMessage("Error checking location.");
-                    setTimeout(() => navigate("/not-allowed"), 2000);
+                    // setLoadingMessage("Network error: There was a network error checking location.");
+                    setTimeout(() => navigate("/network-error"), 2000);
                 }
             },
             () => {
-                setLoadingMessage("Unable to retrieve your location.");
-                setTimeout(() => navigate("/not-allowed"), 2000);
+                setLoadingMessage("Unable to retrieve your location. To vote, you must enable geolocation");
+                setTimeout(() => navigate("/geo-error"), 2000);
             }
         );
     }, [navigate, shouldCheckGeo]);

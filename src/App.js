@@ -14,6 +14,9 @@ import NoVoteTwice from './pages/NoVoteTwice/NoVoteTwice.js';
 import AdminLogin from './pages/AdminLogin/AdminLogin.js';
 import AdminPage from './pages/AdminPage/AdminPage.js';
 import NavigationAssistant from './pages/NavigationAssistant/NavigationAssistant.js';
+import GeoError from './pages/GeolocationErrorMessages/GeoError/GeoError.js';
+import NetworkError from './pages/GeolocationErrorMessages/NetworkError/NetworkError.js';
+import NotOnCampus from './pages/GeolocationErrorMessages/NotOnCampus/NotOnCampus.js';
 
 function App() {
   return (
@@ -32,6 +35,10 @@ function App() {
             <Route path="/admin-login" element={<AdminLogin/>} />
             <Route path="/admin" element={<AdminPage/>} />
             <Route path="/navigation-assistant" element={<NavigationAssistant/>} />
+            <Route path="/geo-error" element={<GeoError/>} />
+            <Route path="/network-error" element={<NetworkError/>} />
+            <Route path="/not-allowed" element={<NotOnCampus/>} />
+
           </Routes>
         </main>
       {/* <Footer /> Include footer here*/}
