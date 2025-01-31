@@ -32,6 +32,8 @@
 }
 
 .project-list__card{
+    display: flex; 
+    flex-direction: column; 
     padding: 1rem;
     background: blue; 
     border-radius: 10px; 
