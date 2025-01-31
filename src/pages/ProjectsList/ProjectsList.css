@@ -64,7 +64,7 @@ short-description text, want the text to grow to fill available size in smallest
     .project-list{
         display: grid; 
         grid-template-columns: repeat(2,minmax(0,500px));
-        grid-auto-rows: minmax(400px, auto); 
+        grid-auto-rows: minmax(250px, auto); 
         grid-gap: 1.5rem 1.5rem;  
     }
 
