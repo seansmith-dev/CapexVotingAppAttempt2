@@ -23,7 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects-list" element={<ProjectsList />} />
-            <Route path="/project-description" element={<ProjectDescription />} />
+            <Route path="/project-description/:projectId" element={<ProjectDescription />} />
             <Route path="/voter-registration" element={<VoterRegistration />} />
             <Route path="/loading" element={<Loading />} />
             <Route path="/vote-successful" element={<VoteSuccessful/>} />

@@ -2,6 +2,21 @@ import './ProjectDescription.css'
 import ButtonWithIcon from '../../components/Button/Button-with-icon';
 
 function ProjectDescription(){
+
+    const { projectId } = useParams(); // Get project ID from the URL
+    const [project, setProject] = useState(null);
+
+    useEffect(() => {
+        fetch(`/api/projects/${projectId}`) // Fetch the selected project's details
+            .then(response => response.json())
+            .then(data => setProject(data))
+            .catch(error => console.error("Error fetching project details:", error));
+    }, [projectId]);
+
+    if (!project) {
+        return <p>Loading project details...</p>; // Display while fetching
+    }
+
     return(
         <div className="project-description">
             <div className="text-wrapper">
