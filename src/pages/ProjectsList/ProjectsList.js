@@ -27,7 +27,7 @@ function ProjectsList() {
                     {projects.map((project) => (
                         <Link key={project.project_id} to={`/project-description/${project.project_id}`}>
                             <div className="project-list__card">
-                                <h3 className="pl__card-title">{project.project_number}</h3>
+                                <h3 className="pl__card-title">Project {project.project_number}</h3>
                                 <p className="pl__short-description">{project.short_description}</p>
                                 <p className="pl__faculty small--text">{project.faculty}</p>
                                 <ButtonWithIcon
