@@ -1,8 +1,9 @@
-import './ProjectDescription.css'
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './ProjectDescription.css';
 import ButtonWithIcon from '../../components/Button/Button-with-icon';
 
-function ProjectDescription(){
-
+function ProjectDescription() {
     const { projectId } = useParams(); // Get project ID from the URL
     const [project, setProject] = useState(null);
 
@@ -17,44 +18,46 @@ function ProjectDescription(){
         return <p>Loading project details...</p>; // Display while fetching
     }
 
-    return(
+    return (
         <div className="project-description">
             <div className="text-wrapper">
-               
-                    <h1 className="hero__heading page-title">Project 1 <br/> <span className="project-description__title">Voting app</span></h1>
-               
+                <h1 className="hero__heading page-title">
+                    Project {project.project_number} <br />
+                    <span className="project-description__title">{project.title}</span>
+                </h1>
+
                 <div className="team-introduction-wrapper">
-                
                     <div className="team-introduction">
-                            <div className="title-wrapper">
-                                <p className="team-introduction__title">Team introduction</p>
-                            </div>
-                        
+                        <div className="title-wrapper">
+                            <p className="team-introduction__title">Team Introduction</p>
+                        </div>
                         <div className="team-members-container">
-                            <p className="team-introduction__team-member">1. Sean Smith (Team Leader)</p>
-                            <p className="team-introduction__team-member">2. Mohammad Obaidullah Abid</p>
-                            <p className="team-introduction__team-member">3. Syed Fawad Amir</p>
-                            <p className="team-introduction__team-member">4. Eshmam Nawar</p>
-                            <p className="team-introduction__team-member">5. Raisa Anzum Rahman</p>
-                            <p className="team-introduction__team-member">6. Tashahud Ahmed</p>
+                            {project.team_members?.map((member, index) => (
+                                <p key={index} className="team-introduction__team-member">
+                                    {index + 1}. {member}
+                                </p>
+                            ))}
                         </div>
                     </div>
                 </div>
-                <ButtonWithIcon buttonType="primary" size="medium" text="Vote" buttonNavigateTo="/loading"/>
+
+                <ButtonWithIcon
+                    buttonType="primary"
+                    size="medium"
+                    text="Vote"
+                    buttonNavigateTo="/loading"
+                />
             </div>
+
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
-                <div class="project-text__wrapper">
-                    <p className="about-project__text">The CAPEX Voting App is a web-based application designed for Swinburne University's final year project expo, where attendees can vote for the best project and poster. The app simplifies the voting process by allowing attendees to scan QR codes placed at the event, without requiring additional registration. </p>
-                    <p className="about-project__text">Attendees are categorized as students or guests, with only students optionally providing their student ID for voting. The app ensures secure, fair voting and complies with data privacy regulations, while aligning with the university's branding and being adaptable across platforms. Key functionalities include real-time vote updates and prevention of duplicate votes.</p>
+                <div className="project-text__wrapper">
+                    <p className="about-project__text">{project.description}</p>
                 </div>
-                <p className="about-project__faculty small--text">Faculty: Computer science</p>
+                <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
-            
-            
         </div>
-    )
-
+    );
 }
 
 export default ProjectDescription;

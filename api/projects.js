@@ -18,8 +18,8 @@ export default function handler(req, res) {
                 "project_number": "2",
                 "title": "Smart Traffic Management System",
                 "short_description": "A system to optimize city traffic flow.",
-                "long_description": "Using IoT sensors and AI, this system dynamically adjusts traffic signals based on real-time vehicle density.",
-                "team_members": ["Charlie", "David"],
+                "long_description": "The CAPEX Voting App is a web-based application designed for Swinburne University's final year project expo, where attendees can vote for the best project and poster. The app simplifies the voting process by allowing attendees to scan QR codes placed at the event, without requiring additional registration. Attendees are categorized as students or guests, with only students optionally providing their student ID for voting. The app ensures secure, fair voting and complies with data privacy regulations, while aligning with the university's branding and being adaptable across platforms. Key functionalities include real-time vote updates and prevention of duplicate votes.",
+                "team_members": ["Sean Smith (Team Leader)", "Mohammad Obaidullah Abid", "Syed Fawad Amir", "Eshmam Nawar", "Raisa Anzum Rahman", "Tashahud Ahmed"],
                 "faculty": "Engineering",
                 "no_votes": "5"
             },
