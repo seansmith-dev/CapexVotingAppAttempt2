@@ -15,7 +15,7 @@ function ProjectDescription() {
     }, [projectId]);
 
     if (!project) {
-        return <p>Loading project details...</p>; // Display while fetching
+        return <Loading/>; // Display while fetching
     }
 
     return (
