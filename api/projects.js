@@ -106,7 +106,7 @@ export default function handler(req, res) {
         ];
         
         // If a projectId is in the URL (e.g., /api/projects/2), fetch that specific project
-        const { projectId } = req.query; // Get projectId from URL (e.g., /api/projects/1)
+        const projectId = req.query.id; // Get projectId from URL (e.g., /api/projects/1)
 
         // If projectId exists, filter the project by ID
         if (projectId) {
