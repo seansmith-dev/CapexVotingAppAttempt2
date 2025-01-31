@@ -30,7 +30,8 @@ function ProjectDescription() {
         while (breakPoint < words.length && !['.', '!', '?'].includes(words[breakPoint].slice(-1))) {
             breakPoint++;
         }
-    
+        
+        breakPoint++;
         // Now we have a better breakPoint
         const firstPart = words.slice(0, breakPoint).join(' ');
         const secondPart = words.slice(breakPoint).join(' ');
