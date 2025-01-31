@@ -31,12 +31,6 @@ function ProjectDescription() {
             breakPoint++;
         }
     
-        // If the breakPoint goes beyond the wordLimit and the sentence isn't fully finished,
-        // try to adjust to the previous word to avoid starting with an incomplete sentence
-        if (breakPoint >= words.length || !['.', '!', '?'].includes(words[breakPoint - 1].slice(-1))) {
-            breakPoint = wordLimit;
-        }
-    
         // Now we have a better breakPoint
         const firstPart = words.slice(0, breakPoint).join(' ');
         const secondPart = words.slice(breakPoint).join(' ');
