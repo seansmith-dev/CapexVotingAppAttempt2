@@ -8,8 +8,8 @@ export default function handler(req, res) {
                 "project_number": "1",
                 "title": "AI-Powered Chatbot",
                 "short_description": "A chatbot that uses AI to assist users.",
-                "long_description": "This chatbot leverages machine learning and NLP techniques to provide real-time responses to user queries.",
-                "team_members": ["Alice", "Bob"],
+                "long_description": "This chatbot uses artificial intelligence, machine learning, and natural language processing techniques to facilitate real-time interactions with users. It can provide quick responses to frequently asked questions, assist with task automation, and offer personalized user experiences, making it a versatile tool in both business and customer service settings.",
+                "team_members": ["Alice", "Bob", "Charlie", "David"],
                 "faculty": "Computer Science",
                 "no_votes": "4"
             },
@@ -28,8 +28,8 @@ export default function handler(req, res) {
                 "project_number": "3",
                 "title": "Blockchain Voting System",
                 "short_description": "A secure, transparent e-voting system.",
-                "long_description": "This project utilizes blockchain technology to ensure tamper-proof and verifiable voting processes.",
-                "team_members": ["Eve", "Frank"],
+                "long_description": "This blockchain-based voting system utilizes distributed ledger technology to ensure that every vote is securely recorded and can be verified by any interested party. The system ensures complete transparency and traceability of votes, making it ideal for electoral processes in any setting, including government elections and corporate shareholder voting.",
+                "team_members": ["Eve", "Frank", "Grace", "Hank", "Ivy"],
                 "faculty": "Cybersecurity",
                 "no_votes": "7"
             },
@@ -38,8 +38,8 @@ export default function handler(req, res) {
                 "project_number": "4",
                 "title": "Autonomous Drone Delivery",
                 "short_description": "Drones for last-mile package delivery.",
-                "long_description": "A drone-based delivery system that autonomously navigates to drop off parcels with high efficiency.",
-                "team_members": ["Grace", "Hank"],
+                "long_description": "This system leverages autonomous drones equipped with advanced navigation and delivery capabilities to efficiently transport packages from central hubs to their destinations. The drones are designed to avoid obstacles, ensure the safety of delivery items, and meet regulatory standards for flight operations in urban areas. The solution aims to reduce delivery times, environmental impact, and the burden on traditional delivery networks.",
+                "team_members": ["Grace", "Hank", "Jack", "Liam"],
                 "faculty": "Aerospace Engineering",
                 "no_votes": "9"
             },
@@ -48,7 +48,7 @@ export default function handler(req, res) {
                 "project_number": "5",
                 "title": "Wearable Health Monitor",
                 "short_description": "A smartwatch that tracks vital health metrics.",
-                "long_description": "This wearable device continuously monitors heart rate, blood oxygen, and other health indicators, providing real-time feedback.",
+                "long_description": "This wearable device continuously tracks key health metrics such as heart rate, blood oxygen levels, and activity levels. It provides real-time feedback and alerts the wearer to potential health issues, enabling proactive management of chronic conditions or general wellness. The smartwatch integrates seamlessly with mobile apps to store historical data and generate health reports for users and healthcare providers.",
                 "team_members": ["Ivy", "Jack"],
                 "faculty": "Biomedical Engineering",
                 "no_votes": "2"
@@ -58,8 +58,8 @@ export default function handler(req, res) {
                 "project_number": "6",
                 "title": "Augmented Reality Learning App",
                 "short_description": "An AR app for interactive learning.",
-                "long_description": "Students can use augmented reality to interact with 3D models, improving their understanding of complex topics.",
-                "team_members": ["Kelly", "Leo"],
+                "long_description": "This augmented reality (AR) application offers an interactive and immersive learning experience by overlaying 3D models and simulations onto real-world environments. It enhances students' understanding of complex subjects such as anatomy, physics, and history by providing hands-on, visual learning. The app is designed for educational institutions and can be customized for various subjects and grade levels.",
+                "team_members": ["Kelly", "Leo", "Mia"],
                 "faculty": "Education Technology",
                 "no_votes": "3"
             },
@@ -68,8 +68,8 @@ export default function handler(req, res) {
                 "project_number": "7",
                 "title": "Smart Home Automation",
                 "short_description": "AI-powered home automation system.",
-                "long_description": "A centralized system that automates lighting, security, and temperature control based on user behavior.",
-                "team_members": ["Mia", "Noah"],
+                "long_description": "This system automates various aspects of home life, including lighting, temperature control, security, and entertainment, based on user preferences and habits. It utilizes AI algorithms to learn from the user's daily routine, creating a truly personalized living experience. The system can be controlled remotely via smartphones and integrates with other smart home devices to create a seamless ecosystem.",
+                "team_members": ["Mia", "Noah", "Olivia"],
                 "faculty": "Electrical Engineering",
                 "no_votes": "1"
             },
@@ -78,8 +78,8 @@ export default function handler(req, res) {
                 "project_number": "8",
                 "title": "Eco-Friendly Water Purifier",
                 "short_description": "A solar-powered water purification system.",
-                "long_description": "This device removes contaminants from water using solar energy, providing clean water in remote areas.",
-                "team_members": ["Olivia", "Paul"],
+                "long_description": "This device uses solar energy to power a filtration system that removes harmful contaminants from water, providing clean drinking water in remote or off-grid areas. The purifier is designed to be low-maintenance, cost-effective, and capable of purifying large amounts of water over extended periods. The system is ideal for use in areas where access to electricity is limited, and the environmental impact of traditional water purification methods is significant.",
+                "team_members": ["Olivia", "Paul", "Quinn", "Ryan", "Sophia"],
                 "faculty": "Environmental Science",
                 "no_votes": "20"
             },
@@ -88,7 +88,7 @@ export default function handler(req, res) {
                 "project_number": "9",
                 "title": "AI-Based Resume Screening",
                 "short_description": "An AI tool to assist HR in hiring.",
-                "long_description": "This system scans resumes using machine learning and ranks candidates based on job requirements.",
+                "long_description": "This system utilizes artificial intelligence to automatically screen resumes, ranking candidates based on how well their qualifications match the job requirements. It uses machine learning algorithms to identify key patterns and keywords in resumes, helping HR departments quickly identify top candidates, thereby streamlining the recruitment process and reducing human bias in the selection process.",
                 "team_members": ["Quinn", "Ryan"],
                 "faculty": "Business & Technology",
                 "no_votes": "11"
@@ -98,12 +98,13 @@ export default function handler(req, res) {
                 "project_number": "10",
                 "title": "IoT-Based Smart Farming",
                 "short_description": "A precision agriculture solution.",
-                "long_description": "IoT sensors monitor soil conditions and automate irrigation, maximizing crop yield and minimizing water waste.",
-                "team_members": ["Sophia", "Tom"],
+                "long_description": "This Internet of Things (IoT) system enables farmers to monitor and optimize crop growth by collecting real-time data on soil conditions, weather patterns, and crop health. Automated irrigation systems are also integrated into the platform, ensuring that crops receive the right amount of water at the right time. The system reduces resource waste, increases crop yield, and enhances sustainable farming practices.",
+                "team_members": ["Sophia", "Tom", "Ursula"],
                 "faculty": "Agricultural Technology",
                 "no_votes": "4"
             }
         ];
+        
         
         // If a projectId is in the URL (e.g., /api/projects/2), fetch that specific project
         const projectId = req.query.id; // Get projectId from URL (e.g., /api/projects/1)
