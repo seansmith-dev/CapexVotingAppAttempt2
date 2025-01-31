@@ -69,7 +69,7 @@ function ProjectDescription() {
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    buttonNavigateTo="/loading"
+                    buttonNavigateTo="/loading?checkGeo=true"
                 />
             </div>
 

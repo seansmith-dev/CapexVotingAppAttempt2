@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Loading.css"; 
+import { useNavigate, useLocation } from "react-router-dom";
+import "./Loading.css";
 
-
-function Loading(){
-
+function Loading() {
     const navigate = useNavigate();
-    const [loadingMessage, setLoadingMessage] = useState("Loading....");
+    const location = useLocation();
+    const [loadingMessage, setLoadingMessage] = useState("Loading...");
+    
+    // Parse query parameters
+    const searchParams = new URLSearchParams(location.search);
+    const shouldCheckGeo = searchParams.get("checkGeo") === "true"; 
 
     useEffect(() => {
+        if (!shouldCheckGeo) return; // Don't check geolocation unless `checkGeo=true`
+
+        setLoadingMessage("Checking your location...");
+
         if (!navigator.geolocation) {
-            setLoadingMessage("Geolocation is not supported by your browser.");
+            setLoadingMessage("Geolocation not supported.");
             setTimeout(() => navigate("/not-allowed"), 2000);
             return;
         }
@@ -29,31 +36,29 @@ function Loading(){
                     const data = await response.json();
                     if (data.allowed) {
                         setLoadingMessage("You are on campus. Processing your vote...");
-                        setTimeout(() => navigate("/vote-successful"), 2000);
+                        setTimeout(() => navigate("/vote-success"), 2000);
                     } else {
                         setLoadingMessage("You are not on campus. Voting is not allowed.");
-                        setTimeout(() => navigate("/vote-unsuccessful"), 2000);
+                        setTimeout(() => navigate("/not-allowed"), 2000);
                     }
                 } catch (error) {
                     setLoadingMessage("Error checking location.");
-                    setTimeout(() => navigate("/vote-unsuccessful"), 2000);
+                    setTimeout(() => navigate("/not-allowed"), 2000);
                 }
             },
             () => {
                 setLoadingMessage("Unable to retrieve your location.");
-                setTimeout(() => navigate("/vote-unsuccessful"), 2000);
+                setTimeout(() => navigate("/not-allowed"), 2000);
             }
         );
-    }, [navigate]);
+    }, [navigate, shouldCheckGeo]);
 
-    return(
-        <div class="loading">
-            <h1 class="loading__title">{loadingMessage}</h1>
-            <h2 className="loading__subtitle">Give us one moment</h2>
-            <div class="spinner">
-                
-            </div>
+    return (
+        <div className="loading">
+            <h1 className="loading__title">{loadingMessage}</h1>
+            <div className="spinner"></div>
         </div>
-    )
+    );
 }
+
 export default Loading;
