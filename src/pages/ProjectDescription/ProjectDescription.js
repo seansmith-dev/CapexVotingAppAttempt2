@@ -22,19 +22,30 @@ function ProjectDescription() {
     // Function to split description into two paragraphs based on word count
     const splitDescription = (description, wordLimit = 48) => {
         const words = description.split(' ');
-
-        // Find the word index closest to the wordLimit but at the end of a sentence
+    
+        // Start by looking for a break at wordLimit
         let breakPoint = wordLimit;
+    
+        // If the word at the wordLimit is not a sentence end, look for the next good break point
         while (breakPoint < words.length && !['.', '!', '?'].includes(words[breakPoint].slice(-1))) {
             breakPoint++;
         }
-
-        // If we can't find a good break, just split at the wordLimit
+    
+        // If the breakPoint goes beyond the wordLimit and the sentence isn't fully finished,
+        // try to adjust to the previous word to avoid starting with an incomplete sentence
+        if (breakPoint >= words.length || !['.', '!', '?'].includes(words[breakPoint - 1].slice(-1))) {
+            breakPoint = wordLimit;
+        }
+    
+        // Now we have a better breakPoint
         const firstPart = words.slice(0, breakPoint).join(' ');
         const secondPart = words.slice(breakPoint).join(' ');
-
+    
         return { firstPart, secondPart };
     };
+    
+    const { firstPart, secondPart } = splitDescription(project.long_description);
+    
 
     const { firstPart, secondPart } = splitDescription(project.long_description);
 
