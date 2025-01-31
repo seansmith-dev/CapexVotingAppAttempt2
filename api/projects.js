@@ -104,20 +104,23 @@ export default function handler(req, res) {
                 "no_votes": "4"
             }
         ];
+        
+        // If a projectId is in the URL (e.g., /api/projects/2), fetch that specific project
+        const { projectId } = req.query; // Get projectId from URL (e.g., /api/projects/1)
 
-        // Get fields to return from query parameters (if any)
+        // If projectId exists, filter the project by ID
+        if (projectId) {
+            const project = projects.find(p => p.project_id === parseInt(projectId));
+            if (!project) {
+                return res.status(404).json({ message: "Project not found" });
+            }
+            return res.status(200).json(project); // Return single project
+        }
+
+        // Otherwise, return all projects
         const fields = req.query.fields ? req.query.fields.split(',') : null;
 
-        // Optionally filter projects based on `id` or other query params
-        const projectId = req.query.id;
-
-        // Filter projects by `id` if `id` query param is provided
-        const filteredProjects = projectId 
-            ? projects.filter(project => project['project-id'] === parseInt(projectId))
-            : projects;
-
-        // If specific fields are requested, return only those fields
-        const result = filteredProjects.map(project => {
+        const result = projects.map(project => {
             if (fields) {
                 const filteredProject = {};
                 fields.forEach(field => {
@@ -127,7 +130,7 @@ export default function handler(req, res) {
                 });
                 return filteredProject;
             }
-            return project; // Return full project data if no fields are specified
+            return project;
         });
 
         res.status(200).json(projects);
