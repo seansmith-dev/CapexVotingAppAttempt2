@@ -4,22 +4,15 @@
     background-size: cover;
     /* background-position: 50% 50%;  */
     min-height: 100vh;
+    display: flex; 
+    flex-direction:column; 
+    justify-content:center; 
+    align-items: center;
     text-align: center; 
-    
 }
 
-.not-on-campus-error__title{
-    margin-bottom: 0.6em; 
-    max-width: 600px;
-}
 
-.not-on-campus-error__subtitle{
-    
+.not-on-campus-error__subtitle{  
     color: white; 
-    max-width: 500px;
 }
 
-.not-on-campus-error__title, .not-on-campus-error__subtitle{
-    margin-left: auto; 
-    margin-right: auto;
-}
