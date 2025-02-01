@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/router"; // Import useRouter
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./AdminLogin.css";
 import Button from "../../components/Button/Button.js";
 
@@ -7,7 +7,7 @@ function AdminLogin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const router = useRouter(); // Initialize router
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent page reload
@@ -22,7 +22,7 @@ function AdminLogin() {
 
         const data = await response.json();
         if (response.ok) {
-            router.push("/admin"); // Navigate to /admin on success
+            navigate("/admin"); // Navigate to /admin on success
         } else {
             setError(data.message);
         }
