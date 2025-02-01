@@ -1,21 +1,69 @@
-import "./AdminLogin.css"; 
+import { useState } from "react";
+import "./AdminLogin.css";
 import Button from "../../components/Button/Button.js";
 
-function AdminLogin(){
-    return(
-        
+function AdminLogin() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Prevent page reload
+
+        const response = await fetch("api/adminLogin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Login successful!");
+            // Redirect or set authentication state
+        } else {
+            setError(data.message);
+        }
+    };
+
+    return (
         <div className="admin-login">
             <h1 className="admin-login__title">Admin Login</h1>
-            <form className="form" action="post">
-                <label for="admin-login__username-input" class="admin-login__username-label" placeholder="Enter Your Username" >Username</label>
-                <input type="text" id= "admin-login__username-input" class="admin-login__username-input" required/>
-                <label for="admin-login__password-input" class="admin-login__username-label margin--top" placeholder="Enter Your Password">Password</label>
-                <input type="password" id= "admin-login__password-input" class="admin-login__password-input margin--bottom" required/>
-                {/* <btn class="form__btn">Login</btn> */}
-                <Button buttonType="card" buttonSize="small" buttonText="Login" buttonWidth="form" className="student--btn login--btn" buttonNavigateTo="/admin" type="submit"/>
+            <form className="form" onSubmit={handleSubmit}>
+                <label htmlFor="admin-login__username-input" className="admin-login__username-label">Username</label>
+                <input 
+                    type="text" 
+                    id="admin-login__username-input" 
+                    className="admin-login__username-input" 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)} 
+                    required 
+                />
+
+                <label htmlFor="admin-login__password-input" className="admin-login__username-label margin--top">Password</label>
+                <input 
+                    type="password" 
+                    id="admin-login__password-input" 
+                    className="admin-login__password-input margin--bottom" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    required 
+                />
+
+                {error && <p className="error">{error}</p>}
+
+                <Button 
+                    buttonType="card" 
+                    buttonSize="small" 
+                    buttonText="Login" 
+                    buttonWidth="form" 
+                    className="student--btn login--btn" 
+                    type="submit"
+                />
             </form>
-            
         </div>
     );
 }
+
 export default AdminLogin;
