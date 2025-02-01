@@ -1,6 +1,6 @@
 .network-error{
     padding: 4rem 1.5rem; 
-    background-image: url("../../../assets/MarioKart/RacewayPrincessPeach.jpg");
+    background-image: url("../../../assets/errorScreenImages/lose.jpg");
     background-size: cover;
     /* background-position: 50% 50%;  */
     min-height: 100vh;
@@ -13,4 +13,5 @@
 
 .network-error__subtitle{
     color: white; 
+    max-width: 900;
 }

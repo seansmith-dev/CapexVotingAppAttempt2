@@ -1,8 +1,8 @@
 .geo-error{
     padding: 4rem 1.5rem; 
-    background-image: url("../../../assets/MarioKart/RacewayPrincessPeach.jpg");
+    background-image: url("../../../assets/errorScreenImages/marioCrying.jpg");
     background-size: cover;
-    /* background-position: 50% 50%;  */
+    background-position: 50% 50%; 
     min-height: 100vh;
     display: flex; 
     flex-direction:column; 
@@ -13,4 +13,11 @@
 
 .geo-error__subtitle{
     color: white; 
+    max-width: 887px;
+}
+
+@media (min-width: 900px){
+    .geo-error{
+        background-position: 20% 50%;
+    }
 }
