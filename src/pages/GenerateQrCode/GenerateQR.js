@@ -7,24 +7,42 @@ function GenerateQR() {
 
     const generateQRCode = async () => {
         setLoading(true);
+        setQrImage(null); // Reset previous QR code
+        setQrUrl(null);
+
         try {
             const response = await fetch("/api/generate-qr");
             const data = await response.json();
 
-            if (data.qrImage) {
+            if (data.qrImage && data.qrUrl) {
                 setQrImage(data.qrImage);
                 setQrUrl(data.qrUrl);
+            } else {
+                console.error("API did not return a valid QR code");
             }
         } catch (error) {
             console.error("Failed to generate QR code", error);
         }
+        
         setLoading(false);
     };
 
     const printQRCode = () => {
+        if (!qrImage || !qrUrl) {
+            console.error("No QR code available for printing");
+            return;
+        }
+
         const printWindow = window.open("", "_blank");
-        printWindow.document.write(`<img src="${qrImage}" style="width: 300px; height: 300px;" />`);
-        printWindow.document.write(`<p>${qrUrl}</p>`);
+        printWindow.document.write(`
+            <html>
+                <head><title>Print QR Code</title></head>
+                <body>
+                    <img src="${qrImage}" style="width: 300px; height: 300px;" />
+                    <p>URL: <a href="${qrUrl}" target="_blank">${qrUrl}</a></p>
+                </body>
+            </html>
+        `);
         printWindow.document.close();
         printWindow.print();
     };

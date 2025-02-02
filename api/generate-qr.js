@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import QRCode from "qrcode";
 
 let validTokens = new Set(); // Temporary in-memory token store
 
@@ -14,5 +15,14 @@ export default async function handler(req, res) {
     setTimeout(() => validTokens.delete(token), 300000);
 
     const qrUrl = `https://yourapp.com/loading?token=${token}`;
-    return res.status(200).json({ qrUrl, token });
+
+    try {
+        // Generate QR Code as a data URL
+        const qrImage = await QRCode.toDataURL(qrUrl);
+
+        return res.status(200).json({ qrUrl, qrImage });
+    } catch (error) {
+        console.error("QR Code generation error:", error);
+        return res.status(500).json({ error: "Failed to generate QR code" });
+    }
 }
