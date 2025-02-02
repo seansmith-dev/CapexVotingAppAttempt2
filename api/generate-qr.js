@@ -8,21 +8,23 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const token = nanoid(); // Generate a unique token
-    validTokens.add(token); // Store it temporarily
-
-    // Auto-remove token after 5 minutes
-    setTimeout(() => validTokens.delete(token), 300000);
-
-    const qrUrl = `https://yourapp.com/loading?token=${token}`;
-
     try {
+        const token = nanoid(); // Generate a unique token
+        validTokens.add(token); // Store it temporarily
+
+        // Auto-remove token after 5 minutes
+        setTimeout(() => validTokens.delete(token), 300000);
+
+        const qrUrl = `https://yourapp.com/loading?token=${token}`;
+
         // Generate QR Code as a data URL
         const qrImage = await QRCode.toDataURL(qrUrl);
 
         return res.status(200).json({ qrUrl, qrImage });
     } catch (error) {
         console.error("QR Code generation error:", error);
+
+        // Ensure we always return valid JSON
         return res.status(500).json({ error: "Failed to generate QR code" });
     }
 }
