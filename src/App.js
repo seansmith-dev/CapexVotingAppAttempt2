@@ -17,6 +17,7 @@ import NavigationAssistant from './pages/NavigationAssistant/NavigationAssistant
 import GeoError from './pages/GeolocationErrorMessages/GeoError/GeoError.js';
 import NetworkError from './pages/GeolocationErrorMessages/NetworkError/NetworkError.js';
 import NotOnCampus from './pages/GeolocationErrorMessages/NotOnCampus/NotOnCampus.js';
+import GenerateQR from './pages/GenerateQrCode/GenerateQR.js';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/geo-error" element={<GeoError/>} />
             <Route path="/network-error" element={<NetworkError/>} />
             <Route path="/not-allowed" element={<NotOnCampus/>} />
+            <Route path="/generate-qr" element={<GenerateQR/>} />
 
           </Routes>
         </main>
