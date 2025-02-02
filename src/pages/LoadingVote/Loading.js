@@ -7,13 +7,42 @@ function Loading() {
     const location = useLocation();
     const [loadingMessage, setLoadingMessage] = useState("Loading...");
     
-    // Parse query parameters
     const searchParams = new URLSearchParams(location.search);
     const shouldCheckGeo = searchParams.get("checkGeo") === "true"; 
+    const token = searchParams.get("token");
 
     useEffect(() => {
-        if (!shouldCheckGeo) return; // Don't check geolocation unless `checkGeo=true`
+        if (!token) {
+            setLoadingMessage("No token found. Access denied.");
+            setTimeout(() => navigate("/not-allowed"), 2000);
+            return;
+        }
 
+        // Validate the token first
+        setLoadingMessage("Validating your access...");
+        fetch(`/api/validate-token?token=${token}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data.valid) {
+                    setLoadingMessage("Invalid or expired token. Access denied.");
+                    setTimeout(() => navigate("/not-allowed"), 2000);
+                    return;
+                }
+
+                // If geolocation is required, check it
+                if (shouldCheckGeo) {
+                    checkGeolocation();
+                } else {
+                    setTimeout(() => navigate("/vote-success"), 2000);
+                }
+            })
+            .catch(() => {
+                setLoadingMessage("Network error during validation.");
+                setTimeout(() => navigate("/network-error"), 2000);
+            });
+    }, [token, shouldCheckGeo, navigate]);
+
+    const checkGeolocation = () => {
         setLoadingMessage("Checking your location...");
 
         if (!navigator.geolocation) {
@@ -37,20 +66,20 @@ function Loading() {
                     if (data.allowed) {
                         setTimeout(() => navigate("/vote-success"), 2000);
                     } else {
-                        // setLoadingMessage("You are not on campus. Voting is not allowed.");
+                        setLoadingMessage("You are not on campus. Voting is not allowed.");
                         setTimeout(() => navigate("/not-allowed"), 2000);
                     }
                 } catch (error) {
-                    // setLoadingMessage("Network error: There was a network error checking location.");
+                    setLoadingMessage("Network error while checking location.");
                     setTimeout(() => navigate("/network-error"), 2000);
                 }
             },
             () => {
-                setLoadingMessage("Unable to retrieve your location. To vote, you must enable geolocation");
+                setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
                 setTimeout(() => navigate("/geo-error"), 2000);
             }
         );
-    }, [navigate, shouldCheckGeo]);
+    };
 
     return (
         <div className="loading">
