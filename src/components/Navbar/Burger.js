@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import RightNav from "./RightNav";
+import RightNav from "./RightNav.js";
 
 
 const StyledBurger = styled.div`

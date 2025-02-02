@@ -1,7 +1,7 @@
 import React from "react"; 
 import styled from "styled-components";
-import Burger from "./Burger";
-import Logo from "../Logo/Logo";
+import Burger from "./Burger.js";
+import Logo from "../Logo/Logo.js";
 
 const Nav = styled.nav`
     width: 100%;

@@ -3,7 +3,7 @@ import AtcEntrance from '../../assets/atc-entrance.jpg';
 import AtcBuilding from '../../assets/ATCbuilding.jpg';
 import AtcBuildingLevel1And2 from '../../assets/ATCLevel1And2.jpg';
 import AboutImage from '../../assets/aboutCapstone.jpeg';
-import ButtonWithIcon from '../../components/Button/Button-with-icon';
+import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
 import Button from '../../components/Button/Button.js';
 import { Link } from 'react-router-dom';
 
