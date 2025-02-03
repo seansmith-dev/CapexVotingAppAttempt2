@@ -6,9 +6,24 @@ import AboutImage from '../../assets/aboutCapstone.jpeg';
 import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
 import Button from '../../components/Button/Button.js';
 import { Link } from 'react-router-dom';
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 function Home() {
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const token = searchParams.get("token");
+        
+        if (token) {
+            localStorage.setItem("voteToken", token); // Store token
+        }
+    }, [location.search]);
+
     return (
         <div className="home-wrapper">
             <div className="hero">

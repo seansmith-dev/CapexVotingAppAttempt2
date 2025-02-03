@@ -1,46 +1,33 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './ProjectDescription.css';
 import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
 import Loading from '../LoadingVote/Loading.js';
 
 function ProjectDescription() {
-    const { projectId } = useParams(); // Get project ID from the URL
+    const { projectId } = useParams();
+    const navigate = useNavigate();
     const [project, setProject] = useState(null);
 
     useEffect(() => {
-        fetch(`/api/projects?id=${projectId}`) // Fetch the selected project's details
+        fetch(`/api/projects?id=${projectId}`)
             .then(response => response.json())
             .then(data => setProject(data))
             .catch(error => console.error("Error fetching project details:", error));
     }, [projectId]);
 
     if (!project) {
-        return <Loading />; // Display while fetching
+        return <Loading />; // Show loading while fetching project
     }
 
-    // Function to split description into two paragraphs based on word count
-    const splitDescription = (description, wordLimit = 48) => {
-        const words = description.split(' ');
-    
-        // Start by looking for a break at wordLimit
-        let breakPoint = wordLimit;
-    
-        // If the word at the wordLimit is not a sentence end, look for the next good break point
-        while (breakPoint < words.length && !['.', '!', '?'].includes(words[breakPoint].slice(-1))) {
-            breakPoint++;
+    const handleVote = () => {
+        const token = localStorage.getItem("voteToken"); // Retrieve stored token
+        if (!token) {
+            alert("Error: No token found. Please scan the QR code again.");
+            navigate("/"); // Send them back to restart
+            return;
         }
-        
-        breakPoint++;
-        // Now we have a better breakPoint
-        const firstPart = words.slice(0, breakPoint).join(' ');
-        const secondPart = words.slice(breakPoint).join(' ');
-    
-        return { firstPart, secondPart };
     };
-    
-    const { firstPart, secondPart } = splitDescription(project.long_description);
-    
 
     return (
         <div className="project-description">
@@ -69,15 +56,14 @@ function ProjectDescription() {
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    buttonNavigateTo="/loading?checkGeo=true"
+                    buttonNavigateTo={`/loading?checkGeo=true&token=${token}`} // Use function to navigate with token
                 />
             </div>
 
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
-                    <p className="about-project__text">{firstPart}</p>
-                    {secondPart && <p className="about-project__text">{secondPart}</p>}
+                    <p className="about-project__text">{project.long_description}</p>
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
