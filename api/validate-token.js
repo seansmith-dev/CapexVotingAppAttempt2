@@ -9,6 +9,7 @@ export default function handler(req, res) {
     console.log("Received token from frontend:", token);
     
     if (!token || !validTokens.has(token)) {
+        console.log("Token not found in validTokens or is invalid");
         return res.status(200).json({ valid: false });
     }
 
