@@ -1,5 +1,9 @@
 /* typography */
 
+.qr-code-generator__url{
+    margin-top: 1em; 
+}
+
 .print-qr{
     font-size: 0.5rem; 
     font-weight: 700;
