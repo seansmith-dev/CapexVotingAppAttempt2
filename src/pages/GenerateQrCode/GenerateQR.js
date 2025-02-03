@@ -39,7 +39,7 @@ function GenerateQR() {
             <html>
                 <head><title>Print QR Code</title></head>
                 <body>
-                    <div style="display: flex; justify-content: center;">
+                    <div style="display: flex; align-items: center; flex-direction: column;">
                         <img src="${qrImage}" style="width: 300px; height: 300px;" />
                         <p>URL: <a href="${qrUrl}" target="_blank">${qrUrl}</a></p>
                     </div>
