@@ -6,6 +6,7 @@ export default function handler(req, res) {
     }
 
     const { token } = req.query;
+    console.log("Received token from frontend:", token);
     
     if (!token || !validTokens.has(token)) {
         return res.status(200).json({ valid: false });
