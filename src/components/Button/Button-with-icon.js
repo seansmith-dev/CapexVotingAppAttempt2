@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router-dom';
 const ButtonWithIcon = (props) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    if(props.onClick){
+      props.onClick(event);
+    }
+
     if (props.buttonNavigateTo) {
       navigate(props.buttonNavigateTo); 
     }
