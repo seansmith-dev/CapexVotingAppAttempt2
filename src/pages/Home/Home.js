@@ -18,9 +18,10 @@ function Home() {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const token = searchParams.get("token");
-        console.log("Token received:", token);
+        
         
         if (token) {
+            console.log("Token received:", token);
             localStorage.setItem("voteToken", token); // Store token
         }
     }, [location.search]);
