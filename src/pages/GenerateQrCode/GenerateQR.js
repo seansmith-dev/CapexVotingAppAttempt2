@@ -51,7 +51,7 @@ function GenerateQR() {
     return (
         <div className="qr-code-generator">
             <h1 className="qr-code-generator__page-title">QR Code Generator</h1>
-            <button onClick={generateQRCode} disabled={loading} class="btn btn--card btn--medium card--undefined btn--wide student--btn">{loading ? "Generating..." : "Generate QR Code"}</button>
+            <button onClick={generateQRCode} disabled={loading} class="btn btn--card btn--medium card--undefined btn--wide student--btn qr-code-btn">{loading ? "Generating..." : "Generate QR Code"}</button>
 
             {qrImage && (
                 <div>

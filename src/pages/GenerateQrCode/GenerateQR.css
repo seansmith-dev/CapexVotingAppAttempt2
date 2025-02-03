@@ -9,3 +9,14 @@
 .qr-code-generator__page-title{
     margin-bottom: 0.3em; 
 }
+
+.qr-code-btn{
+    font-size: 1rem; 
+}
+
+@media (min-width:500px){
+    .qr-code-btn{
+        font-size: 1.5rem; 
+    }
+
+}
