@@ -43,7 +43,6 @@ function ProjectDescription() {
 
     const handleVote = async () => {
         const token = localStorage.getItem("voteToken"); // Retrieve stored token
-        
 
         if (!token) {
             alert("Error: No token found. Please scan the QR code again.");
@@ -55,10 +54,9 @@ function ProjectDescription() {
 
         try {
             console.log("Token from localStorage validate:", token); 
-            const res = await fetch(`/api/validate-token?token=${token}`);
-            const data = await res.json();
-
-            if (!data.valid) {
+            // Simulating API request for token validation
+            const res = await mockValidateTokenAPI(token);
+            if (!res.valid) {
                 alert("Invalid or expired token. Access denied.");
                 navigate("/");
                 return;
@@ -103,6 +101,20 @@ function ProjectDescription() {
         } catch (error) {
             setLoadingMessage("Network error while checking location.");
             setTimeout(() => navigate("/network-error"), 2000);
+        }
+    };
+
+    // Simulate an API function that checks the token
+    const mockValidateTokenAPI = async (token) => {
+        // Simulate an API call by checking the token in localStorage
+        const storedToken = localStorage.getItem("voteToken");
+
+        // If the token is valid (exists in localStorage), return a valid response
+        if (token && token === storedToken) {
+            localStorage.removeItem("voteToken"); // Remove after validation (one-time use)
+            return { valid: true };
+        } else {
+            return { valid: false };
         }
     };
 
