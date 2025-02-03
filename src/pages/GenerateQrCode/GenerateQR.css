@@ -1,6 +1,11 @@
 .qr-code-generator{
+    padding: 4rem 1.5rem; 
     background-image:url("../../assets/errorScreenImages/chompYoshi.jpg");
     background-size: cover; 
     min-height: 100vh; 
     text-align:center;
+}
+
+.qr-code-generator__page-title{
+    margin-bottom: 0.3em; 
 }
