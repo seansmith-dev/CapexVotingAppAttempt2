@@ -43,7 +43,7 @@ function ProjectDescription() {
 
     const handleVote = async () => {
         const token = localStorage.getItem("voteToken"); // Retrieve stored token
-        console.log("Token from localStorage:", token); 
+        
 
         if (!token) {
             alert("Error: No token found. Please scan the QR code again.");
@@ -54,6 +54,7 @@ function ProjectDescription() {
         setLoadingMessage("Validating your access...");
 
         try {
+            console.log("Token from localStorage validate:", token); 
             const res = await fetch(`/api/validate-token?token=${token}`);
             const data = await res.json();
 
