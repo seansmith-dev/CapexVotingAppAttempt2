@@ -54,7 +54,7 @@ function ProjectDescription() {
         setLoadingMessage("Validating your access...");
 
         try {
-            
+            console.log("Token from localStorage validate:", token); 
             const res = await fetch(`/api/validate-token?token=${token}`);
             const data = await res.json();
 
