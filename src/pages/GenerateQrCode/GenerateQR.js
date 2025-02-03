@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './GenerateQR.css'
 
 function GenerateQR() {
     const [qrImage, setQrImage] = useState(null);
@@ -48,16 +49,16 @@ function GenerateQR() {
     };
 
     return (
-        <div>
-            <h1>QR Code Generator</h1>
-            <button onClick={generateQRCode} disabled={loading}>
+        <div className="qr-code-generator">
+            <h1 className="qr-code-generator__page-title">QR Code Generator</h1>
+            <button onClick={generateQRCode} disabled={loading} class="btn btn--card btn--small btn--form student--btn login--btn">
                 {loading ? "Generating..." : "Generate QR Code"}
             </button>
             {qrImage && (
                 <div>
-                    <h3>Scan this QR Code</h3>
-                    <img src={qrImage} alt="QR Code" style={{ width: "200px", height: "200px" }} />
-                    <p>URL: <a href={qrUrl} target="_blank" rel="noopener noreferrer">{qrUrl}</a></p>
+                    <h3 className="qr-code-generator__image-title">Scan this QR Code</h3>
+                    <img className="qr-code-generator__image"src={qrImage} alt="QR Code" style={{ width: "200px", height: "200px" }} />
+                    <p className="qr-code-generator__url">URL: <a href={qrUrl} target="_blank" rel="noopener noreferrer">{qrUrl}</a></p>
                     <button onClick={printQRCode}>Print QR Code</button>
                 </div>
             )}

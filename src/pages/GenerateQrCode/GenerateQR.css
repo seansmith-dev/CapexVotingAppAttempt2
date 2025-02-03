@@ -1,0 +1,6 @@
+.qr-code-generator{
+    background-image:url("../../assets/errorScreenImages/chompYoshi.jpg");
+    background-size: cover; 
+    min-height: 100vh; 
+    text-align:center;
+}
