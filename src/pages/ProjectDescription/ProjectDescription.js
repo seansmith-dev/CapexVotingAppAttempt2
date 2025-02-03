@@ -1,31 +1,86 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import './ProjectDescription.css';
-import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
-import Loading from '../LoadingVote/Loading.js';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import "./ProjectDescription.css";
+import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
+import Loading from "../LoadingVote/Loading.js";
 
 function ProjectDescription() {
     const { projectId } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
+    const [loadingMessage, setLoadingMessage] = useState("");
 
     useEffect(() => {
         fetch(`/api/projects?id=${projectId}`)
-            .then(response => response.json())
-            .then(data => setProject(data))
-            .catch(error => console.error("Error fetching project details:", error));
+            .then((response) => response.json())
+            .then((data) => setProject(data))
+            .catch((error) => console.error("Error fetching project details:", error));
     }, [projectId]);
 
     if (!project) {
         return <Loading />; // Show loading while fetching project
     }
 
-    const handleVote = () => {
-        const token = localStorage.getItem("voteToken"); // Retrieve stored token
+    const handleVote = async () => {
+        const token = localStorage.getItem("voterToken"); // Retrieve stored token
+
         if (!token) {
             alert("Error: No token found. Please scan the QR code again.");
-            navigate("/"); // Send them back to restart
+            navigate("/");
             return;
+        }
+
+        setLoadingMessage("Validating your access...");
+
+        try {
+            const res = await fetch(`/api/validate-token?token=${token}`);
+            const data = await res.json();
+
+            if (!data.valid) {
+                alert("Invalid or expired token. Access denied.");
+                navigate("/");
+                return;
+            }
+
+            setLoadingMessage("Checking your location...");
+
+            if (!navigator.geolocation) {
+                alert("Geolocation not supported. Enable location services to vote.");
+                navigate("/not-allowed");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    try {
+                        const response = await fetch("/api/check-location", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ latitude, longitude }),
+                        });
+
+                        const locationData = await response.json();
+                        if (locationData.allowed) {
+                            setTimeout(() => navigate("/vote-success"), 2000);
+                        } else {
+                            setLoadingMessage("You are not on campus. Voting is not allowed.");
+                            setTimeout(() => navigate("/not-allowed"), 2000);
+                        }
+                    } catch (error) {
+                        setLoadingMessage("Network error while checking location.");
+                        setTimeout(() => navigate("/network-error"), 2000);
+                    }
+                },
+                () => {
+                    setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
+                    setTimeout(() => navigate("/geo-error"), 2000);
+                }
+            );
+        } catch (error) {
+            setLoadingMessage("Network error while checking location.");
+                        setTimeout(() => navigate("/network-error"), 2000);
         }
     };
 
@@ -56,7 +111,7 @@ function ProjectDescription() {
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    buttonNavigateTo={`/loading?checkGeo=true&token=${token}`} // Use function to navigate with token
+                    onClick={handleVote} // Calls validation & geolocation on click
                 />
             </div>
 
@@ -67,6 +122,8 @@ function ProjectDescription() {
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
+
+            {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
         </div>
     );
 }
