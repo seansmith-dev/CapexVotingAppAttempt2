@@ -4,8 +4,8 @@ export default function handler(req, res) {
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
     }
-        
-    const { token } = req.query;
+
+    const { token } = req.query.token;
     console.log("Received token from frontend:", token);
     
     if (!token || !validTokens.has(token)) {
