@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     // Auto-remove token after 5 minutes
     setTimeout(() => validTokens.delete(token), 300000);
 
-    const qrUrl = `https://capex-voting-app.vercel.app/loading?token=${token}`;
+    const qrUrl = `https://capex-voting-app.vercel.app/?token=${token}`;
 
     try {
         // Generate QR Code as a data URL
