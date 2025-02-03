@@ -58,7 +58,7 @@ function GenerateQR() {
                     <h3 className="qr-code-generator__image-title">Scan this QR Code</h3>
                     <img className="qr-code-generator__image"src={qrImage} alt="QR Code" style={{ width: "200px", height: "200px" }} />
                     <p className="qr-code-generator__url">URL: <a href={qrUrl} target="_blank" rel="noopener noreferrer">{qrUrl}</a></p>
-                    <button onClick={printQRCode}>Print QR Code</button>
+                    <button onClick={printQRCode} className="print-qr">Print QR Code</button>
                 </div>
             )}
         </div>
