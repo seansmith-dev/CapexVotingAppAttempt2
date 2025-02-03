@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Loading.css";
 
 function Loading() {
     const navigate = useNavigate();
     const [loadingMessage, setLoadingMessage] = useState("Loading...");
 
-    useEffect(() => {
-        setTimeout(() => navigate("/project-description"), 2000); // Move to project description
-    }, [navigate]);
-
+    // No automatic navigation anymore; handle error or timeout inside `ProjectDescription`
     return (
         <div className="loading">
             <h1 className="loading__title">{loadingMessage}</h1>

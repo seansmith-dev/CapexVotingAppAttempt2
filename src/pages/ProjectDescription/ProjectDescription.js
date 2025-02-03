@@ -9,16 +9,36 @@ function ProjectDescription() {
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setError("Request timed out. Please try again later.");
+            navigate("/error"); // Navigate to an error page after a delay
+        }, 5000); // Timeout after 5 seconds
+
         fetch(`/api/projects?id=${projectId}`)
             .then((response) => response.json())
-            .then((data) => setProject(data))
-            .catch((error) => console.error("Error fetching project details:", error));
-    }, [projectId]);
+            .then((data) => {
+                clearTimeout(timeoutId); // Clear the timeout once data is fetched
+                setProject(data);
+            })
+            .catch((error) => {
+                clearTimeout(timeoutId);
+                console.error("Error fetching project details:", error);
+                setError("Error fetching project details.");
+                navigate("/error"); // Navigate to error page
+            });
+
+        return () => clearTimeout(timeoutId); // Clean up the timeout on unmount
+    }, [projectId, navigate]);
+
+    if (error) {
+        return <div>{error}</div>; // Optionally show a fallback error message
+    }
 
     if (!project) {
-        return <Loading />; // Show loading while fetching project
+        return <Loading />;
     }
 
     const handleVote = async () => {
@@ -80,7 +100,7 @@ function ProjectDescription() {
             );
         } catch (error) {
             setLoadingMessage("Network error while checking location.");
-                        setTimeout(() => navigate("/network-error"), 2000);
+            setTimeout(() => navigate("/network-error"), 2000);
         }
     };
 
