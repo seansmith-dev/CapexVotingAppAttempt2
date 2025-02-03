@@ -42,7 +42,7 @@ function ProjectDescription() {
     }
 
     const handleVote = async () => {
-        const token = localStorage.getItem("voterToken"); // Retrieve stored token
+        const token = localStorage.getItem("voteToken"); // Retrieve stored token
 
         if (!token) {
             alert("Error: No token found. Please scan the QR code again.");
