@@ -46,7 +46,7 @@ function ProjectDescription() {
 
         if (!token) {
             alert("Error: No token found. Please scan the QR code again.");
-            navigate("/");
+            navigate("/no-vote-twice");
             return;
         }
 
