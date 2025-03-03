@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';  // Correct way to import nanoid
 import QRCode from 'qrcode';      // Correct way to import qrcode
-import { Pool } from 'pg';
+import pkg from 'pg';  // Default import of the entire 'pg' module
+const { Pool } = pkg;  // Destructure 'Pool' from the 'pg' module
 
 
 const pool = new Pool({
