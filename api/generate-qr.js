@@ -13,7 +13,10 @@ const pool = new Pool({
   });
 
 export default async function handler(req, res) {
-
+  console.log("DB_HOST: ", process.env.DB_HOST);
+  console.log("DB_USER: ", process.env.DB_USER);
+  console.log("DB_PASSWORD: ", process.env.DB_PASSWORD);
+  console.log("DB_NAME: ", process.env.DB_NAME);
   console.log('Request from IP:', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
   
   if (req.headers['x-forwarded-for']) {
@@ -21,6 +24,8 @@ export default async function handler(req, res) {
   } else {
     console.log('Running locally');
   }
+  //Some code to determine the ip address that vercel is being run on
+  // What ip are they running our server on?
 
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
