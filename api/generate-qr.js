@@ -13,15 +13,19 @@ const pool = new Pool({
   });
 
 export default async function handler(req, res) {
+
+  console.log('Request from IP:', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+  
+  if (req.headers['x-forwarded-for']) {
+    console.log('Running on Vercel or other cloud provider');
+  } else {
+    console.log('Running locally');
+  }
+
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    if (process.env.VERCEL === 'true') {
-        console.log('App is running on Vercel cloud infrastructure');
-      } else {
-        console.log('App is running locally (127.0.0.1)');
-      }
 
     const token = nanoid(); // Generate a unique token
 
