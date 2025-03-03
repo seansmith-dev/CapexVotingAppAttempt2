@@ -10,14 +10,7 @@ const pool = new Pool({
     database: process.env.DB_NAME, 
     password: process.env.DB_PASSWORD, 
     port: 5432, 
-  });
-
-  pool.on('connect', (client) => {
-    console.log('Connected to database');
-  });
-  
-  pool.on('error', (err) => {
-    console.error('Database error:', err);
+    max: 20, 
   });
 
 export default async function handler(req, res) {
