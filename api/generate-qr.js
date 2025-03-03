@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         const result = await pool.query(query, [token]);
         
         // If the insertion is successful, return the QRCodeID (auto-generated)
-        const qrCodeId = result.rows[0].QRCodeID;
+        const qrCodeId = result.rows[0].qr_code_id;
         res.status(200).json({ success: true, qrCodeId, token });
       } catch (error) {
         console.error('Error inserting QRCode:', error);
