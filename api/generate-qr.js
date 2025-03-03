@@ -33,8 +33,10 @@ export default async function handler(req, res) {
 
 
     const token = nanoid(); // Generate a unique token
+    let startTime = Date.now();
 
     try {
+        console.log("Starting database query...");
         const query = `
           INSERT INTO "qrcodes" ("qr_code_token", "project_id")
           VALUES ($1, NULL)
@@ -42,6 +44,8 @@ export default async function handler(req, res) {
         
         // Perform the query to insert the token into the database
         const result = await pool.query(query, [token]);
+        console.log("Database query took: ", Date.now() - startTime, "ms");
+        //Log how long it took to connect to db and query. 
         
         // If the insertion is successful, return the qr_code_id (auto-generated)
         const qrCodeId = result.rows[0].qr_code_id;
