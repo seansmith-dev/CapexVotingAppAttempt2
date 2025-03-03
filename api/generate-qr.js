@@ -20,9 +20,9 @@ export default async function handler(req, res) {
 
     try {
         const query = `
-          INSERT INTO "QRCode" ("QRCodeToken", "projectID")
+          INSERT INTO "qrcodes" ("qr_code_token", "project_id")
           VALUES ($1, NULL)
-          RETURNING "QRCodeID";`;
+          RETURNING "qr_code_token";`;
         
         // Perform the query to insert the token into the database
         const result = await pool.query(query, [token]);
