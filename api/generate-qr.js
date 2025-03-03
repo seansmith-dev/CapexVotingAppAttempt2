@@ -12,6 +12,14 @@ const pool = new Pool({
     port: 5432, 
   });
 
+  pool.on('connect', (client) => {
+    console.log('Connected to database');
+  });
+  
+  pool.on('error', (err) => {
+    console.error('Database error:', err);
+  });
+
 export default async function handler(req, res) {
   console.log("DB_HOST: ", process.env.DB_HOST);
   console.log("DB_USER: ", process.env.DB_USER);
@@ -33,7 +41,15 @@ export default async function handler(req, res) {
 
 
     const token = nanoid(); // Generate a unique token
-    let startTime = Date.now();
+    let startTime = Date.now(); //How long does connection take
+
+    pool.on('connect', (client) => {
+      console.log('Connected to database'); //Is it actually connecting?
+    });
+    
+    pool.on('error', (err) => {
+      console.error('Database error:', err);
+    });
 
     try {
         console.log("Starting database query...");
