@@ -17,6 +17,12 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
+    if (process.env.VERCEL === 'true') {
+        console.log('App is running on Vercel cloud infrastructure');
+      } else {
+        console.log('App is running locally (127.0.0.1)');
+      }
+
     const token = nanoid(); // Generate a unique token
 
     try {
@@ -34,6 +40,7 @@ export default async function handler(req, res) {
         console.error('Error inserting QRCode:', error);
         res.status(500).json({ success: false, error: error.message });
       }
+
     
     const qrUrl = `https://capex-voting-app.vercel.app/?token=${token}`;
 
