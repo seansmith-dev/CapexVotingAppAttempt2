@@ -27,22 +27,26 @@ export default async function handler(req, res) {
         // Perform the query to insert the token into the database
         const result = await pool.query(query, [token]);
         
-        // If the insertion is successful, return the QRCodeID (auto-generated)
+        // If the insertion is successful, return the qr_code_id (auto-generated)
         const qrCodeId = result.rows[0].qr_code_id;
-        res.status(200).json({ success: true, qrCodeId, token });
       } catch (error) {
         console.error('Error inserting QRCode:', error);
         res.status(500).json({ success: false, error: error.message });
       }
     
-
     const qrUrl = `https://capex-voting-app.vercel.app/?token=${token}`;
 
     try {
         // Generate QR Code as a data URL
         const qrImage = await QRCode.toDataURL(qrUrl);
 
-        return res.status(200).json({ qrUrl, qrImage });
+        return res.status(200).json({
+            success: true,
+            qrCodeId,
+            token,
+            qrUrl,
+            qrImage,
+        });
     } catch (error) {
         console.error("QR Code generation error:", error);
         return res.status(500).json({ error: "Failed to generate QR code" });
