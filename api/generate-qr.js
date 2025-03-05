@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         const query = `
           INSERT INTO "qrcodes" ("qr_code_token", "project_id")
           VALUES ($1, NULL)
-          RETURNING "qr_code_token";`;
+          RETURNING "qr_code_id", "qr_code_token";`;
         
         // Perform the query to insert the token into the database
         const result = await pool.query(query, [token]);
