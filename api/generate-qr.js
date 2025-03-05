@@ -21,7 +21,9 @@ export default async function handler(req, res) {
   console.log("DB_USER: ", process.env.DB_USER);
   console.log("DB_PASSWORD: ", process.env.DB_PASSWORD);
   console.log("DB_NAME: ", process.env.DB_NAME);
-  console.log('Request from IP:', req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+  
+  const requestIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log('Request from IP:', requestIp);
   
   if (req.headers['x-forwarded-for']) {
     console.log('Running on Vercel or other cloud provider');
@@ -30,6 +32,14 @@ export default async function handler(req, res) {
   }
   //Some code to determine the ip address that vercel is being run on
   // What ip are they running our server on?
+
+  // Check the IP address and log accordingly
+  if (requestIp !== '180.150.36.251') {
+    console.error('Request not from allowed IP:', requestIp);
+    return res.status(403).json({ success: false, error: "Forbidden - IP address not allowed" });
+  } else {
+    console.log('Request from allowed IP:', requestIp);
+  }
 
     if (req.method !== "GET") {
         return res.status(405).json({ error: "Method not allowed" });
