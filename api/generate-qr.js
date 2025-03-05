@@ -47,6 +47,8 @@ export default async function handler(req, res) {
       console.error('Database error:', err);
     });
 
+    let qrCodeId = null; 
+
     try {
         console.log("Starting database query...");
         const query = `
@@ -71,7 +73,11 @@ export default async function handler(req, res) {
         console.error('Error inserting QRCode:', error);
         res.status(500).json({ success: false, error: error.message });
       }
-
+    
+      if (qrCodeId === null) {
+        console.error("qrCodeId is still undefined after database query!");
+        return res.status(500).json({ success: false, error: "Failed to retrieve QR code ID" });
+    }
     
     const qrUrl = `https://capex-voting-app.vercel.app/?token=${token}`;
 
