@@ -59,8 +59,14 @@ export default async function handler(req, res) {
         console.log("Database query took: ", Date.now() - startTime, "ms");
         //Log how long it took to connect to db and query. 
         
-        // If the insertion is successful, return the qr_code_id (auto-generated)
-        const qrCodeId = result.rows[0].qr_code_id;
+        console.log("Query result:", result.rows);  // Log the entire rows array
+
+        if (result.rows.length > 0) {
+            qrCodeId = result.rows[0].qr_code_id;
+            console.log("Extracted qrCodeId:", qrCodeId);
+        } else {
+            console.error("No rows returned from INSERT query!");
+        }
       } catch (error) {
         console.error('Error inserting QRCode:', error);
         res.status(500).json({ success: false, error: error.message });
