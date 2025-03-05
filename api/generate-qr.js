@@ -11,6 +11,9 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD, 
     port: 5432, 
     max: 20, 
+    ssl: {
+      rejectUnauthorized: false  // Bypass certificate validation
+    }
   });
 
 export default async function handler(req, res) {
