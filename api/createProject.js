@@ -52,7 +52,7 @@ try {
     try{
     // Insert Faculty (or get existing one)
     const facultyQuery = `
-        INSERT INTO Facultys (faculty_name)
+        INSERT INTO "Facultys" (faculty_name)
         VALUES ($1)
         ON CONFLICT (faculty_name) DO NOTHING
         RETURNING faculty_id;
@@ -71,7 +71,7 @@ try {
       try{
     // Insert Team (or get existing one)
     const teamQuery = `
-        INSERT INTO Teams (team_name)
+        INSERT INTO "Teams" (team_name)
         VALUES ($1)
         ON CONFLICT (team_name) DO NOTHING
         RETURNING team_id;
@@ -88,7 +88,7 @@ try {
       try{
     // Insert Project
     const projectQuery = `
-        INSERT INTO Projects (project_title, project_short_description, project_long_description, faculty_id, team_id)
+        INSERT INTO "Projects" (project_title, project_short_description, project_long_description, faculty_id, team_id)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
@@ -103,13 +103,13 @@ try {
     
     // Insert Members (or get existing ones) and link to TeamMembership
     const memberQuery = `
-        INSERT INTO Members (member_name)
+        INSERT INTO "Members" (member_name)
         VALUES ($1)
         ON CONFLICT (member_name) DO NOTHING
         RETURNING member_id;
     `;
     const teamMembershipQuery = `
-        INSERT INTO TeamMembership (team_id, member_id)
+        INSERT INTO "TeamMembership" (team_id, member_id)
         VALUES ($1, $2)
         ON CONFLICT DO NOTHING;
     `;
