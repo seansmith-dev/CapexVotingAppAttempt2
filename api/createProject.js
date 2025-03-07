@@ -49,6 +49,7 @@ const client = await pool.connect();
 try {
     await client.query("BEGIN"); // Start transaction
 
+    try{
     // Insert Faculty (or get existing one)
     const facultyQuery = `
         INSERT INTO Facultys (faculty_name)
@@ -61,6 +62,13 @@ try {
         ? facultyResult.rows[0].faculty_id 
         : (await client.query("SELECT faculty_id FROM Facultys WHERE faculty_name = $1", [facultyName])).rows[0].faculty_id;
 
+      }
+      catch(error){
+        console.error("Error faculty:", error);
+        res.status(500).json({ error: "Internal Server Error returning faculty" });
+      }
+
+      try{
     // Insert Team (or get existing one)
     const teamQuery = `
         INSERT INTO Teams (team_name)
@@ -72,7 +80,12 @@ try {
     const teamId = teamResult.rows.length > 0
         ? teamResult.rows[0].team_id
         : (await client.query("SELECT team_id FROM Teams WHERE team_name = $1", [teamName])).rows[0].team_id;
-
+      }
+      catch(error){
+        console.error("Error inserting team name:", error);
+        res.status(500).json({ error: "Internal Server Error returning team name" });
+      }
+      try{
     // Insert Project
     const projectQuery = `
         INSERT INTO Projects (project_title, project_short_description, project_long_description, faculty_id, team_id)
@@ -81,7 +94,13 @@ try {
     `;
     const projectResult = await client.query(projectQuery, [projectTitle, shortDescription, longDescription, facultyId, teamId]);
     const projectId = projectResult.rows[0].project_id;
+      }
+      catch(error){
+        console.error("Error inserting project into project table:", error);
+        res.status(500).json({ error: "Internal Server Error returning project" });
+      }
 
+    
     // Insert Members (or get existing ones) and link to TeamMembership
     const memberQuery = `
         INSERT INTO Members (member_name)
@@ -94,15 +113,22 @@ try {
         VALUES ($1, $2)
         ON CONFLICT DO NOTHING;
     `;
+    
+    try{
+      for (let member of teamMembers) {
+          const memberResult = await client.query(memberQuery, [member]);
+          const memberId = memberResult.rows.length > 0
+              ? memberResult.rows[0].member_id
+              : (await client.query("SELECT member_id FROM Members WHERE member_name = $1", [member])).rows[0].member_id;
 
-    for (let member of teamMembers) {
-        const memberResult = await client.query(memberQuery, [member]);
-        const memberId = memberResult.rows.length > 0
-            ? memberResult.rows[0].member_id
-            : (await client.query("SELECT member_id FROM Members WHERE member_name = $1", [member])).rows[0].member_id;
-
-        await client.query(teamMembershipQuery, [teamId, memberId]);
+          await client.query(teamMembershipQuery, [teamId, memberId]);
+      }
     }
+    catch(error){
+      console.error("Error inserting team member into team table:", error);
+      res.status(500).json({ error: "Internal Server Error returning the team membership table to determine membership" });
+    }
+    
 
     await client.query("COMMIT"); // Commit transaction
     res.status(201).json({ message: "Project successfully created", projectId });
