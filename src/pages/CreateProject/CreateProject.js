@@ -120,7 +120,7 @@ function CreateProject() {
                     <Button onClick={handleRemoveMember} disabled={teamMembers.length <= 1} buttonSize="medium-small"  className="btn--remove" buttonText="Remove"/>
                 </div>
 
-                <Button type="submit" buttonText="Submit" className="btn--submit"></Button>
+                <Button onClick={handleSubmit} type="submit" buttonText="Submit" className="btn--submit"></Button>
             </form>
         </div>
     );
