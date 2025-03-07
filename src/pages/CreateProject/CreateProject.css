@@ -1,0 +1,90 @@
+.btn--add, .btn--remove, .btn--submit{
+    color: white; 
+    border: 1px solid white; 
+    margin-top: 0.8rem; 
+}
+
+.btn--add, .btn--remove{
+   background-color: green;  
+}
+
+.btn--add{
+    margin: 0rem 1.5rem 1rem 0rem; 
+}
+
+.projects{
+    background-image: url("../../assets/MarioKart/NavigationAssistant/marioKartMushrooms.jpg"); 
+    background-position: 20% 1%;
+    padding: 2rem;
+}
+
+.project__title{
+    text-align: center; 
+    max-width: 500px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-bottom: 0.2em; 
+}
+
+.project-form{  
+    justify-self: center; 
+    align-self: center;
+    display: grid; 
+    border: 2px solid red; 
+         
+    background: yellow; 
+    opacity: 0.95;
+    padding: 2rem 5.5rem; 
+    text-align: left; 
+    color: red; 
+}
+
+.team-member__input{
+    margin: 0.4rem 0rem;
+}
+
+textarea {
+    width: 100%;
+    min-height: 80px;
+    max-width: 100%;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none; /* Prevent manual resize */
+    overflow: hidden;
+
+}
+
+.project-form__title-top{
+    margin-bottom: 0.6rem; 
+}
+
+.project-form__title{
+    margin: 0.6rem 0; 
+}
+
+
+
+
+@media (min-width: 800px){
+    .projects{
+        background-position: 18% 1%;
+    }
+}
+
+@media (min-width: 1000px){
+    .projects{
+        background-position: 14% 1%;
+    }
+}
+
+@media (max-width: 400px){
+    .btn--remove, .btn--submit{
+        margin-top: 0rem; 
+    }
+    .btn--remove{
+        margin-bottom: 1rem; 
+    }
+}
+

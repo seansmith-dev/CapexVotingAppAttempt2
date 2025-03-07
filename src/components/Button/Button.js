@@ -5,7 +5,11 @@ import { useNavigate } from 'react-router-dom';
 const Button = (props) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+
+    if (props.onClick) {
+      props.onClick(event); // Call the passed-in onClick function (e.g., handleAddMember)
+    }
     if (props.buttonNavigateTo) {
       navigate(props.buttonNavigateTo); 
     }

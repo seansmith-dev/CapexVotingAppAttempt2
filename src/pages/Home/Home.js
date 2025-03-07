@@ -46,8 +46,9 @@ function Home() {
                             <h3 className="card__heading">ATC building</h3>
                             <p className="card__subtitle">Projects are located on the first and second floor of the ATC building</p>
                             
-                            <Button buttonType="card" buttonSize="small" buttonText="Still Lost" buttonCardNo="one" buttonNavigateTo="navigation-assistant"/>
+                            
                             <img href="#" src={AtcBuilding} className="card__img" alt="ATC building"/>
+                            <Button buttonType="card" buttonSize="small" buttonText="Still Lost" buttonCardNo="one" buttonNavigateTo="navigation-assistant"/>
                             
                         </div>
                     </Link>
@@ -57,8 +58,9 @@ function Home() {
                             <h3 className="card__heading">What to do</h3>
                             <p className="card__subtitle">First head to the ATC building entrance. You will than see a display of the projects inside.</p>
                             
-                            <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="two" buttonNavigateTo="navigation-assistant"/>
+                            
                             <img href="#" src={AtcEntrance} className="card__img" alt="ATC entrance"/>
+                            <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="two" buttonNavigateTo="navigation-assistant"/>
                             
                         </div>
                     </Link>
@@ -68,9 +70,9 @@ function Home() {
                             <h3 className="card__heading">Still lost?</h3>
                             <p className="card__subtitle">If your still unable to find your way, try out the navigation assistant below </p>
 
-                            <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="three" buttonNavigateTo="navigation-assistant"/>
-                            <img href="#" src={AtcBuildingLevel1And2} className="card__img card-image-three--positioning" alt="ATC building ATC level 1 and 2"/>
                             
+                            <img href="#" src={AtcBuildingLevel1And2} className="card__img card-image-three--positioning" alt="ATC building ATC level 1 and 2"/>
+                            <Button buttonType="card" buttonSize="small" buttonText="Navigation Assistant" buttonCardNo="three" buttonNavigateTo="navigation-assistant"/>
                         </div>
                     </Link>
                 </div>
