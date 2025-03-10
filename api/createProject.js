@@ -46,6 +46,8 @@ export default async function handler(req, res) {
     const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
 const client = await pool.connect();
 
+let facultyId; 
+
 try {
     await client.query("BEGIN"); // Start transaction
 
@@ -85,6 +87,9 @@ try {
         console.error("Error inserting team name:", error);
         res.status(500).json({ error: "Internal Server Error returning team name" });
       }
+
+      let teamId;
+      
       try{
     // Insert Project
     const projectQuery = `
@@ -126,7 +131,7 @@ try {
     }
     catch(error){
       console.error("Error inserting team member into team table:", error);
-      res.status(500).json({ error: "Internal Server Error returning the team membership table to determine membership" });
+      res.status(500).json({ error: "Internal Server Error in team membership or membership table" });
     }
     
 
