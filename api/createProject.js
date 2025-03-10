@@ -123,12 +123,24 @@ try {
     
     try{
       for (let member of teamMembers) {
+        try{
           const memberResult = await client.query(memberQuery, [member]);
           const memberId = memberResult.rows.length > 0
               ? memberResult.rows[0].member_id
               : (await client.query("SELECT member_id FROM Members WHERE member_name = $1", [member])).rows[0].member_id;
-
-          await client.query(teamMembershipQuery, [teamId, memberId]);
+          }
+          catch(error){
+            console.error("Error inserting into the members table:", error);
+            res.status(500).json({ error: "Internal Server Error in the members table" });
+          }
+          try{
+            await client.query(teamMembershipQuery, [teamId, memberId]);
+          }
+          catch(error){
+            console.error("Error inserting into the teamMembership table:", error);
+            res.status(500).json({ error: "Internal Server Error in the teamMembership table" });
+          }
+          
       }
     }
     catch(error){
