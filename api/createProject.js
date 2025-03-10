@@ -81,7 +81,7 @@ try {
         RETURNING team_id;
     `;
     const teamResult = await client.query(teamQuery, [teamName]);
-    const teamId = teamResult.rows.length > 0
+    teamId = teamResult.rows.length > 0
         ? teamResult.rows[0].team_id
         : (await client.query("SELECT team_id FROM Teams WHERE team_name = $1", [teamName])).rows[0].team_id;
       }
