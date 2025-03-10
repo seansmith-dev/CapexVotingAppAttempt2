@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 const client = await pool.connect();
 
 
-let facultyId, teamId, projectId;
+let facultyId, teamId, projectId, memberId;
 
 
 try {
