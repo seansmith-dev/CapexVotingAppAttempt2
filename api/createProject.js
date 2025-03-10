@@ -46,7 +46,9 @@ export default async function handler(req, res) {
     const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
 const client = await pool.connect();
 
-let facultyId; 
+
+let facultyId, teamId, projectId;
+
 
 try {
     await client.query("BEGIN"); // Start transaction
@@ -88,8 +90,8 @@ try {
         res.status(500).json({ error: "Internal Server Error returning team name" });
       }
 
-      let teamId;
-      
+  
+
       try{
     // Insert Project
     const projectQuery = `
