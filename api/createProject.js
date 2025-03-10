@@ -121,7 +121,7 @@ try {
         ON CONFLICT DO NOTHING;
     `;
     
-    try{
+    
       for (let member of teamMembers) {
         try{
           const memberResult = await client.query(memberQuery, [member]);
@@ -142,11 +142,8 @@ try {
           }
           
       }
-    }
-    catch(error){
-      console.error("Error inserting team member into team table:", error);
-      res.status(500).json({ error: "Internal Server Error in team membership or membership table" });
-    }
+    
+    
     
 
     await client.query("COMMIT"); // Commit transaction
