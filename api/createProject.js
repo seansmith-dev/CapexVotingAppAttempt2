@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     const existingTitleResult = await client.query(checkTitleQuery, [projectTitle]);
 
     if (existingTitleResult.rows.length > 0) {
-      console.log("same project title")
+      console.log("same project title");
       return res.status(201).json({ message: "A project with this title already exists." });
     }
 
