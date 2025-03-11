@@ -62,9 +62,7 @@ try {
         RETURNING faculty_id;
     `;
     const facultyResult = await client.query(facultyQuery, [facultyName]);
-    const facultyId = facultyResult.rows.length > 0 
-        ? facultyResult.rows[0].faculty_id 
-        : (await client.query("SELECT faculty_id FROM Facultys WHERE faculty_name = $1", [facultyName])).rows[0].faculty_id;
+    facultyId = facultyResult.rows[0].faculty_id 
 
       }
       catch(error){
