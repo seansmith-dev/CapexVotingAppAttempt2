@@ -64,13 +64,17 @@ function CreateProject() {
                 console.log("201 response status executed");
             }
             else if (response.status === 409) {
+                console.log("the alert executed");
                 alert(responseData.message || 'Project with this title already exists!');
             }
             else if (response.status === 408) {
+                console.log("the response 408 executed");
                 alert(responseData.message || 'Your team has already created a project.');
             }
             else {
+                console.log("the alert executed")
                 alert('Something went wrong.');
+                
             }
         
         } catch (error) {

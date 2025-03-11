@@ -178,7 +178,7 @@ export default async function handler(req, res) {
 
     await client.query("COMMIT"); // Commit transaction
     
-    res.status(200).json({ status: 201, message: "Projectsc created successfully!"});
+    res.status(200).json({ status: 201, message: "Project created successfully!"});
 
   } catch (error) {
     await client.query("ROLLBACK"); // Rollback transaction in case of error
