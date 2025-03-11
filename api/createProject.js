@@ -176,6 +176,7 @@ export default async function handler(req, res) {
 
 
     await client.query("COMMIT"); // Commit transaction
+    console.log("line afted commit executing");
     res.status(201).json({ message: "Project successfully created", projectId });
 
   } catch (error) {
