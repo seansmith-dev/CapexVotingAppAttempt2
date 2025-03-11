@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./ProjectDescription.css";
+import "./Edit.css";
 import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
 import Loading from "../LoadingVote/Loading.js";
 
-function ProjectDescription() {
+function Edit() {
     const { projectId } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
@@ -86,4 +86,4 @@ function ProjectDescription() {
     );
 }
 
-export default ProjectDescription;
+export default Edit;

@@ -21,6 +21,7 @@ import GenerateQR from './pages/GenerateQrCode/GenerateQR.js';
 import UpdateProjects from './pages/CreateReadUpdateDelete/ModifyProjects.js';
 import { Update } from '@mui/icons-material';
 import CreateProject from './pages/CreateProject/CreateProject.js';
+import Edit from './pages/Edit/Edit.js';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path="/generate-qr" element={<GenerateQR/>} />
             <Route path="/update-projects" element={<UpdateProjects/>} />
             <Route path="/create" element={<CreateProject/>} />
+            <Route path="/edit" element={<Edit/>} />
 
           </Routes>
         </main>

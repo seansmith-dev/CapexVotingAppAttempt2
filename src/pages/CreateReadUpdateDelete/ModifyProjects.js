@@ -12,59 +12,59 @@ function UpdateProjects(){
                 
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 <div className="modify-team">
                     <h2 className="leaderboard__team"> The green team</h2>
-                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="navigation-assistant" className="btn--edit"/>
+                    <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo="edit" className="btn--edit"/>
                 </div>
                 
                 
