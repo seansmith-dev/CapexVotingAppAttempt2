@@ -12,12 +12,12 @@ function CreateProject() {
 
 
     const handleAddMember = (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         setTeamMembers([...teamMembers, '']);
     };
 
     const handleRemoveMember = (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         if (teamMembers.length > 1) {
             setTeamMembers(teamMembers.slice(0, -1));
         }
@@ -38,7 +38,7 @@ function CreateProject() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         const projectData = {
             projectTitle,
             shortDescription,
@@ -47,78 +47,81 @@ function CreateProject() {
             teamName,
             teamMembers,
         };
-    
+
         try {
-            const response = await fetch('/api/createProject', {
+            const responseData = await fetch('/api/createProject', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(projectData),
             });
-    
-            if (response.status === 201) {
+
+            if (responseData.status === 201) {
                 alert('Project created successfully!');
-            } 
-            else if (response.status === 409){
-                alert('Project with this title already exists!');
-            } 
-            else if (response.status === 408){
-                alert('Your team has already created a project');
-            } 
-            else{
-                console.log('Failed to create project');
             }
+            else if (responseData.status === 409) {
+                alert(responseData.message);
+            }
+            else if (responseData.status === 408) {
+                alert(responseData.message);
+            }
+            else {
+                alert('Something went wrong.');
+            }
+
+
+
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred.');
         }
     };
-    
 
-    
+
+
 
     return (
         <div className="projects">
             <h1 className="project__title">Create a project</h1>
             <form className="project-form" onSubmit={handleSubmit}>
                 <label className="project-form__title-top">Project title</label>
-                <input type="text" 
-                value={projectTitle} 
-                onChange={(e) => handleTextChange(e, setProjectTitle)} 
-                className="project-form__input"
-                required 
-                 />
+                <input type="text"
+                    value={projectTitle}
+                    onChange={(e) => handleTextChange(e, setProjectTitle)}
+                    className="project-form__input"
+                    required
+                />
 
                 <label className="project-form__title">Project short description</label>
-                <textarea 
-                    value={shortDescription} 
-                    onChange={(e) => handleTextChange(e, setShortDescription)} 
-                    className="auto-resize" 
+                <textarea
+                    value={shortDescription}
+                    onChange={(e) => handleTextChange(e, setShortDescription)}
+                    className="auto-resize"
                     required
                 ></textarea>
 
                 <label className="project-form__title">Project long description</label>
-                <textarea 
-                    value={longDescription} 
-                    onChange={(e) => handleTextChange(e, setLongDescription)} 
-                    className="auto-resize" 
+                <textarea
+                    value={longDescription}
+                    onChange={(e) => handleTextChange(e, setLongDescription)}
+                    className="auto-resize"
                     required
                 ></textarea>
 
                 <label className="project-form__title">Faculty name</label>
-                <input 
-                type="text"
-                 value={facultyName} 
-                 onChange={(e) => setFacultyName(e.target.value)} 
-                 required />
+                <input
+                    type="text"
+                    value={facultyName}
+                    onChange={(e) => setFacultyName(e.target.value)}
+                    required />
 
                 <label className="project-form__title">Team Name</label>
-                <input 
-                type="text" 
-                value={teamName} 
-                onChange={(e) => setTeamName(e.target.value)}
-                required  />
+                <input
+                    type="text"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    required />
 
                 <label className="project-form__title">Team Members</label>
 
@@ -135,8 +138,8 @@ function CreateProject() {
                 ))}
 
                 <div className="team-member-buttons">
-                    <Button onClick={handleAddMember} className="btn--add" buttonSize="medium-small" buttonText="Add"/>
-                    <Button onClick={handleRemoveMember} disabled={teamMembers.length <= 1} buttonSize="medium-small"  className="btn--remove" buttonText="Remove"/>
+                    <Button onClick={handleAddMember} className="btn--add" buttonSize="medium-small" buttonText="Add" />
+                    <Button onClick={handleRemoveMember} disabled={teamMembers.length <= 1} buttonSize="medium-small" className="btn--remove" buttonText="Remove" />
                 </div>
 
                 <Button onClick={handleSubmit} type="submit" buttonText="Submit" className="btn--submit"></Button>
