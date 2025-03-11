@@ -49,13 +49,15 @@ function CreateProject() {
         };
 
         try {
-            const responseData = await fetch('/api/createProject', {
+            const projectData = await fetch('/api/createProject', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(projectData),
             });
+
+            const responseData = await projectData.json(); 
 
             if (responseData.status === 201) {
                 alert('Project created successfully!');
