@@ -62,7 +62,7 @@ export default async function handler(req, res) {
 
     if (existingTitleResult.rows.length > 0) {
       console.log("same project title");
-      return res.status(200).json({ status: 409, message: "A project with this title already exists." });
+      return res.status(409).json({message: "A project with this title already exists." });
     }
 
     await client.query("BEGIN"); // Start transaction
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
       } else {
         // If the team already exists, send an error response that project already created
         console.log("Already created executing")
-        return res.status(408).json({ status: 408, message: "This team has already created a project." });
+        return res.status(408).json({ message: "This team has already created a project." });
       }
     }
     catch (error) {
@@ -178,7 +178,7 @@ export default async function handler(req, res) {
 
     await client.query("COMMIT"); // Commit transaction
     
-    res.status(200).json({ status: 201, message: "Project created successfully!"});
+    res.status(201).json({message: "Project created successfully!"});
 
   } catch (error) {
     await client.query("ROLLBACK"); // Rollback transaction in case of error

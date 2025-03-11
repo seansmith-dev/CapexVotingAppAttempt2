@@ -50,37 +50,36 @@ function CreateProject() {
 
         try {
             const response = await fetch('/api/createProject', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(projectData), // Ensure you're passing the correct data here
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(projectData),
             });
-        
+          
             const responseData = await response.json(); // Extract JSON data
-        
+          
             if (response.status === 201) {
-                alert('Project created successfully!');
-                console.log("201 response status executed");
+              alert('Project created successfully!');
+              console.log("201 response status executed");
             }
             else if (response.status === 409) {
-                console.log("the alert executed");
-                alert(responseData.message || 'Project with this title already exists!');
+              console.log("The alert executed");
+              alert(responseData.message || 'Project with this title already exists!');
             }
             else if (response.status === 408) {
-                console.log("the response 408 executed");
-                alert(responseData.message || 'Your team has already created a project.');
+              console.log("The response 408 executed");
+              alert(responseData.message || 'Your team has already created a project.');
             }
             else {
-                console.log("the alert executed")
-                alert('Something went wrong.');
-                
+              console.log("The alert executed");
+              alert('Something went wrong.');
             }
-        
-        } catch (error) {
+          } catch (error) {
             console.error('Error:', error);
             alert('An error occurred.');
-        }
+          }
+          
         
         
     };
