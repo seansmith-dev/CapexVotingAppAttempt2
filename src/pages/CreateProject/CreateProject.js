@@ -77,7 +77,12 @@ function CreateProject() {
             <h1 className="project__title">Create a project</h1>
             <form className="project-form" onSubmit={handleSubmit}>
                 <label className="project-form__title-top">Project title</label>
-                <input type="text" required className="project-form__input" />
+                <input type="text" 
+                value={projectTitle} 
+                onChange={(e) => handleTextChange(e, setProjectTitle)} 
+                className="project-form__input"
+                required 
+                 />
 
                 <label className="project-form__title">Project short description</label>
                 <textarea 
