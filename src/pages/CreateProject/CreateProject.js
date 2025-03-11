@@ -96,13 +96,15 @@ function CreateProject() {
                 ></textarea>
 
                 <label className="project-form__title">Faculty name</label>
-                <input type="text"
+                <input 
+                type="text"
                  value={facultyName} 
                  onChange={(e) => setFacultyName(e.target.value)} 
                  required />
 
                 <label className="project-form__title">Team Name</label>
-                <input type="text" 
+                <input 
+                type="text" 
                 value={teamName} 
                 onChange={(e) => setTeamName(e.target.value)}
                 required  />
