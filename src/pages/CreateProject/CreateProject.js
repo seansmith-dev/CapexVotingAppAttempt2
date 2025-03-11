@@ -57,7 +57,7 @@ function CreateProject() {
                 body: JSON.stringify(projectData),
             });
     
-            if (response === 201) {
+            if (response.status === 201) {
                 alert('Project created successfully!');
             } 
             else if (response.status === 409){
