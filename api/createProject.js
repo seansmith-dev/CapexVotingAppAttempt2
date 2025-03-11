@@ -124,9 +124,7 @@ try {
       for (let member of teamMembers) {
         try{
           const memberResult = await client.query(memberQuery, [member]);
-          memberId = memberResult.rows.length > 0
-              ? memberResult.rows[0].member_id
-              : (await client.query("SELECT member_id FROM Members WHERE member_name = $1", [member])).rows[0].member_id;
+          memberId = memberResult.rows[0].member_id;
           }
           catch(error){
             console.error("Error inserting into the members table:", error);
