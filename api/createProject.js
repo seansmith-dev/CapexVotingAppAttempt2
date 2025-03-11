@@ -95,7 +95,7 @@ try {
     const teamResult = await client.query(teamQuery, [teamName]);
     teamId = teamResult.rows.length > 0
         ? teamResult.rows[0].team_id
-        : (await client.query("SELECT team_id FROM Teams WHERE team_name = $1", [teamName])).rows[0].team_id;
+        : (await client.query('SELECT team_id FROM "Teams" WHERE team_name = $1', [teamName])).rows[0].team_id;
       }
       catch(error){
         console.error("Error inserting team name:", error);
