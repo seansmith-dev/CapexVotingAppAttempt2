@@ -63,10 +63,10 @@ function CreateProject() {
                 alert('Project created successfully!');
             }
             else if (response.status === 409) {
-                alert(responseData.message);
+                alert(responseData.message || 'Project with this title already exists!');
             }
             else if (response.status === 408) {
-                alert(responseData.message);
+                alert(responseData.message || 'Your team has already created a project.');
             }
             else {
                 alert('Something went wrong.');
@@ -76,6 +76,7 @@ function CreateProject() {
             console.error('Error:', error);
             alert('An error occurred.');
         }
+        
         
     };
 
