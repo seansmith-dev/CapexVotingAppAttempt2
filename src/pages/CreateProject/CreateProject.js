@@ -96,10 +96,10 @@ function CreateProject() {
                 ></textarea>
 
                 <label className="project-form__title">Faculty name</label>
-                <input type="text" required />
+                <input type="text" value={facultyName} required />
 
                 <label className="project-form__title">Team Name</label>
-                <input type="text" required />
+                <input type="text" value={teamName} required  />
 
                 <label className="project-form__title">Team Members</label>
 

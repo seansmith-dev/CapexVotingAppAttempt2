@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       console.error('Database error:', err);
     });
 
-    const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
+const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
 const client = await pool.connect();
 
 
