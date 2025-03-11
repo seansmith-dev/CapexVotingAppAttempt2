@@ -57,11 +57,17 @@ function CreateProject() {
                 body: JSON.stringify(projectData),
             });
     
-            if (response.ok) {
+            if (response === 201) {
                 alert('Project created successfully!');
-            } else {
+            } 
+            else if (response.status === 409){
+                alert('Project with this title already exists!');
+            } 
+            else if (response.status === 408){
+                alert('Your team has already created a project');
+            } 
+            else{
                 console.log('Failed to create project');
-                
             }
         } catch (error) {
             console.error('Error:', error);
