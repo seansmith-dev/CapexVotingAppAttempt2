@@ -112,7 +112,6 @@ try {
     const memberQuery = `
         INSERT INTO "Members" (member_name)
         VALUES ($1)
-        ON CONFLICT (member_name) DO NOTHING
         RETURNING member_id;
     `;
     const teamMembershipQuery = `
