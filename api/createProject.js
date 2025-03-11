@@ -110,7 +110,8 @@ try {
       if (teamResult.rows.length > 0) {
         teamId = teamResult.rows[0].team_id;
       } else {
-          // If the team already exists, send an error response
+          // If the team already exists, send an error response that project already created
+          console.log("Already created executing")
           return res.status(201).json({ message: "This team has already created a project." });
       }
     }
