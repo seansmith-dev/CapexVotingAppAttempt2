@@ -88,6 +88,7 @@ export default async function handler(req, res) {
           facultyId = facultySelectResult.rows[0].faculty_id;
         } else {
           console.error("Faculty not found or inserted.");
+          client.release();
           return res.status(500).json({ error: "Faculty not found or failed to insert." });
         }
       }
