@@ -51,6 +51,30 @@ let facultyId, teamId, projectId, memberId;
 
 
 try {
+  const checkProjectQuery = `
+        SELECT project_id 
+        FROM "Projects"
+        WHERE team_id = $1;
+    `;
+    const existingProjectResult = await client.query(checkProjectQuery, [teamId]);
+
+    if (existingProjectResult.rows.length > 0) {
+        return res.status(400).json({ error: "This team has already created a project." });
+        res.status(201).json({ message: "This team has already created a project."});
+    }
+
+    // Check if a project with the same title already exists
+    const checkTitleQuery = `
+        SELECT project_id 
+        FROM "Projects"
+        WHERE project_title = $1;
+    `;
+    const existingTitleResult = await client.query(checkTitleQuery, [projectTitle]);
+
+    if (existingTitleResult.rows.length > 0) {
+        res.status(201).json({ message: "A project with this title already exists."});
+    }
+
     await client.query("BEGIN"); // Start transaction
 
     try{
