@@ -61,6 +61,7 @@ function CreateProject() {
         
             if (response.status === 201) {
                 alert('Project created successfully!');
+                console.log("201 response status executed");
             }
             else if (response.status === 409) {
                 alert(responseData.message || 'Project with this title already exists!');
