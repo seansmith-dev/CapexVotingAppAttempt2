@@ -69,7 +69,7 @@ function Edit() {
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    onClick={handleVote} // Calls validation & geolocation on click
+                    
                 />
             </div>
 
