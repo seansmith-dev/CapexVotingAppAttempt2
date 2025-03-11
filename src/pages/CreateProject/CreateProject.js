@@ -49,35 +49,34 @@ function CreateProject() {
         };
 
         try {
-            const projectData = await fetch('/api/createProject', {
+            const response = await fetch('/api/createProject', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(projectData),
+                body: JSON.stringify(projectData), // Ensure you're passing the correct data here
             });
-
-            const responseData = await projectData.json(); 
-
-            if (responseData.status === 201) {
+        
+            const responseData = await response.json(); // Extract JSON data
+        
+            if (response.status === 201) {
                 alert('Project created successfully!');
             }
-            else if (responseData.status === 409) {
+            else if (response.status === 409) {
                 alert(responseData.message);
             }
-            else if (responseData.status === 408) {
+            else if (response.status === 408) {
                 alert(responseData.message);
             }
             else {
                 alert('Something went wrong.');
             }
-
-
-
+        
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred.');
         }
+        
     };
 
 
