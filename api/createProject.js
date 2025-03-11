@@ -51,17 +51,6 @@ let facultyId, teamId, projectId, memberId;
 
 
 try {
-  const checkProjectQuery = `
-        SELECT project_id 
-        FROM "Projects"
-        WHERE team_id = $1;
-    `;
-    const existingProjectResult = await client.query(checkProjectQuery, [teamId]);
-
-    if (existingProjectResult.rows.length > 0) {
-        return res.status(400).json({ error: "This team has already created a project." });
-        res.status(201).json({ message: "This team has already created a project."});
-    }
 
     // Check if a project with the same title already exists
     const checkTitleQuery = `
@@ -72,7 +61,7 @@ try {
     const existingTitleResult = await client.query(checkTitleQuery, [projectTitle]);
 
     if (existingTitleResult.rows.length > 0) {
-        res.status(201).json({ message: "A project with this title already exists."});
+        return res.status(201).json({ message: "A project with this title already exists."});
     }
 
     await client.query("BEGIN"); // Start transaction
@@ -108,24 +97,27 @@ try {
         res.status(500).json({ error: "Internal Server Error returning faculty" });
       }
 
-      try{
-    // Insert Team (or get existing one)
-    const teamQuery = `
-        INSERT INTO "Teams" (team_name)
-        VALUES ($1)
-        ON CONFLICT (team_name) DO NOTHING
-        RETURNING team_id;
-    `;
-    const teamResult = await client.query(teamQuery, [teamName]);
-    teamId = teamResult.rows.length > 0
-        ? teamResult.rows[0].team_id
-        : (await client.query('SELECT team_id FROM "Teams" WHERE team_name = $1', [teamName])).rows[0].team_id;
+    try{
+
+      // Insert Team (or get existing one)
+      const teamQuery = `
+          INSERT INTO "Teams" (team_name)
+          VALUES ($1)
+          ON CONFLICT (team_name) DO NOTHING
+          RETURNING team_id;
+      `;
+      const teamResult = await client.query(teamQuery, [teamName]);
+      if (teamResult.rows.length > 0) {
+        teamId = teamResult.rows[0].team_id;
+      } else {
+          // If the team already exists, send an error response
+          return res.status(201).json({ message: "This team has already created a project." });
       }
+    }
       catch(error){
         console.error("Error inserting team name:", error);
         res.status(500).json({ error: "Internal Server Error returning team name" });
       }
-
   
 
       try{
