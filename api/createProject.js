@@ -62,7 +62,21 @@ try {
         RETURNING faculty_id;
     `;
     const facultyResult = await client.query(facultyQuery, [facultyName]);
-    facultyId = facultyResult.rows[0].faculty_id 
+    if (facultyResult.rows.length > 0) {
+      facultyId = facultyResult.rows[0].faculty_id;
+    } else {
+      // If no rows were returned, try to fetch the faculty_id explicitly
+      const facultySelectQuery = `
+          SELECT faculty_id FROM "Facultys" WHERE faculty_name = $1;
+      `;
+      const facultySelectResult = await client.query(facultySelectQuery, [facultyName]);
+      if (facultySelectResult.rows.length > 0) {
+          facultyId = facultySelectResult.rows[0].faculty_id;
+      } else {
+          console.error("Faculty not found or inserted.");
+          return res.status(500).json({ error: "Faculty not found or failed to insert." });
+      }
+    }
 
       }
       catch(error){
