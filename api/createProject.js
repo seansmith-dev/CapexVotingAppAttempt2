@@ -106,6 +106,7 @@ try {
           ON CONFLICT (team_name) DO NOTHING
           RETURNING team_id;
       `;
+      console.log("team query executed ");
       const teamResult = await client.query(teamQuery, [teamName]);
       if (teamResult.rows.length > 0) {
         console.log("team id was returned ");
