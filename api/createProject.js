@@ -108,6 +108,7 @@ try {
       `;
       const teamResult = await client.query(teamQuery, [teamName]);
       if (teamResult.rows.length > 0) {
+        console.log("team id was returned ")
         teamId = teamResult.rows[0].team_id;
       } else {
           // If the team already exists, send an error response that project already created
