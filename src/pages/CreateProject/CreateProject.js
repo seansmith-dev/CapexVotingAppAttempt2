@@ -3,7 +3,7 @@ import './CreateProject.css';
 import Button from '../../components/Button/Button.js';
 
 function CreateProject() {
-    const [teamMembers, setTeamMembers] = useState([{ firstName: '', secondName: '' }]);
+    const [teamMembers, setTeamMembers] = useState([{ firstName: '', lastName: '' }]);
     const [shortDescription, setShortDescription] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [projectTitle, setProjectTitle] = useState('');
@@ -12,7 +12,7 @@ function CreateProject() {
 
     const handleAddMember = (event) => {
         event.preventDefault();
-        setTeamMembers([...teamMembers, { firstName: '', secondName: '' }]);
+        setTeamMembers([...teamMembers, { firstName: '', lastName: '' }]);
     };
 
 
@@ -63,7 +63,6 @@ function CreateProject() {
 
 
             const responseData = await response.json(); // Extract JSON data
-            console.log(projectData)
 
             if (response.status === 201) {
                 alert('Project created successfully!');
@@ -155,7 +154,7 @@ function CreateProject() {
                             <p className="team-member__text">Second name</p>
                             <input
                                 type="text"
-                                value={member.secondName}
+                                value={member.lastName}
                                 onChange={(e) => handleTeamMemberChange(index, 'secondName', e)}
                                 placeholder={`Second name ${index + 1}`}
                                 required
