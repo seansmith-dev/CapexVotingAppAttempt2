@@ -110,16 +110,6 @@
     margin-right: 1rem; 
 }
 
-.btn--save, .btn--delete{
-    background-color: green; 
-    color: white; 
-}
-
-.btn--save{
-    margin-top: 2rem; 
-    margin-right: 2rem; 
-}
-
 /* margin-right: auto; 
     margin-left: 1rem;  */
 

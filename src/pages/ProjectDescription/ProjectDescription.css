@@ -82,8 +82,19 @@
     -webkit-text-stroke: 0.5px rgb(205, 17, 26);
 }
 
+.btn--save, .btn--delete{
+    background-color: green; 
+    color: white; 
+}
+
+.btn--save{
+    margin-top: 2rem; 
+    margin-right: 2rem; 
+}
+
 @media (min-width: 600px){
     .about-project__heading{
         text-align: left;
     }
 }
+
