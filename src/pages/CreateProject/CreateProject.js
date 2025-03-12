@@ -61,6 +61,7 @@ function CreateProject() {
             });
 
             const responseData = await response.json(); // Extract JSON data
+            console.log(projectData)
 
             if (response.status === 201) {
                 alert('Project created successfully!');
