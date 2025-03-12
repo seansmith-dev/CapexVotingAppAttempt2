@@ -10,7 +10,7 @@ function UpdateProjects() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`/api/getProjects.js`)
+        fetch(`/api/getProjectsList.js`)
             .then((response) => response.json())
             .then((data) => {
                 setProjects(data);

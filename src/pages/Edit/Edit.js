@@ -5,42 +5,54 @@ import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
 import Loading from "../LoadingVote/Loading.js";
 
 function Edit() {
-    const { projectId } = useParams();
+    const { projectNumber } = useParams(); // Ensure this matches your route
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        let isMounted = true; // Prevent state updates on unmounted component
+
         const timeoutId = setTimeout(() => {
-            setError("Request timed out. Please try again later.");
-            navigate("/error"); // Navigate to an error page after a delay
+            if (isMounted) {
+                setError("Request timed out. Please try again later.");
+            }
         }, 5000); // Timeout after 5 seconds
 
-        fetch(`/api/projects?id=${projectId}`)
-            .then((response) => response.json())
+        fetch(`/api/getProject?id=${projectNumber}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch project details");
+                }
+                return response.json();
+            })
             .then((data) => {
-                clearTimeout(timeoutId); // Clear the timeout once data is fetched
-                setProject(data);
+                clearTimeout(timeoutId);
+                if (isMounted) {
+                    setProject(data);
+                }
             })
             .catch((error) => {
-                clearTimeout(timeoutId);
                 console.error("Error fetching project details:", error);
-                setError("Error fetching project details.");
-                navigate("/error"); // Navigate to error page
+                if (isMounted) {
+                    setError("Error fetching project details.");
+                }
             });
 
-        return () => clearTimeout(timeoutId); // Clean up the timeout on unmount
-    }, [projectId, navigate]);
+        return () => {
+            isMounted = false; // Cleanup
+            clearTimeout(timeoutId);
+        };
+    }, [projectNumber]);
 
     if (error) {
-        return <div>{error}</div>; // Optionally show a fallback error message
+        return <div className="error-message">{error}</div>;
     }
 
     if (!project) {
         return <Loading />;
     }
-
 
     return (
         <div className="project-description">
@@ -69,7 +81,6 @@ function Edit() {
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    
                 />
             </div>
 
