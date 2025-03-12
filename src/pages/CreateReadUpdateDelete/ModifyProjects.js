@@ -37,7 +37,7 @@ function UpdateProjects() {
             <div className="leaderboard">
                 {projects.map((project) => (
                     <div key={project.project_number} className="modify-team">
-                        <h2 className="leaderboard__team">{project.project_title}</h2>
+                        <h2 className="leaderboard__team">Project {project.project_number}</h2>
                         <Button buttonType="card" buttonSize="medium-small" buttonText="Edit" buttonCardNo="three" buttonNavigateTo={`/edit/${project.project_number}`} className="btn--edit"/>
                     </div>
                 ))}
