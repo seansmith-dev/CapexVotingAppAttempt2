@@ -92,12 +92,14 @@ function Edit() {
                     <p className="about-project__text">{project.project_long_description}</p>
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
-            </main>
 
+                <Button className="btn--save" buttonSize="medium-small" buttonText="Save Changes" />
+                <Button onClick={deleteProject} className="btn--delete" buttonSize="medium-small" buttonText="Delete" />
+            </main>
+                            
             {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
 
-            <Button className="btn--add" buttonSize="medium-small" buttonText="Save Changes" />
-            <Button onClick={deleteProject} className="btn--add" buttonSize="medium-small" buttonText="Delete" />
+            
 
         </div>
     );
