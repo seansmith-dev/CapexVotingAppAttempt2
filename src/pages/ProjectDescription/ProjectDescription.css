@@ -92,6 +92,10 @@
     margin-right: 2rem; 
 }
 
+.about-project__heading{
+    margin-right: 0; 
+}
+
 @media (min-width: 600px){
     .about-project__heading{
         text-align: left;
