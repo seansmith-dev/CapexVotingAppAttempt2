@@ -10,7 +10,6 @@ function CreateProject() {
     const [facultyName, setFacultyName] = useState('');
     const [teamName, setTeamName] = useState('');
 
-
     const handleAddMember = (event) => {
         event.preventDefault();
         setTeamMembers([...teamMembers, { firstName: '', secondName: '' }]);
@@ -59,6 +58,9 @@ function CreateProject() {
                 },
                 body: JSON.stringify(projectData),
             });
+
+            console.log("Sending project data:", JSON.stringify(projectData, null, 2));
+
 
             const responseData = await response.json(); // Extract JSON data
             console.log(projectData)
