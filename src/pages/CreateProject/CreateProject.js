@@ -3,8 +3,8 @@ import './CreateProject.css';
 import Button from '../../components/Button/Button.js';
 
 function CreateProject() {
-    const [teamMembers, setTeamMembers] = useState(['']);
-    const [secondName, setSecondName] = useState([''])
+    const [teamMembers, setTeamMembers] = useState([{ firstName: '', secondName: '' }]);
+    const [secondName, setSecondName] = useState(['']);
     const [shortDescription, setShortDescription] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [projectTitle, setProjectTitle] = useState('');
