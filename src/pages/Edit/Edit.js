@@ -30,6 +30,7 @@ function Edit() {
             .then((data) => {
                 clearTimeout(timeoutId);
                 if (isMounted) {
+                    console.log("Fetched Projects:", data); 
                     setProject(data);
                 }
             })
