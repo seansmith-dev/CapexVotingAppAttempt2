@@ -88,7 +88,7 @@ function Edit() {
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
-                    <p className="about-project__text">{project.long_description}</p>
+                    <p className="about-project__text">{project.project_long_description}</p>
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
