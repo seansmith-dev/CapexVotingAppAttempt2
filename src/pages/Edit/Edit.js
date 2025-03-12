@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./Edit.css";
 import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
 import Loading from "../LoadingVote/Loading.js";
+import Button from '../../components/Button/Button.js';
 
 function Edit() {
     const { projectNumber } = useParams(); // Ensure this matches your route
@@ -10,6 +11,10 @@ function Edit() {
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
+
+    const deleteProject = async (project_id) => {
+
+    }
 
     useEffect(() => {
         let isMounted = true; // Prevent state updates on unmounted component
@@ -78,11 +83,7 @@ function Edit() {
                     </div>
                 </div>
 
-                <ButtonWithIcon
-                    buttonType="primary"
-                    size="medium"
-                    text="Vote"
-                />
+                
             </div>
 
             <main className="about-project">
@@ -94,6 +95,10 @@ function Edit() {
             </main>
 
             {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
+
+            <Button className="btn--add" buttonSize="medium-small" buttonText="Save Changes" />
+            <Button onClick={deleteProject} className="btn--add" buttonSize="medium-small" buttonText="Delete" />
+
         </div>
     );
 }

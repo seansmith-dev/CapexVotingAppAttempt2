@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../LoadingVote/Loading.js";
 
+
 function UpdateProjects() {
     const [projects, setProjects] = useState([]);
     const [error, setError] = useState(null);
