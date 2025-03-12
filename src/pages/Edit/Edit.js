@@ -12,10 +12,6 @@ function Edit() {
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
 
-    const deleteProject = async (project_id) => {
-
-    }
-
     useEffect(() => {
         let isMounted = true; // Prevent state updates on unmounted component
 
@@ -59,6 +55,27 @@ function Edit() {
     if (!project) {
         return <Loading />;
     }
+
+    const deleteProject = async (projectNumber) => {
+        try {
+          const response = await fetch(`/api/deleteProject/${projectNumber}`, {
+            method: "DELETE",
+          });
+      
+          if (response.ok) {
+            console.log("Project deleted successfully!");
+            alert('Project deleted successfully!');
+            navigate('/update-projects')
+          } else {
+            const errorData = await response.json();
+            console.error("Error deleting project:", errorData);
+          }
+        } catch (error) {
+          console.error("Request failed:", error);
+        }
+      };
+      
+   
 
     return (
         <div className="project-description">
