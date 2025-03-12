@@ -151,11 +151,11 @@ function CreateProject() {
                         </div>
 
                         <div className="team-member-second-name__input">
-                            <p className="team-member__text">Second name</p>
+                            <p className="team-member__text">Last name</p>
                             <input
                                 type="text"
                                 value={member.lastName}
-                                onChange={(e) => handleTeamMemberChange(index, 'secondName', e)}
+                                onChange={(e) => handleTeamMemberChange(index, 'lastName', e)}
                                 placeholder={`Second name ${index + 1}`}
                                 required
                                 className="second--input"
