@@ -4,6 +4,7 @@ import Button from '../../components/Button/Button.js';
 
 function CreateProject() {
     const [teamMembers, setTeamMembers] = useState(['']);
+    const [secondName, setSecondName] = useState([''])
     const [shortDescription, setShortDescription] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [projectTitle, setProjectTitle] = useState('');
@@ -13,8 +14,9 @@ function CreateProject() {
 
     const handleAddMember = (event) => {
         event.preventDefault();
-        setTeamMembers([...teamMembers, '']);
+        setTeamMembers([...teamMembers, { firstName: '', secondName: '' }]);
     };
+    
 
     const handleRemoveMember = (event) => {
         event.preventDefault();
@@ -22,12 +24,14 @@ function CreateProject() {
             setTeamMembers(teamMembers.slice(0, -1));
         }
     };
+    
 
-    const handleTeamMemberChange = (index, event) => {
+    const handleTeamMemberChange = (index, field, event) => {
         const newTeamMembers = [...teamMembers];
-        newTeamMembers[index] = event.target.value;
+        newTeamMembers[index][field] = event.target.value;
         setTeamMembers(newTeamMembers);
     };
+    
 
     // Function to auto-resize the textarea
     const handleTextChange = (event, setState) => {
@@ -132,16 +136,33 @@ function CreateProject() {
                 <label className="project-form__title">Team Members</label>
 
                 {teamMembers.map((member, index) => (
-                    <div key={index} className="team-member__input">
-                        <input
-                            type="text"
-                            value={member}
-                            onChange={(e) => handleTeamMemberChange(index, e)}
-                            placeholder={`Team Member ${index + 1}`}
-                            required
-                        />
-                    </div>
-                ))}
+    <div key={index} className="team-member__input-form">
+        <div className="team-member-first-name__input">
+            <p className="team-member__text">First name</p>
+            <input
+                type="text"
+                value={member.firstName}
+                onChange={(e) => handleTeamMemberChange(index, 'firstName', e)}
+                placeholder={`First name ${index + 1}`}
+                required
+                className="first--input"
+            />
+        </div>
+
+        <div className="team-member-second-name__input">
+            <p className="team-member__text">Second name</p>
+            <input
+                type="text"
+                value={member.secondName}
+                onChange={(e) => handleTeamMemberChange(index, 'secondName', e)}
+                placeholder={`Second name ${index + 1}`}
+                required
+                className="second--input"
+            />
+        </div>
+    </div>
+))}
+
 
                 <div className="team-member-buttons">
                     <Button onClick={handleAddMember} className="btn--add" buttonSize="medium-small" buttonText="Add" />

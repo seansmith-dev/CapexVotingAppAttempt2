@@ -64,6 +64,18 @@ textarea {
     margin: 0.6rem 0; 
 }
 
+.team-member__input-form{
+    display: grid; 
+    grid-template-columns: auto auto; 
+    grid-gap: 2rem; 
+}
+
+
+
+.second--input{
+    display: inline;
+ }
+
 
 
 
