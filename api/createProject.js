@@ -142,27 +142,27 @@ export default async function handler(req, res) {
 
 
     // Insert Members (or get existing ones) and link to TeamMembership
-    const memberQuery = `
-        INSERT INTO "Members" (member_name)
-        VALUES ($1)
+    const memberFirstNameQuery = `
+        INSERT INTO "Members" (member_first_name, member_second_name)
+        VALUES ($1, $2)
         RETURNING member_id;
     `;
+    
     const teamMembershipQuery = `
         INSERT INTO "TeamMembership" (team_id, member_id)
         VALUES ($1, $2)
         ON CONFLICT DO NOTHING;
     `;
 
-
     for (let member of teamMembers) {
       try {
-        const memberResult = await client.query(memberQuery, [member]);
+        const memberResult = await client.query(memberInsertQuery, [member.firstName, member.lastName]);
         memberId = memberResult.rows[0].member_id;
       }
-      catch (error) {
-        console.error("Error inserting into the members table:", error);
-        res.status(500).json({ error: "Internal Server Error in the members table" });
+      catch(error){
+        return res.status(500).json({ error: "Internal Server Error in the members table" });
       }
+        
       try {
         await client.query(teamMembershipQuery, [teamId, memberId]);
       }
@@ -170,11 +170,8 @@ export default async function handler(req, res) {
         console.error("Error inserting into the teamMembership table:", error);
         res.status(500).json({ error: "Internal Server Error in the teamMembership table" });
       }
-
+    
     }
-
-
-
 
     await client.query("COMMIT"); // Commit transaction
     

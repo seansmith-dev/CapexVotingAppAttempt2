@@ -16,7 +16,7 @@ function CreateProject() {
         event.preventDefault();
         setTeamMembers([...teamMembers, { firstName: '', secondName: '' }]);
     };
-    
+
 
     const handleRemoveMember = (event) => {
         event.preventDefault();
@@ -24,14 +24,14 @@ function CreateProject() {
             setTeamMembers(teamMembers.slice(0, -1));
         }
     };
-    
+
 
     const handleTeamMemberChange = (index, field, event) => {
         const newTeamMembers = [...teamMembers];
         newTeamMembers[index][field] = event.target.value;
         setTeamMembers(newTeamMembers);
     };
-    
+
 
     // Function to auto-resize the textarea
     const handleTextChange = (event, setState) => {
@@ -54,38 +54,38 @@ function CreateProject() {
 
         try {
             const response = await fetch('/api/createProject', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(projectData),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(projectData),
             });
-          
+
             const responseData = await response.json(); // Extract JSON data
-          
+
             if (response.status === 201) {
-              alert('Project created successfully!');
-              console.log("201 response status executed");
+                alert('Project created successfully!');
+                console.log("201 response status executed");
             }
             else if (response.status === 409) {
-              console.log("The alert executed");
-              alert(responseData.message || 'Project with this title already exists!');
+                console.log("The alert executed");
+                alert(responseData.message || 'Project with this title already exists!');
             }
             else if (response.status === 408) {
-              console.log("The response 408 executed");
-              alert(responseData.message || 'Your team has already created a project.');
+                console.log("The response 408 executed");
+                alert(responseData.message || 'Your team has already created a project.');
             }
             else {
-              console.log("The alert executed");
-              alert('Something went wrong.');
+                console.log("The alert executed");
+                alert('Something went wrong.');
             }
-          } catch (error) {
+        } catch (error) {
             console.error('Error:', error);
             alert('An error occurred.');
-          }
-          
-        
-        
+        }
+
+
+
     };
 
 
@@ -136,32 +136,32 @@ function CreateProject() {
                 <label className="project-form__title">Team Members</label>
 
                 {teamMembers.map((member, index) => (
-    <div key={index} className="team-member__input-form">
-        <div className="team-member-first-name__input">
-            <p className="team-member__text">First name</p>
-            <input
-                type="text"
-                value={member.firstName}
-                onChange={(e) => handleTeamMemberChange(index, 'firstName', e)}
-                placeholder={`First name ${index + 1}`}
-                required
-                className="first--input"
-            />
-        </div>
+                    <div key={index} className="team-member__input-form">
+                        <div className="team-member-first-name__input">
+                            <p className="team-member__text">First name</p>
+                            <input
+                                type="text"
+                                value={member.firstName}
+                                onChange={(e) => handleTeamMemberChange(index, 'firstName', e)}
+                                placeholder={`First name ${index + 1}`}
+                                required
+                                className="first--input"
+                            />
+                        </div>
 
-        <div className="team-member-second-name__input">
-            <p className="team-member__text">Second name</p>
-            <input
-                type="text"
-                value={member.secondName}
-                onChange={(e) => handleTeamMemberChange(index, 'secondName', e)}
-                placeholder={`Second name ${index + 1}`}
-                required
-                className="second--input"
-            />
-        </div>
-    </div>
-))}
+                        <div className="team-member-second-name__input">
+                            <p className="team-member__text">Second name</p>
+                            <input
+                                type="text"
+                                value={member.secondName}
+                                onChange={(e) => handleTeamMemberChange(index, 'secondName', e)}
+                                placeholder={`Second name ${index + 1}`}
+                                required
+                                className="second--input"
+                            />
+                        </div>
+                    </div>
+                ))}
 
 
                 <div className="team-member-buttons">
