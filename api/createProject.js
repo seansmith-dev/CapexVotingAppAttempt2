@@ -142,7 +142,7 @@ export default async function handler(req, res) {
 
 
     // Insert Members (or get existing ones) and link to TeamMembership
-    const memberFirstNameQuery = `
+    const memberInsertQuery = `
         INSERT INTO "Members" (member_first_name, member_second_name)
         VALUES ($1, $2)
         RETURNING member_id;
