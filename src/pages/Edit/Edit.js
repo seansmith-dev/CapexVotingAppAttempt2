@@ -49,6 +49,7 @@ function Edit() {
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
                 }
                 if (textareaRef.current) {
+                    console.log("this is executing")
                     textareaRef.current.style.height = "auto"; // Reset height
                     textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // Adjust height
                 }
