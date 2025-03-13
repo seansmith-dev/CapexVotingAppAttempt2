@@ -11,7 +11,7 @@ function Edit() {
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
-    const [editedProject, setEditedProject] = useState(null); // Track changes to project
+    const [editedProject, setEditedProject] = useState(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -33,7 +33,7 @@ function Edit() {
                 clearTimeout(timeoutId);
                 if (isMounted) {
                     setProject(data);
-                    setEditedProject(data);  // Initialize the editable project state
+                    setEditedProject(data); // Initialize the editable project state
                 }
             })
             .catch((error) => {
@@ -52,18 +52,43 @@ function Edit() {
         const { name, value } = event.target;
         setEditedProject((prev) => ({
             ...prev,
-            [name]: value,  // Update specific field
+            [name]: value, // Update specific field
+        }));
+    };
+
+    const handleTeamMemberChange = (index, event) => {
+        const { name, value } = event.target;
+        const updatedMembers = [...editedProject.team_members];
+        updatedMembers[index][name] = value; // Update specific team member field
+        setEditedProject((prev) => ({
+            ...prev,
+            team_members: updatedMembers,
+        }));
+    };
+
+    const handleAddTeamMember = () => {
+        setEditedProject((prev) => ({
+            ...prev,
+            team_members: [...prev.team_members, { first_name: "", second_name: "" }],
+        }));
+    };
+
+    const handleRemoveTeamMember = (index) => {
+        const updatedMembers = editedProject.team_members.filter((_, i) => i !== index);
+        setEditedProject((prev) => ({
+            ...prev,
+            team_members: updatedMembers,
         }));
     };
 
     const saveChanges = async () => {
         try {
             const response = await fetch(`/api/updateProject/${projectNumber}`, {
-                method: "PATCH",  // Use PATCH for partial updates
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(editedProject),  // Send the updated data
+                body: JSON.stringify(editedProject), // Send the updated data
             });
 
             const responseBody = await response.json();
@@ -85,7 +110,7 @@ function Edit() {
                 method: "DELETE",
             });
 
-            const responseBody = await response.text(); 
+            const responseBody = await response.text();
             console.log("Response Body:", responseBody);
 
             if (response.ok) {
@@ -129,14 +154,30 @@ function Edit() {
                             <p className="team-introduction__title">Team Introduction</p>
                         </div>
                         <div className="team-members-container">
-                            {project.team_members.map((member, index) => (
-                                <p key={index} className="team-introduction__team-member">
-                                    {index + 1}. {member.first_name} {member.second_name}
-                                </p>
+                            {editedProject.team_members.map((member, index) => (
+                                <div key={index} className="team-member-edit">
+                                    <input
+                                        type="text"
+                                        name="first_name"
+                                        value={member.first_name || ""}
+                                        onChange={(event) => handleTeamMemberChange(index, event)}
+                                        placeholder="First Name"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="second_name"
+                                        value={member.second_name || ""}
+                                        onChange={(event) => handleTeamMemberChange(index, event)}
+                                        placeholder="Second Name"
+                                    />
+                                    <button onClick={() => handleRemoveTeamMember(index)}>Remove</button>
+                                </div>
                             ))}
+                            <button onClick={handleAddTeamMember}>Add Team Member</button>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <main className="about-project">
@@ -149,7 +190,14 @@ function Edit() {
                     />
                 </div>
                 <p className="about-project__faculty small--text">
-                    Faculty: {project.faculty}
+                    Faculty: 
+                    <input
+                        type="text"
+                        name="faculty"
+                        value={editedProject.faculty || ""}
+                        onChange={handleInputChange}
+                        placeholder="Faculty"
+                    />
                 </p>
 
                 <Button 
