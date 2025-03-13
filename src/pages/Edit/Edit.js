@@ -202,6 +202,7 @@ function Edit() {
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
                     <textarea 
+                        ref={textareaRef} 
                         name="project_long_description" 
                         value={longDescription} 
                         onChange={(e) => handleTextChange(e, setLongDescription)}
