@@ -62,7 +62,10 @@ function Edit() {
           const response = await fetch(`/api/deleteProject/${projectNumber}`, {
             method: "DELETE",
           });
-      
+          
+        const responseBody = await response.text();  // Use text() to get the raw response
+        console.log("Response Body:", responseBody);
+
           if (response.ok) {
             console.log("Project deleted successfully!");
             alert('Project deleted successfully!');
