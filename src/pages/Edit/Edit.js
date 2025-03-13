@@ -15,10 +15,12 @@ function Edit() {
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
 
     const handleTextChange = (event, setState) => {
+        const textarea = event.target;
         setState(event.target.value);
-        event.target.style.height = "auto";
-        event.target.style.height = event.target.scrollHeight + "px";
+        textarea.style.height = "auto";  // Reset the height to auto to shrink back
+        textarea.style.height = textarea.scrollHeight + "px";  // Set it to the scrollHeight
     };
+    
 
     useEffect(() => {
         let isMounted = true;
