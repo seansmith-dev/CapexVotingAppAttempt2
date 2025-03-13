@@ -22,10 +22,10 @@ function Edit() {
         textarea.style.height = textarea.scrollHeight + "px";  // Set it to the scrollHeight
 
     };
-    
+
 
     useEffect(() => {
-        
+
         let isMounted = true;
 
         const timeoutId = setTimeout(() => {
@@ -48,15 +48,7 @@ function Edit() {
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
                 }
-                if (textareaRef.current) {
-                    console.log(textareaRef.current.value);
-                }
-                console.log("checking")
-                if (textareaRef.current) {
-                    console.log("this is executing")
-                    textareaRef.current.style.height = "auto"; // Reset height
-                    textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // Adjust height
-                }
+
             })
             .catch((error) => {
                 if (isMounted) {
@@ -69,6 +61,16 @@ function Edit() {
             clearTimeout(timeoutId);
         };
     }, [projectNumber]);
+
+    // Effect to handle the textarea update after fetching data
+    useEffect(() => {
+        if (textareaRef.current) {
+            console.log(textareaRef.current.value);  // Log textarea value here
+            console.log("This is executing after fetching data");
+            textareaRef.current.style.height = "auto"; // Reset height
+            textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // Adjust height
+        }
+    }, [longDescription]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -161,11 +163,11 @@ function Edit() {
                 <h1 className="hero__heading page-title">
                     Project {project.project_number} <br />
                     <span className="project-description__title">
-                        <input 
-                            type="text" 
-                            name="title" 
-                            value={editedProject.title || ""} 
-                            onChange={handleInputChange} 
+                        <input
+                            type="text"
+                            name="title"
+                            value={editedProject.title || ""}
+                            onChange={handleInputChange}
                         />
                     </span>
                 </h1>
@@ -205,15 +207,15 @@ function Edit() {
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
-                    <textarea 
-                        ref={textareaRef} 
-                        name="project_long_description" 
-                        value={longDescription} 
+                    <textarea
+                        ref={textareaRef}
+                        name="project_long_description"
+                        value={longDescription}
                         onChange={(e) => handleTextChange(e, setLongDescription)}
                     />
                 </div>
                 <p className="about-project__faculty small--text">
-                    Faculty: 
+                    Faculty:
                     <input
                         type="text"
                         name="faculty"
@@ -223,17 +225,17 @@ function Edit() {
                     />
                 </p>
 
-                <Button 
-                    onClick={saveChanges} 
-                    className="btn--save" 
-                    buttonSize="medium-small" 
-                    buttonText="Save Changes" 
+                <Button
+                    onClick={saveChanges}
+                    className="btn--save"
+                    buttonSize="medium-small"
+                    buttonText="Save Changes"
                 />
-                <Button 
-                    onClick={deleteProject} 
-                    className="btn--delete" 
-                    buttonSize="medium-small" 
-                    buttonText="Delete Project" 
+                <Button
+                    onClick={deleteProject}
+                    className="btn--delete"
+                    buttonSize="medium-small"
+                    buttonText="Delete Project"
                 />
             </main>
 
