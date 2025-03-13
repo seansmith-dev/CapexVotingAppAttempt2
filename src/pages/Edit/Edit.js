@@ -48,7 +48,9 @@ function Edit() {
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
                 }
-                console.log(textareaRef.current.value)
+                if (textareaRef.current) {
+                    console.log(textareaRef.current.value);
+                }
                 console.log("checking")
                 if (textareaRef.current) {
                     console.log("this is executing")
