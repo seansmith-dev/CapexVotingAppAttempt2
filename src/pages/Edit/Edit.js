@@ -12,8 +12,7 @@ function Edit() {
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
     const [editedProject, setEditedProject] = useState(null);
-    const [longDescription, setLongDescription] = useState(editedProject.project_long_description);
-
+    const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
 
     const handleTextChange = (event, setState) => {
         setState(event.target.value);
@@ -42,6 +41,7 @@ function Edit() {
                 if (isMounted) {
                     setProject(data);
                     setEditedProject(data); // Initialize the editable project state
+                    setLongDescription(data.project_long_description || ""); // Set long description once data is available
                 }
             })
             .catch((error) => {
@@ -193,7 +193,7 @@ function Edit() {
                 <div className="project-text__wrapper">
                     <textarea 
                         name="project_long_description" 
-                        value={editedProject.project_long_description || ""} 
+                        value={longDescription} 
                         onChange={(e) => handleTextChange(e, setLongDescription)}
                     />
                 </div>
