@@ -41,7 +41,7 @@ export default async function handler(req, res) {
           json_agg(
             DISTINCT jsonb_build_object(
               'first_name', m.member_first_name,
-              'second_name'. m.member_second_name
+              'second_name', m.member_second_name
             )
           ) FILTER (WHERE m.member_id IS NOT NULL), '[]'
         ) AS team_members
