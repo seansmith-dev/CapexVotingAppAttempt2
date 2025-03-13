@@ -12,6 +12,14 @@ function Edit() {
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
     const [editedProject, setEditedProject] = useState(null);
+    const [longDescription, setLongDescription] = useState(editedProject.project_long_description);
+
+
+    const handleTextChange = (event, setState) => {
+        setState(event.target.value);
+        event.target.style.height = "auto";
+        event.target.style.height = event.target.scrollHeight + "px";
+    };
 
     useEffect(() => {
         let isMounted = true;
@@ -186,7 +194,7 @@ function Edit() {
                     <textarea 
                         name="project_long_description" 
                         value={editedProject.project_long_description || ""} 
-                        onChange={handleInputChange}
+                        onChange={(e) => handleTextChange(e, setLongDescription)}
                     />
                 </div>
                 <p className="about-project__faculty small--text">
