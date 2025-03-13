@@ -20,6 +20,8 @@ export default async function handler(req, res) {
 
   const { projectNumber } = req.params; // Extract project_number from URL
   const client = await pool.connect();
+  
+  console.log('Delete request received for project:', projectNumber);
 
   try {
     await client.query("BEGIN"); // Start transaction
