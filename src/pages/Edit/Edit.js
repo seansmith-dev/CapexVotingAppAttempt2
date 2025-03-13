@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Edit.css";
 import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
@@ -13,6 +13,7 @@ function Edit() {
     const [error, setError] = useState(null);
     const [editedProject, setEditedProject] = useState(null);
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
+    const textareaRef = useRef(null);
 
     const handleTextChange = (event, setState) => {
         const textarea = event.target;
@@ -24,7 +25,7 @@ function Edit() {
     
 
     useEffect(() => {
-        const textareaRef = useRef(null);
+        
         let isMounted = true;
 
         const timeoutId = setTimeout(() => {
