@@ -162,14 +162,6 @@ function Edit() {
             <div className="text-wrapper">
                 <h1 className="hero__heading page-title">
                     Project {project.project_number} <br />
-                    <span className="project-description__title">
-                        <input
-                            type="text"
-                            name="title"
-                            value={editedProject.title || ""}
-                            onChange={handleInputChange}
-                        />
-                    </span>
                 </h1>
 
                 <div className="team-introduction-wrapper">
