@@ -19,10 +19,12 @@ function Edit() {
         setState(event.target.value);
         textarea.style.height = "auto";  // Reset the height to auto to shrink back
         textarea.style.height = textarea.scrollHeight + "px";  // Set it to the scrollHeight
+
     };
     
 
     useEffect(() => {
+        const textareaRef = useRef(null);
         let isMounted = true;
 
         const timeoutId = setTimeout(() => {
@@ -44,6 +46,10 @@ function Edit() {
                     setProject(data);
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
+                }
+                if (textareaRef.current) {
+                    textareaRef.current.style.height = "auto"; // Reset height
+                    textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // Adjust height
                 }
             })
             .catch((error) => {
