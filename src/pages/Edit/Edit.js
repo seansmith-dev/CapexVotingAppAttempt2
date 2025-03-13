@@ -104,10 +104,10 @@ function Edit() {
             team_members: updatedMembers,
         }));
     };
-
+    
     const saveChanges = async () => {
         try {
-            const response = await fetch(`/api/updateProject/${projectNumber}`, {
+            const response = await fetch(`/api/updateProject/?projectNumber=${projectNumber}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
