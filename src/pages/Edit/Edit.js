@@ -131,7 +131,7 @@ function Edit() {
                         <div className="team-members-container">
                             {project.team_members.map((member, index) => (
                                 <p key={index} className="team-introduction__team-member">
-                                    {index + 1}. {member.first_name}
+                                    {index + 1}. {member.first_name} {member.second_name}
                                 </p>
                             ))}
                         </div>
