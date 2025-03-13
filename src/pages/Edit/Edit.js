@@ -107,7 +107,8 @@ function Edit() {
     
     const saveChanges = async () => {
         try {
-            const response = await fetch(`/api/updateProjects/?projectsNumber=${projectNumber}`, {
+            console.log(projectNumber)
+            const response = await fetch(`/api/updateProjects/?projectNumber=${projectNumber}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
