@@ -59,7 +59,7 @@ function Edit() {
     const deleteProject = async () => {
         try {
             console.log(projectNumber)
-            const response = await fetch(`/api/deleteProject/${projectNumber}`, {
+            const response = await fetch(`/api/deleteProject/?projectNumber=${projectNumber}`, {
             method: "DELETE",
           });
           
