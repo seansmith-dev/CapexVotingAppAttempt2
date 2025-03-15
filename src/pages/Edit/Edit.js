@@ -82,12 +82,12 @@ function Edit() {
             longDescRef.current.style.height = longDescRef.current.scrollHeight + "px"; // Adjust height
         }
         if (shortDescRef.current) {
-            console.log(longDescRef.current.value);  // Log textarea value here
+            console.log(shortDescRef.current.value);  // Log textarea value here
             console.log("This is executing after fetching data");
             shortDescRef.current.style.height = "auto"; // Reset height
             shortDescRef.current.style.height = shortDescRef.current.scrollHeight + "px"; // Adjust height
         }
-    }, [longDescription]);
+    }, [longDescription, shortDescription]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
