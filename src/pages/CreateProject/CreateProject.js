@@ -20,7 +20,7 @@ function CreateProject() {
 
     const handleRemoveMember = (event) => {
         event.preventDefault();
-        if (teamMembers.length > 1) {
+        if (team_members.length > 1) {
             setTeamMembers(team_members.slice(0, -1));
         }
     };
