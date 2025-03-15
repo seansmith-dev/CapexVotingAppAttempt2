@@ -16,14 +16,23 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { projectNumber } = req.query;  
-    const { project_title, project_short_description, project_long_description, faculty_name, team_name, team_members } = req.body;
+    // Destructure variables correctly from request
+    const { project_number } = req.query;
+    const { 
+        project_title, 
+        project_short_description, 
+        project_long_description, 
+        faculty_name, 
+        team_name, 
+        team_members 
+    } = req.body;
 
-    if (!projectNumber) {
+    // Check required fields
+    if (!project_number) {
         return res.status(400).json({ error: "Project number is required" });
     }
     
-    if (!projectTitle || !shortDescription || !longDescription) {
+    if (!project_title || !project_short_description || !project_long_description) {
         return res.status(400).json({ error: "Project title, short description, and long description are required" });
     }
 
@@ -35,7 +44,7 @@ export default async function handler(req, res) {
         // Check if project exists
         try {
             const checkProjectQuery = `SELECT project_id FROM "Projects" WHERE project_id = $1;`;
-            const projectResult = await client.query(checkProjectQuery, [projectNumber]);
+            const projectResult = await client.query(checkProjectQuery, [project_number]);
 
             if (projectResult.rows.length === 0) {
                 await client.query("ROLLBACK");
@@ -54,7 +63,7 @@ export default async function handler(req, res) {
                 SET project_title = $1, project_short_description = $2, project_long_description = $3
                 WHERE project_id = $4;
             `;
-            await client.query(updateProjectQuery, [projectTitle, shortDescription, longDescription, projectNumber]);
+            await client.query(updateProjectQuery, [project_title, project_short_description, project_long_description, project_number]);
         } catch (error) {
             await client.query("ROLLBACK");
             console.error("Error updating project:", error);
@@ -62,13 +71,13 @@ export default async function handler(req, res) {
         }
 
         // Update Faculty if provided
-        if (facultyName) {
+        if (faculty_name) {
             try {
                 const updateFacultyQuery = `
-                    UPDATE "Facultys" SET faculty_name = $1
+                    UPDATE "Faculties" SET faculty_name = $1
                     WHERE faculty_id = (SELECT faculty_id FROM "Projects" WHERE project_id = $2);
                 `;
-                await client.query(updateFacultyQuery, [facultyName, projectNumber]);
+                await client.query(updateFacultyQuery, [faculty_name, project_number]);
             } catch (error) {
                 await client.query("ROLLBACK");
                 console.error("Error updating faculty:", error);
@@ -77,13 +86,13 @@ export default async function handler(req, res) {
         }
 
         // Update Team if provided
-        if (teamName) {
+        if (team_name) {
             try {
                 const updateTeamQuery = `
                     UPDATE "Teams" SET team_name = $1
                     WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_id = $2);
                 `;
-                await client.query(updateTeamQuery, [teamName, projectNumber]);
+                await client.query(updateTeamQuery, [team_name, project_number]);
             } catch (error) {
                 await client.query("ROLLBACK");
                 console.error("Error updating team:", error);
@@ -92,14 +101,14 @@ export default async function handler(req, res) {
         }
 
         // Update Team Members if provided
-        if (teamMembers && teamMembers.length > 0) {
+        if (team_members && team_members.length > 0) {
             try {
                 // Delete existing team members
                 const deleteMembersQuery = `
                     DELETE FROM "TeamMembership"
                     WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_id = $1);
                 `;
-                await client.query(deleteMembersQuery, [projectNumber]);
+                await client.query(deleteMembersQuery, [project_number]);
 
                 // Insert new team members
                 const memberInsertQuery = `
@@ -112,14 +121,14 @@ export default async function handler(req, res) {
                     VALUES ((SELECT team_id FROM "Projects" WHERE project_id = $1), $2);
                 `;
 
-                for (let member of teamMembers) {
-                    if (!member.firstName || !member.lastName) {
+                for (let member of team_members) {
+                    if (!member.first_name || !member.second_name) {
                         await client.query("ROLLBACK");
-                        return res.status(400).json({ error: "Each team member must have a first and last name" });
+                        return res.status(400).json({ error: "Each team member must have a first and second name" });
                     }
-                    const memberResult = await client.query(memberInsertQuery, [member.firstName, member.lastName]);
+                    const memberResult = await client.query(memberInsertQuery, [member.first_name, member.second_name]);
                     const memberId = memberResult.rows[0].member_id;
-                    await client.query(teamMembershipQuery, [projectNumber, memberId]);
+                    await client.query(teamMembershipQuery, [project_number, memberId]);
                 }
             } catch (error) {
                 await client.query("ROLLBACK");
