@@ -128,7 +128,7 @@ function Edit() {
         try {
 
             console.log(projectNumber)
-            const response = await fetch(`/api/updateProjects/?projectNumber=${projectNumber}`, {
+            const response = await fetch(`/api/updateProjects/?project_number=${projectNumber}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
