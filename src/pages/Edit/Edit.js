@@ -115,6 +115,7 @@ function Edit() {
                 },
                 body: JSON.stringify(editedProject), // Send the updated data
             });
+            console.log(editedProject)
 
             const responseBody = await response.json();
             if (response.ok) {
