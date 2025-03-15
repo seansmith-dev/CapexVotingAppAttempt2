@@ -49,6 +49,8 @@ export default async function handler(req, res) {
 
   let facultyId, teamId, projectId, memberId;
 
+  console.log("Received project data:", req.body);
+
 
   try {
 
