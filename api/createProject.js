@@ -1,7 +1,6 @@
 import pkg from 'pg';  // Default import of the entire 'pg' module
 const { Pool } = pkg;  // Destructure 'Pool' from the 'pg' module
 
-
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -33,24 +32,23 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  let startTime = Date.now(); //How long does connection take
+  let startTime = Date.now(); // How long does connection take
 
   pool.on('connect', (client) => {
-    console.log('Connected to database'); //Is it actually connecting?
+    console.log('Connected to database'); // Is it actually connecting?
   });
 
   pool.on('error', (err) => {
     console.error('Database error:', err);
   });
 
-  const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
+  // Destructure the constants from req.body
+  const { project_title, short_description, long_description, faculty_name, team_name, team_members } = req.body;
   const client = await pool.connect();
-
 
   let facultyId, teamId, projectId, memberId;
 
   console.log("Received project data:", req.body);
-
 
   try {
 
@@ -60,7 +58,7 @@ export default async function handler(req, res) {
         FROM "Projects"
         WHERE project_title = $1;
     `;
-    const existingTitleResult = await client.query(checkTitleQuery, [projectTitle]);
+    const existingTitleResult = await client.query(checkTitleQuery, [project_title]);
 
     if (existingTitleResult.rows.length > 0) {
       console.log("same project title");
@@ -77,7 +75,7 @@ export default async function handler(req, res) {
         ON CONFLICT (faculty_name) DO NOTHING
         RETURNING faculty_id;
     `;
-      const facultyResult = await client.query(facultyQuery, [facultyName]);
+      const facultyResult = await client.query(facultyQuery, [faculty_name]);
       if (facultyResult.rows.length > 0) {
         facultyId = facultyResult.rows[0].faculty_id;
       } else {
@@ -85,7 +83,7 @@ export default async function handler(req, res) {
         const facultySelectQuery = `
           SELECT faculty_id FROM "Facultys" WHERE faculty_name = $1;
       `;
-        const facultySelectResult = await client.query(facultySelectQuery, [facultyName]);
+        const facultySelectResult = await client.query(facultySelectQuery, [faculty_name]);
         if (facultySelectResult.rows.length > 0) {
           facultyId = facultySelectResult.rows[0].faculty_id;
         } else {
@@ -111,7 +109,7 @@ export default async function handler(req, res) {
           RETURNING team_id;
       `;
       console.log("team query executed ");
-      const teamResult = await client.query(teamQuery, [teamName]);
+      const teamResult = await client.query(teamQuery, [team_name]);
       if (teamResult.rows.length > 0) {
         console.log("team id was returned ");
         teamId = teamResult.rows[0].team_id;
@@ -134,8 +132,8 @@ export default async function handler(req, res) {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
-      const projectResult = await client.query(projectQuery, [projectTitle, shortDescription, longDescription, facultyId, teamId]);
-      const projectId = projectResult.rows[0].project_id;
+      const projectResult = await client.query(projectQuery, [project_title, short_description, long_description, facultyId, teamId]);
+      projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
     }
     catch (error) {
       console.error("Error inserting project into project table:", error);
@@ -156,15 +154,15 @@ export default async function handler(req, res) {
         ON CONFLICT DO NOTHING;
     `;
 
-    for (let member of teamMembers) {
+    for (let member of team_members) {
 
-      if (!member.firstName) {
+      if (!member.first_name) {
         await client.query("ROLLBACK");
         return res.status(400).json({ error: "Each team member must have a first name" });
       }
 
       try {
-        const memberResult = await client.query(memberInsertQuery, [member.firstName, member.lastName]);
+        const memberResult = await client.query(memberInsertQuery, [member.first_name, member.last_name]);
         memberId = memberResult.rows[0].member_id;
       }
       catch (error) {
@@ -192,6 +190,4 @@ export default async function handler(req, res) {
   } finally {
     client.release();
   }
-
-
 }
