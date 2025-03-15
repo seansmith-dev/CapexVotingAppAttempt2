@@ -90,7 +90,7 @@ export default async function handler(req, res) {
             try {
                 const updateTeamQuery = `
                     UPDATE "Teams" SET team_name = $1
-                    WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_id = $2);
+                    WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_number = $2);
                 `;
                 await client.query(updateTeamQuery, [team_name, project_number]);
             } catch (error) {
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
                 // Delete existing team members
                 const deleteMembersQuery = `
                     DELETE FROM "TeamMembership"
-                    WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_id = $1);
+                    WHERE team_id = (SELECT team_id FROM "Projects" WHERE project_number = $1);
                 `;
                 await client.query(deleteMembersQuery, [project_number]);
 
@@ -118,7 +118,7 @@ export default async function handler(req, res) {
                 `;
                 const teamMembershipQuery = `
                     INSERT INTO "TeamMembership" (team_id, member_id)
-                    VALUES ((SELECT team_id FROM "Projects" WHERE project_id = $1), $2);
+                    VALUES ((SELECT team_id FROM "Projects" WHERE project_number = $1), $2);
                 `;
 
                 for (let member of team_members) {
