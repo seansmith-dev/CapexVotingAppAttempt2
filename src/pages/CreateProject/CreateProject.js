@@ -66,6 +66,7 @@ function CreateProject() {
 
             if (response.status === 201) {
                 alert('Project created successfully!');
+                navigate('update-projects')
                 console.log("201 response status executed");
             }
             else if (response.status === 409) {
