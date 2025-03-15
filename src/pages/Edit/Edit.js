@@ -119,12 +119,6 @@ function Edit() {
 
         try {
 
-            // Set projectTitle to the same value it was initially fetched as
-            const updatedProject = {
-                ...editedProject,
-                project_title: projectTitle, // Ensure projectTitle is included
-            };
-
             console.log(projectNumber)
             const response = await fetch(`/api/updateProjects/?projectNumber=${projectNumber}`, {
                 method: "PATCH",
