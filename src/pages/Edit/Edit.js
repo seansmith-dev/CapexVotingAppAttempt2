@@ -15,7 +15,7 @@ function Edit() {
     const [editedProject, setEditedProject] = useState(null);
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
     const [shortDescription, setShortDescription] = useState("");
-    const [facultyName, setFacultyName] = useState("");
+    const [facultyName, setFacultyName] = useState(""); // Initialize faculty name state
     const [projectTitle, setProjectTitle] = useState("");
     const longDescRef = useRef(null);
     const shortDescRef = useRef(null);
@@ -90,13 +90,15 @@ function Edit() {
         }
     }, [longDescription, shortDescription]);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
+    const handleFacultyNameChange = (event) => {
+        const value = event.target.value;
+        setFacultyName(value); // Update facultyName state
         setEditedProject((prev) => ({
             ...prev,
-            [name]: value, // Update specific field
+            faculty_name: value, // Update faculty_name in editedProject state
         }));
     };
+    
 
     const handleTeamMemberChange = (index, event) => {
         const { name, value } = event.target;
@@ -243,8 +245,8 @@ function Edit() {
                     <input
                         type="text"
                         name="faculty"
-                        value={editedProject.faculty_name || ""}
-                        onChange={(e) => handleInputChange(e)}
+                        value={facultyName}
+                        onChange={handleFacultyNameChange}
                         placeholder="Faculty"
                     />
                 </p>
