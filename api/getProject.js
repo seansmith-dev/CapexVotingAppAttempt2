@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       LEFT JOIN "TeamMembership" tm ON t.team_id = tm.team_id
       LEFT JOIN "Members" m ON tm.member_id = m.member_id
       WHERE p.project_number = $1
-      GROUP BY p.project_number, p.project_title, p.project_long_description, f.faculty_name, t.team_name;
+      GROUP BY p.project_number, p.project_title, p.project_long_description, p.project_short_description, f.faculty_name, t.team_name;
     `;
 
     const result = await client.query(query, [id]);
