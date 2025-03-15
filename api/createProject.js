@@ -158,7 +158,7 @@ export default async function handler(req, res) {
 
     for (let member of teamMembers) {
 
-      if (!member.first_name) {
+      if (!member.firstName) {
         await client.query("ROLLBACK");
         return res.status(400).json({ error: "Each team member must have a first name" });
       }
