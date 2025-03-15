@@ -242,7 +242,7 @@ function Edit() {
                     <input
                         type="text"
                         name="faculty"
-                        value={editedProject.faculty || ""}
+                        value={editedProject.faculty_name || ""}
                         onChange={handleInputChange}
                         placeholder="Faculty"
                     />
