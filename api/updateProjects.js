@@ -18,20 +18,20 @@ export default async function handler(req, res) {
 
     // Destructure variables correctly from request
     const { project_number } = req.query;
-    const { 
-        project_title, 
-        project_short_description, 
-        project_long_description, 
-        faculty_name, 
-        team_name, 
-        team_members 
+    const {
+        project_title,
+        project_short_description,
+        project_long_description,
+        faculty_name,
+        team_name,
+        team_members
     } = req.body;
 
     // Check required fields
     if (!project_number) {
         return res.status(400).json({ error: "Project number is required" });
     }
-    
+
     if (!project_title || !project_short_description || !project_long_description) {
         return res.status(400).json({ error: "Project title, short description, and long description are required" });
     }
@@ -73,17 +73,66 @@ export default async function handler(req, res) {
         // Update Faculty if provided
         if (faculty_name) {
             try {
-                const updateFacultyQuery = `
-                    UPDATE "Facultys" SET faculty_name = $1
-                    WHERE faculty_id = (SELECT faculty_id FROM "Projects" WHERE project_number = $2);
+                await client.query("BEGIN"); // Start transaction
+
+                // Step 1: Get the current faculty_id for the project
+                const getCurrentFacultyQuery = `
+                    SELECT faculty_id FROM "Projects" WHERE project_number = $1;
                 `;
-                await client.query(updateFacultyQuery, [faculty_name, project_number]);
+                const currentFacultyResult = await client.query(getCurrentFacultyQuery, [project_number]);
+
+                if (currentFacultyResult.rows.length === 0) {
+                    throw new Error("Project not found.");
+                }
+
+                const currentFacultyId = currentFacultyResult.rows[0].faculty_id;
+
+                // Step 2: Check if the new faculty name already exists
+                const checkFacultyQuery = `SELECT faculty_id FROM "Facultys" WHERE faculty_name = $1;`;
+                const existingFaculty = await client.query(checkFacultyQuery, [faculty_name]);
+
+                if (existingFaculty.rows.length > 0) {
+                    // Faculty already exists, update the project to use the existing faculty_id
+                    const facultyId = existingFaculty.rows[0].faculty_id;
+                    const updateProjectQuery = `
+                        UPDATE "Projects"
+                        SET faculty_id = $1
+                        WHERE project_number = $2;
+                    `;
+                    await client.query(updateProjectQuery, [facultyId, project_number]);
+                } else {
+                    // Faculty does not exist → Update the current faculty record instead of inserting
+                    const updateFacultyQuery = `
+                        UPDATE "Facultys"
+                        SET faculty_name = $1
+                        WHERE faculty_id = $2;
+                    `;
+                    await client.query(updateFacultyQuery, [faculty_name, currentFacultyId]);
+                }
+
+                // Step 3: Check if the old faculty is still in use and delete if not
+                const deleteOldFacultyQuery = `
+                    DELETE FROM "Facultys"
+                    WHERE faculty_id = $1
+                    AND faculty_id NOT IN (SELECT DISTINCT faculty_id FROM "Projects")
+                    RETURNING faculty_id;
+                `;
+                const deleteResult = await client.query(deleteOldFacultyQuery, [currentFacultyId]);
+
+                if (deleteResult.rows.length > 0) {
+                    console.log(`Deleted old faculty with ID: ${deleteResult.rows[0].faculty_id}`);
+                }
+
+                await client.query("COMMIT"); // Commit transaction
+                res.status(200).json({ message: "Faculty updated successfully!" });
+
             } catch (error) {
-                await client.query("ROLLBACK");
+                await client.query("ROLLBACK"); // Rollback transaction if any error occurs
                 console.error("Error updating faculty:", error);
                 return res.status(500).json({ error: "Error updating faculty table" });
             }
         }
+
 
         // Update Team if provided
         if (team_name) {
