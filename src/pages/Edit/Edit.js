@@ -54,6 +54,7 @@ function Edit() {
                     setProject(data);
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
+                    setShortDescription(data.project_short_description || ""); 
                     setProjectTitle(data.project_title);
                 }
 
