@@ -51,6 +51,7 @@ function Edit() {
             .then((data) => {
                 clearTimeout(timeoutId);
                 if (isMounted) {
+                    console.log("Project fetched:", JSON.stringify(data, null, 2));
                     setProject(data);
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
