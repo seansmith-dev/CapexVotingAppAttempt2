@@ -15,6 +15,7 @@ function Edit() {
     const [editedProject, setEditedProject] = useState(null);
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
     const [shortDescription, setShortDescription] = useState("");
+    const [facultyName, setFacultyName] = useState("");
     const [projectTitle, setProjectTitle] = useState("");
     const longDescRef = useRef(null);
     const shortDescRef = useRef(null);
@@ -243,7 +244,7 @@ function Edit() {
                         type="text"
                         name="faculty"
                         value={editedProject.faculty_name || ""}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange(e)}
                         placeholder="Faculty"
                     />
                 </p>
