@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './CreateProject.css';
 import Button from '../../components/Button/Button.js';
+import { useNavigate } from 'react-router-dom';
 
 function CreateProject() {
     const [teamMembers, setTeamMembers] = useState([{ firstName: '', lastName: '' }]);
@@ -9,6 +10,7 @@ function CreateProject() {
     const [projectTitle, setProjectTitle] = useState('');
     const [facultyName, setFacultyName] = useState('');
     const [teamName, setTeamName] = useState('');
+    const navigate = useNavigate();
 
     const handleAddMember = (event) => {
         event.preventDefault();
