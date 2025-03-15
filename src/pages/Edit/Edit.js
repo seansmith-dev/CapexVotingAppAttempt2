@@ -16,7 +16,8 @@ function Edit() {
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
     const [shortDescription, setShortDescription] = useState("");
     const [projectTitle, setProjectTitle] = useState("");
-    const textareaRef = useRef(null);
+    const longDescRef = useRef(null);
+    const shortDescRef = useRef(null);
 
     const handleTextChange = (event, setState, fieldName) => {
         const textarea = event.target;
@@ -215,7 +216,7 @@ function Edit() {
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
                     <textarea
-                        ref={textareaRef}
+                        ref={longDescRef}
                         name="project_long_description"
                         value={longDescription}
                         onChange={(e) => handleTextChange(e, setLongDescription, "project_long_description")}
@@ -224,7 +225,7 @@ function Edit() {
                 <br />
                 <div className="project-text__wrapper">
                     <textarea
-                        ref={textareaRef}
+                        ref={shortDescRef}
                         name="project_short_description"
                         value={shortDescription}
                         onChange={(e) => handleTextChange(e, setShortDescription, "project_short_description")}
