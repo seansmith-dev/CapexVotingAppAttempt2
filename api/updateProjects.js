@@ -74,7 +74,7 @@ export default async function handler(req, res) {
         if (faculty_name) {
             try {
                 const updateFacultyQuery = `
-                    UPDATE "Faculties" SET faculty_name = $1
+                    UPDATE "Facultys" SET faculty_name = $1
                     WHERE faculty_id = (SELECT faculty_id FROM "Projects" WHERE project_number = $2);
                 `;
                 await client.query(updateFacultyQuery, [faculty_name, project_number]);
