@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     }
 
     const { projectNumber } = req.query;  
-    const { projectTitle, shortDescription, longDescription, facultyName, teamName, teamMembers } = req.body;
+    const { project_title, project_short_description, project_long_description, faculty_name, team_name, team_members } = req.body;
 
     if (!projectNumber) {
         return res.status(400).json({ error: "Project number is required" });
