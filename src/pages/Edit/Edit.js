@@ -127,7 +127,7 @@ function Edit() {
                 },
                 body: JSON.stringify(editedProject), // Send the updated data
             });
-            console.log(editedProject)
+            console.log("Edited Project:", JSON.stringify(editedProject, null, 2));
 
             const responseBody = await response.json();
             if (response.ok) {
