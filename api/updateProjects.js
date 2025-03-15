@@ -61,7 +61,7 @@ export default async function handler(req, res) {
             const updateProjectQuery = `
                 UPDATE "Projects"
                 SET project_title = $1, project_short_description = $2, project_long_description = $3
-                WHERE project_id = $4;
+                WHERE project_number = $4;
             `;
             await client.query(updateProjectQuery, [project_title, project_short_description, project_long_description, project_number]);
         } catch (error) {
