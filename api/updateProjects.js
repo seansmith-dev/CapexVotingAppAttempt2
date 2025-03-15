@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 
         // Check if project exists
         try {
-            const checkProjectQuery = `SELECT project_id FROM "Projects" WHERE project_id = $1;`;
+            const checkProjectQuery = `SELECT project_number FROM "Projects" WHERE project_number = $1;`;
             const projectResult = await client.query(checkProjectQuery, [project_number]);
 
             if (projectResult.rows.length === 0) {
