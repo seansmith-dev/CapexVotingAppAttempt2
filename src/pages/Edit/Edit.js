@@ -75,11 +75,17 @@ function Edit() {
 
     // Effect to handle the textarea update after fetching data
     useEffect(() => {
-        if (textareaRef.current) {
-            console.log(textareaRef.current.value);  // Log textarea value here
+        if (longDescRef.current) {
+            console.log(longDescRef.current.value);  // Log textarea value here
             console.log("This is executing after fetching data");
-            textareaRef.current.style.height = "auto"; // Reset height
-            textareaRef.current.style.height = textareaRef.current.scrollHeight + "px"; // Adjust height
+            longDescRef.current.style.height = "auto"; // Reset height
+            longDescRef.current.style.height = longDescRef.current.scrollHeight + "px"; // Adjust height
+        }
+        if (shortDescRef.current) {
+            console.log(longDescRef.current.value);  // Log textarea value here
+            console.log("This is executing after fetching data");
+            shortDescRef.current.style.height = "auto"; // Reset height
+            shortDescRef.current.style.height = shortDescRef.current.scrollHeight + "px"; // Adjust height
         }
     }, [longDescription]);
 
