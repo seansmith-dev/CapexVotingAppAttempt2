@@ -7,17 +7,24 @@ import Button from '../../components/Button/Button.js';
 
 function Edit() {
     const { projectNumber } = useParams();
+
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
     const [editedProject, setEditedProject] = useState(null);
     const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
+    const [shortDescription, setShortDescription] = useState("");
+    const [projectTitle, setProjectTitle] = useState("");
     const textareaRef = useRef(null);
 
-    const handleTextChange = (event, setState) => {
+    const handleTextChange = (event, setState, fieldName) => {
         const textarea = event.target;
         setState(event.target.value);
+        setEditedProject((prev) => ({
+            ...prev,
+            [fieldName]: event.target.value, // update longDescription in editedProject
+        }));
         textarea.style.height = "auto";  // Reset the height to auto to shrink back
         textarea.style.height = textarea.scrollHeight + "px";  // Set it to the scrollHeight
 
@@ -47,6 +54,7 @@ function Edit() {
                     setProject(data);
                     setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
+                    setProjectTitle(data.project_title);
                 }
 
             })
@@ -104,9 +112,18 @@ function Edit() {
             team_members: updatedMembers,
         }));
     };
-    
+
     const saveChanges = async () => {
+
+
         try {
+
+            // Set projectTitle to the same value it was initially fetched as
+            const updatedProject = {
+                ...editedProject,
+                project_title: projectTitle, // Ensure projectTitle is included
+            };
+
             console.log(projectNumber)
             const response = await fetch(`/api/updateProjects/?projectNumber=${projectNumber}`, {
                 method: "PATCH",
@@ -205,7 +222,16 @@ function Edit() {
                         ref={textareaRef}
                         name="project_long_description"
                         value={longDescription}
-                        onChange={(e) => handleTextChange(e, setLongDescription)}
+                        onChange={(e) => handleTextChange(e, setLongDescription, "project_long_description")}
+                    />
+                </div>
+                <br />
+                <div className="project-text__wrapper">
+                    <textarea
+                        ref={textareaRef}
+                        name="project_short_description"
+                        value={shortDescription}
+                        onChange={(e) => handleTextChange(e, setShortDescription, "project_short_description")}
                     />
                 </div>
                 <p className="about-project__faculty small--text">
