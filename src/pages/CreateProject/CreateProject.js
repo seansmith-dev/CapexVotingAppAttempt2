@@ -4,30 +4,30 @@ import Button from '../../components/Button/Button.js';
 import { useNavigate } from 'react-router-dom';
 
 function CreateProject() {
-    const [teamMembers, setTeamMembers] = useState([{ firstName: '', lastName: '' }]);
-    const [shortDescription, setShortDescription] = useState('');
-    const [longDescription, setLongDescription] = useState('');
-    const [projectTitle, setProjectTitle] = useState('');
-    const [facultyName, setFacultyName] = useState('');
-    const [teamName, setTeamName] = useState('');
+    const [team_members, setTeamMembers] = useState([{ first_name: '', last_name: '' }]);
+    const [short_description, setShortDescription] = useState('');
+    const [long_description, setLongDescription] = useState('');
+    const [project_title, setProjectTitle] = useState('');
+    const [faculty_name, setFacultyName] = useState('');
+    const [team_name, setTeamName] = useState('');
     const navigate = useNavigate();
 
     const handleAddMember = (event) => {
         event.preventDefault();
-        setTeamMembers([...teamMembers, { firstName: '', lastName: '' }]);
+        setTeamMembers([...team_members, { first_name: '', last_name: '' }]);
     };
 
 
     const handleRemoveMember = (event) => {
         event.preventDefault();
         if (teamMembers.length > 1) {
-            setTeamMembers(teamMembers.slice(0, -1));
+            setTeamMembers(team_members.slice(0, -1));
         }
     };
 
 
     const handleTeamMemberChange = (index, field, event) => {
-        const newTeamMembers = [...teamMembers];
+        const newTeamMembers = [...team_members];
         newTeamMembers[index][field] = event.target.value;
         setTeamMembers(newTeamMembers);
     };
@@ -44,12 +44,12 @@ function CreateProject() {
         event.preventDefault();
 
         const projectData = {
-            projectTitle,
-            shortDescription,
-            longDescription,
-            facultyName,
-            teamName,
-            teamMembers,
+            project_title,
+            short_description,
+            long_description,
+            faculty_name,
+            team_name,
+            team_members,
         };
 
         try {
@@ -101,7 +101,7 @@ function CreateProject() {
             <form className="project-form" onSubmit={handleSubmit}>
                 <label className="project-form__title-top">Project title</label>
                 <input type="text"
-                    value={projectTitle}
+                    value={project_title}
                     onChange={(e) => handleTextChange(e, setProjectTitle)}
                     className="project-form__input"
                     required
@@ -109,7 +109,7 @@ function CreateProject() {
 
                 <label className="project-form__title">Project short description</label>
                 <textarea
-                    value={shortDescription}
+                    value={short_description}
                     onChange={(e) => handleTextChange(e, setShortDescription)}
                     className="auto-resize"
                     required
@@ -117,7 +117,7 @@ function CreateProject() {
 
                 <label className="project-form__title">Project long description</label>
                 <textarea
-                    value={longDescription}
+                    value={long_description}
                     onChange={(e) => handleTextChange(e, setLongDescription)}
                     className="auto-resize"
                     required
@@ -126,27 +126,27 @@ function CreateProject() {
                 <label className="project-form__title">Faculty name</label>
                 <input
                     type="text"
-                    value={facultyName}
+                    value={faculty_name}
                     onChange={(e) => setFacultyName(e.target.value)}
                     required />
 
                 <label className="project-form__title">Team Name</label>
                 <input
                     type="text"
-                    value={teamName}
+                    value={team_name}
                     onChange={(e) => setTeamName(e.target.value)}
                     required />
 
                 <label className="project-form__title">Team Members</label>
 
-                {teamMembers.map((member, index) => (
+                {team_members.map((member, index) => (
                     <div key={index} className="team-member__input-form">
                         <div className="team-member-first-name__input">
                             <p className="team-member__text">First name</p>
                             <input
                                 type="text"
-                                value={member.firstName}
-                                onChange={(e) => handleTeamMemberChange(index, 'firstName', e)}
+                                value={member.first_name}
+                                onChange={(e) => handleTeamMemberChange(index, 'first_name', e)}
                                 placeholder={`First name ${index + 1}`}
                                 required
                                 className="first--input"
@@ -157,8 +157,8 @@ function CreateProject() {
                             <p className="team-member__text">Last name</p>
                             <input
                                 type="text"
-                                value={member.lastName}
-                                onChange={(e) => handleTeamMemberChange(index, 'lastName', e)}
+                                value={member.last_name}
+                                onChange={(e) => handleTeamMemberChange(index, 'last_name', e)}
                                 placeholder={`Second name ${index + 1}`}
                                 required
                                 className="second--input"
@@ -170,7 +170,7 @@ function CreateProject() {
 
                 <div className="team-member-buttons">
                     <Button onClick={handleAddMember} className="btn--add" buttonSize="medium-small" buttonText="Add" />
-                    <Button onClick={handleRemoveMember} disabled={teamMembers.length <= 1} buttonSize="medium-small" className="btn--remove" buttonText="Remove" />
+                    <Button onClick={handleRemoveMember} disabled={team_members.length <= 1} buttonSize="medium-small" className="btn--remove" buttonText="Remove" />
                 </div>
 
                 <Button onClick={handleSubmit} type="submit" buttonText="Submit" className="btn--submit"></Button>
