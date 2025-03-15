@@ -122,9 +122,9 @@ export default async function handler(req, res) {
                 `;
 
                 for (let member of team_members) {
-                    if (!member.first_name || !member.second_name) {
+                    if (!member.first_name) {
                         await client.query("ROLLBACK");
-                        return res.status(400).json({ error: "Each team member must have a first and second name" });
+                        return res.status(400).json({ error: "Each team member must have a first name" });
                     }
                     const memberResult = await client.query(memberInsertQuery, [member.first_name, member.second_name]);
                     const memberId = memberResult.rows[0].member_id;

@@ -62,7 +62,7 @@ export default async function handler(req, res) {
 
     if (existingTitleResult.rows.length > 0) {
       console.log("same project title");
-      return res.status(409).json({message: "A project with this title already exists." });
+      return res.status(409).json({ message: "A project with this title already exists." });
     }
 
     await client.query("BEGIN"); // Start transaction
@@ -147,7 +147,7 @@ export default async function handler(req, res) {
         VALUES ($1, $2)
         RETURNING member_id;
     `;
-    
+
     const teamMembershipQuery = `
         INSERT INTO "TeamMembership" (team_id, member_id)
         VALUES ($1, $2)
@@ -155,14 +155,20 @@ export default async function handler(req, res) {
     `;
 
     for (let member of teamMembers) {
+
+      if (!member.first_name) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ error: "Each team member must have a first name" });
+      }
+
       try {
         const memberResult = await client.query(memberInsertQuery, [member.firstName, member.lastName]);
         memberId = memberResult.rows[0].member_id;
       }
-      catch(error){
+      catch (error) {
         return res.status(500).json({ error: "Internal Server Error in the members table" });
       }
-        
+
       try {
         await client.query(teamMembershipQuery, [teamId, memberId]);
       }
@@ -170,12 +176,12 @@ export default async function handler(req, res) {
         console.error("Error inserting into the teamMembership table:", error);
         res.status(500).json({ error: "Internal Server Error in the teamMembership table" });
       }
-    
+
     }
 
     await client.query("COMMIT"); // Commit transaction
-    
-    res.status(201).json({message: "Project created successfully!"});
+
+    res.status(201).json({ message: "Project created successfully!" });
 
   } catch (error) {
     await client.query("ROLLBACK"); // Rollback transaction in case of error
