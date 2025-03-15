@@ -73,7 +73,7 @@ export default async function handler(req, res) {
         // Update Faculty if provided
         if (faculty_name) {
             try {
-                await client.query("BEGIN"); // Start transaction
+                await client.query("BEGIN"); // Start transfaction
 
                 // Step 1: Get the current faculty_id for the project
                 const getCurrentFacultyQuery = `
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
                 const currentFacultyResult = await client.query(getCurrentFacultyQuery, [project_number]);
 
                 if (currentFacultyResult.rows.length === 0) {
-                    throw new Error("Project not found.");
+                    throw new Error("Project not found within faculty logic.");
                 }
 
                 const currentFacultyId = currentFacultyResult.rows[0].faculty_id;
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
                 }
 
                 await client.query("COMMIT"); // Commit transaction
-                res.status(200).json({ message: "Faculty updated successfully!" });
+                
 
             } catch (error) {
                 await client.query("ROLLBACK"); // Rollback transaction if any error occurs
