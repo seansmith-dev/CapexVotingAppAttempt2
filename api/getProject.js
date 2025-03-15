@@ -34,7 +34,8 @@ export default async function handler(req, res) {
       SELECT 
         p.project_number, 
         p.project_title, 
-        p.project_long_description, 
+        p.project_long_description,
+        p.project_short_description 
         f.faculty_name AS faculty,
         t.team_name,
         COALESCE(
