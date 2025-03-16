@@ -8,22 +8,13 @@ function ProjectDescription() {
     const { project_number } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
-    const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
-    const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
-    const [shortDescription, setShortDescription] = useState("");
-    const [projectTitle, setProjectTitle] = useState("");
-    const [facultyName, setFacultyName] = useState(""); // Initialize faculty name state
+    const [isValid, setIsValid] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isVoting, setIsVoting] = useState(false); // New state for handling loading during voting
 
     useEffect(() => {
-
         let isMounted = true;
-
-        const timeoutId = setTimeout(() => {
-            if (isMounted) {
-                setError("Request timed out. Please try again later.");
-            }
-        }, 5000);
 
         fetch(`/api/getProject?id=${project_number}`)
             .then((response) => {
@@ -33,26 +24,21 @@ function ProjectDescription() {
                 return response.json();
             })
             .then((data) => {
-                clearTimeout(timeoutId);
                 if (isMounted) {
-                    console.log("Project fetched:", JSON.stringify(data, null, 2));
                     setProject(data);
-                    setLongDescription(data.project_long_description || ""); // Set long description once data is available
-                    setShortDescription(data.project_short_description || ""); 
-                    setProjectTitle(data.project_title);
-                    setFacultyName(data.faculty_name)
                 }
-
             })
-            .catch((error) => {
+            .catch(() => {
                 if (isMounted) {
                     setError("Error fetching project details.");
                 }
+            })
+            .finally(() => {
+                if (isMounted) setIsLoading(false);
             });
 
         return () => {
             isMounted = false;
-            clearTimeout(timeoutId);
         };
     }, [project_number]);
 
@@ -65,97 +51,57 @@ function ProjectDescription() {
             return;
         }
 
-        setLoadingMessage("Validating your access...");
+        setIsVoting(true); // Show loading indicator
 
         try {
             console.log("Token from localStorage validate:", token);
-    
+
             // Call the API endpoint
             const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-    
-            const data = await res.json(); // Parse JSON response
-    
+            const data = await res.json();
+
             if (!res.ok || !data.valid) {
                 alert("Invalid or expired token. Access denied.");
                 return false;
             }
-    
+
             if (res.status === 200 && data.valid) {
                 console.log("Token is valid");
                 return true;
-            } 
-            
+            }
+
             if (res.status === 401) {
                 console.warn("Invalid or expired token");
                 alert("Invalid or expired token. Access denied.");
                 return false;
-            } 
-            
+            }
+
             if (res.status === 400) {
                 console.warn("Token not provided");
                 alert("Token is required.");
                 return false;
             }
-    
+
             console.error("Unexpected error:", data.error);
             alert("An unexpected error occurred. Please try again.");
             return false;
-    
+
         } catch (error) {
             console.error("Error validating token:", error);
+            alert("Network error occurred.");
             return false;
+        } finally {
+            setIsVoting(false); // Hide loading indicator after request completes
         }
-
-        //     setLoadingMessage("Checking your location...");
-
-        //     if (!navigator.geolocation) {
-        //         alert("Geolocation not supported. Enable location services to vote.");
-        //         navigate("/not-allowed");
-        //         return;
-        //     }
-
-        //     navigator.geolocation.getCurrentPosition(
-        //         async (position) => {
-        //             const { latitude, longitude } = position.coords;
-
-        //             try {
-        //                 const response = await fetch("/api/check-location", {
-        //                     method: "POST",
-        //                     headers: { "Content-Type": "application/json" },
-        //                     body: JSON.stringify({ latitude, longitude }),
-        //                 });
-
-        //                 const locationData = await response.json();
-        //                 if (locationData.allowed) {
-        //                     setTimeout(() => navigate("/vote-success"), 2000);
-        //                 } else {
-        //                     setLoadingMessage("You are not on campus. Voting is not allowed.");
-        //                     setTimeout(() => navigate("/not-allowed"), 2000);
-        //                 }
-        //             } catch (error) {
-        //                 setLoadingMessage("Network error while checking location.");
-        //                 setTimeout(() => navigate("/network-error"), 2000);
-        //             }
-        //         },
-        //         () => {
-        //             setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
-        //             setTimeout(() => navigate("/geo-error"), 2000);
-        //         }
-        //     );
-        // } catch (error) {
-        //     setLoadingMessage("Network error while checking location.");
-        //     setTimeout(() => navigate("/network-error"), 2000);
-        // }
     };
+
+    if (isLoading) {
+        return <Loading />; // Show loading when fetching project data
+    }
 
     if (error) {
         return <div className="error-message">{error}</div>;
     }
-
-    if (!project) {
-        return <Loading />;
-    }
-
 
     return (
         <div className="project-description">
@@ -165,27 +111,15 @@ function ProjectDescription() {
                     <span className="project-description__title">{project.project_title}</span>
                 </h1>
 
-                <div className="team-introduction-wrapper">
-                    <div className="team-introduction">
-                        <div className="title-wrapper">
-                            <p className="team-introduction__title">Team Introduction</p>
-                        </div>
-                        <div className="team-members-container">
-                            {project.team_members?.map((member, index) => (
-                                <p key={index} className="team-introduction__team-member">
-                                    {index + 1}. {member.first_name} {member.second_name}
-                                </p>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
                 <ButtonWithIcon
                     buttonType="primary"
                     size="medium"
                     text="Vote"
-                    onClick={handleVote} // Calls validation & geolocation on click
+                    onClick={handleVote}
+                    disabled={isVoting} // Disable button while validating token
                 />
+
+                {isVoting && <Loading />} {/* Show loading indicator while validating token */}
             </div>
 
             <main className="about-project">
@@ -195,8 +129,6 @@ function ProjectDescription() {
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
             </main>
-
-            {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
         </div>
     );
 }
