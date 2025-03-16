@@ -178,7 +178,7 @@ function ProjectDescription() {
                 <div className="project-text__wrapper">
                     <p className="about-project__text">{project.project_long_description}</p>
                 </div>
-                <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
+                <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
             </main>
 
             {loadingMessage && <p className="loading-message">{loadingMessage}</p>}
