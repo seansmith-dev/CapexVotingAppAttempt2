@@ -15,6 +15,7 @@ function Home() {
     const location = useLocation();
     const navigate = useNavigate();
     
+    //Logic to store the token locally. 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const token = searchParams.get("token");

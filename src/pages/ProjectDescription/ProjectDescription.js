@@ -68,69 +68,90 @@ function ProjectDescription() {
         setLoadingMessage("Validating your access...");
 
         try {
-            console.log("Token from localStorage validate:", token); 
-            // Simulating API request for token validation
-            const res = await mockValidateTokenAPI(token);
-            if (!res.valid) {
-                alert("Invalid or expired token. Access denied.");
-                navigate("/");
-                return;
-            }
-
-            setLoadingMessage("Checking your location...");
-
-            if (!navigator.geolocation) {
-                alert("Geolocation not supported. Enable location services to vote.");
-                navigate("/not-allowed");
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-
-                    try {
-                        const response = await fetch("/api/check-location", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ latitude, longitude }),
-                        });
-
-                        const locationData = await response.json();
-                        if (locationData.allowed) {
-                            setTimeout(() => navigate("/vote-success"), 2000);
-                        } else {
-                            setLoadingMessage("You are not on campus. Voting is not allowed.");
-                            setTimeout(() => navigate("/not-allowed"), 2000);
-                        }
-                    } catch (error) {
-                        setLoadingMessage("Network error while checking location.");
-                        setTimeout(() => navigate("/network-error"), 2000);
-                    }
+            console.log("Token from localStorage validate:", token);
+    
+            // Call the API endpoint
+            const res = await fetch("/api/validate-token.js", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
                 },
-                () => {
-                    setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
-                    setTimeout(() => navigate("/geo-error"), 2000);
-                }
-            );
+                body: JSON.stringify({ token })
+            });
+    
+            const data = await res.json(); // Parse JSON response
+    
+            if (!res.ok || !data.valid) {
+                alert("Invalid or expired token. Access denied.");
+                return false;
+            }
+    
+            if (res.status === 200 && data.valid) {
+                console.log("Token is valid");
+                return true;
+            } 
+            
+            if (res.status === 401) {
+                console.warn("Invalid or expired token");
+                alert("Invalid or expired token. Access denied.");
+                return false;
+            } 
+            
+            if (res.status === 400) {
+                console.warn("Token not provided");
+                alert("Token is required.");
+                return false;
+            }
+    
+            console.error("Unexpected error:", data.error);
+            alert("An unexpected error occurred. Please try again.");
+            return false;
+    
         } catch (error) {
-            setLoadingMessage("Network error while checking location.");
-            setTimeout(() => navigate("/network-error"), 2000);
+            console.error("Error validating token:", error);
+            return false;
         }
-    };
 
-    // Simulate an API function that checks the token
-    const mockValidateTokenAPI = async (token) => {
-        // Simulate an API call by checking the token in localStorage
-        const storedToken = localStorage.getItem("voteToken");
+        //     setLoadingMessage("Checking your location...");
 
-        // If the token is valid (exists in localStorage), return a valid response
-        if (token && token === storedToken) {
-            localStorage.removeItem("voteToken"); // Remove after validation (one-time use)
-            return { valid: true };
-        } else {
-            return { valid: false };
-        }
+        //     if (!navigator.geolocation) {
+        //         alert("Geolocation not supported. Enable location services to vote.");
+        //         navigate("/not-allowed");
+        //         return;
+        //     }
+
+        //     navigator.geolocation.getCurrentPosition(
+        //         async (position) => {
+        //             const { latitude, longitude } = position.coords;
+
+        //             try {
+        //                 const response = await fetch("/api/check-location", {
+        //                     method: "POST",
+        //                     headers: { "Content-Type": "application/json" },
+        //                     body: JSON.stringify({ latitude, longitude }),
+        //                 });
+
+        //                 const locationData = await response.json();
+        //                 if (locationData.allowed) {
+        //                     setTimeout(() => navigate("/vote-success"), 2000);
+        //                 } else {
+        //                     setLoadingMessage("You are not on campus. Voting is not allowed.");
+        //                     setTimeout(() => navigate("/not-allowed"), 2000);
+        //                 }
+        //             } catch (error) {
+        //                 setLoadingMessage("Network error while checking location.");
+        //                 setTimeout(() => navigate("/network-error"), 2000);
+        //             }
+        //         },
+        //         () => {
+        //             setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
+        //             setTimeout(() => navigate("/geo-error"), 2000);
+        //         }
+        //     );
+        // } catch (error) {
+        //     setLoadingMessage("Network error while checking location.");
+        //     setTimeout(() => navigate("/network-error"), 2000);
+        // }
     };
 
     if (error) {
