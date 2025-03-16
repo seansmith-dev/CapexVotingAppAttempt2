@@ -12,34 +12,46 @@ function ProjectDescription() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            setError("Request timed out. Please try again later.");
-            navigate("/error"); // Navigate to an error page after a delay
-        }, 5000); // Timeout after 5 seconds
 
-        fetch(`/api/projects?id=${projectId}`)
-            .then((response) => response.json())
+        let isMounted = true;
+
+        const timeoutId = setTimeout(() => {
+            if (isMounted) {
+                setError("Request timed out. Please try again later.");
+            }
+        }, 5000);
+
+        fetch(`/api/getProject?id=${projectNumber}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch project details");
+                }
+                return response.json();
+            })
             .then((data) => {
-                clearTimeout(timeoutId); // Clear the timeout once data is fetched
-                setProject(data);
+                clearTimeout(timeoutId);
+                if (isMounted) {
+                    console.log("Project fetched:", JSON.stringify(data, null, 2));
+                    setProject(data);
+                    setEditedProject(data); // Initialize the editable project state
+                    setLongDescription(data.project_long_description || ""); // Set long description once data is available
+                    setShortDescription(data.project_short_description || ""); 
+                    setProjectTitle(data.project_title);
+                    setFacultyName(data.faculty_name)
+                }
+
             })
             .catch((error) => {
-                clearTimeout(timeoutId);
-                console.error("Error fetching project details:", error);
-                setError("Error fetching project details.");
-                navigate("/error"); // Navigate to error page
+                if (isMounted) {
+                    setError("Error fetching project details.");
+                }
             });
 
-        return () => clearTimeout(timeoutId); // Clean up the timeout on unmount
-    }, [projectId, navigate]);
-
-    if (error) {
-        return <div>{error}</div>; // Optionally show a fallback error message
-    }
-
-    if (!project) {
-        return <Loading />;
-    }
+        return () => {
+            isMounted = false;
+            clearTimeout(timeoutId);
+        };
+    }, [projectNumber]);
 
     const handleVote = async () => {
         const token = localStorage.getItem("voteToken"); // Retrieve stored token
