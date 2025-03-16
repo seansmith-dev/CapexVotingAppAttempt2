@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     // Step 2: Insert a new vote into the votes table
     const voteQuery = `
-      INSERT INTO "Votes" (project_id, qr_code_id, votestamp)
+      INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp)
       VALUES ($1, $2, NOW()) 
       RETURNING vote_id;
     `;
