@@ -60,43 +60,50 @@ function ProjectDescription() {
         try {
             console.log("Token from localStorage validate:", token);
 
+            setIsLoading(true) 
             // Call the API endpoint
             const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
             const data = await res.json();
 
             if (!res.ok || !data.valid) {
                 alert("Invalid or expired token. Access denied.");
+                setIsLoading(false) 
                 return false;
             }
 
             if (res.status === 200 && data.valid) {
                 console.log("Token is valid");
+                setIsLoading(false) 
                 return true;
             }
 
             if (res.status === 401) {
                 console.warn("Invalid or expired token");
+                setIsLoading(false) 
                 alert("Invalid or expired token. Access denied.");
                 return false;
             }
 
             if (res.status === 400) {
                 console.warn("Token not provided");
+                setIsLoading(false) 
                 alert("Token is required.");
                 return false;
             }
-
+            setIsLoading(false) 
             console.error("Unexpected error:", data.error);
             alert("An unexpected error occurred. Please try again.");
             return false;
 
         } catch (error) {
+            setIsLoading(false) 
             console.error("Error validating token:", error);
             alert("Network error occurred.");
             return false;
         } finally {
             setIsVoting(false); // Hide loading indicator after request completes
         }
+        setIsLoading(false) 
     };
 
     if (isLoading) {
