@@ -77,7 +77,7 @@ function ProjectDescription() {
             return false;
         } finally {
             setIsVoting(false); // Hide loading indicator after request completes
-            setIsLoading(true);
+            setIsLoading(false);
         }
     };
 
