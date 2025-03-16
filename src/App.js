@@ -46,7 +46,7 @@ function App() {
             <Route path="/generate-qr" element={<GenerateQR/>} />
             <Route path="/update-projects" element={<UpdateProjects/>} />
             <Route path="/create" element={<CreateProject/>} />
-            <Route path="/edit/:projectNumber" element={<Edit/>} />
+            <Route path="/edit/:project_number" element={<Edit/>} />
 
           </Routes>
         </main>

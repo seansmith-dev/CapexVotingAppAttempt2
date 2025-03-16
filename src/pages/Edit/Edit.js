@@ -6,7 +6,7 @@ import Loading from "../LoadingVote/Loading.js";
 import Button from '../../components/Button/Button.js';
 
 function Edit() {
-    const { projectNumber } = useParams();
+    const { project_number } = useParams();
 
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
@@ -43,7 +43,7 @@ function Edit() {
             }
         }, 5000);
 
-        fetch(`/api/getProject?id=${projectNumber}`)
+        fetch(`/api/getProject?id=${project_number}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch project details");
@@ -156,7 +156,7 @@ function Edit() {
 
     const deleteProject = async () => {
         try {
-            const response = await fetch(`/api/deleteProject/?projectNumber=${projectNumber}`, {
+            const response = await fetch(`/api/deleteProject/?projectNumber=${project_number}`, {
                 method: "DELETE",
             });
 
