@@ -147,7 +147,7 @@ function ProjectDescription() {
             <div className="text-wrapper">
                 <h1 className="hero__heading page-title">
                     Project {project.project_number} <br />
-                    <span className="project-description__title">{project.title}</span>
+                    <span className="project-description__title">{project.project_title}</span>
                 </h1>
 
                 <div className="team-introduction-wrapper">
@@ -176,7 +176,7 @@ function ProjectDescription() {
             <main className="about-project">
                 <h2 className="about-project__heading">About</h2>
                 <div className="project-text__wrapper">
-                    <p className="about-project__text">{project.long_description}</p>
+                    <p className="about-project__text">{project.project_long_description}</p>
                 </div>
                 <p className="about-project__faculty small--text">Faculty: {project.faculty}</p>
             </main>
