@@ -42,6 +42,10 @@ function ProjectDescription() {
         };
     }, [project_number]);
 
+    if (isLoading) {
+        return <Loading />;
+    }
+
     const handleVote = async () => {
         const token = localStorage.getItem("voteToken"); // Retrieve stored token
 
@@ -118,7 +122,7 @@ function ProjectDescription() {
                     onClick={handleVote}
                     disabled={isVoting} // Disable button while validating token
                 />
-                
+
             </div>
 
             <main className="about-project">
