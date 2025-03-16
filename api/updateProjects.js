@@ -76,9 +76,10 @@ export default async function handler(req, res) {
                 await client.query("BEGIN"); // Start transfaction
 
                 // Step 1: Get the current faculty_id for the project
+                // Step 1: Get the current faculty_id for the project
                 const getCurrentFacultyQuery = `
-                    SELECT faculty_id FROM "Projects" WHERE project_number = $1;
-                `;
+SELECT faculty_id FROM "Projects" WHERE project_number = $1;
+`;
                 const currentFacultyResult = await client.query(getCurrentFacultyQuery, [project_number]);
 
                 if (currentFacultyResult.rows.length === 0) {
@@ -87,7 +88,14 @@ export default async function handler(req, res) {
 
                 const currentFacultyId = currentFacultyResult.rows[0].faculty_id;
 
-                // Step 2: Check if the new faculty name already exists
+                // Step 2: Get the count of projects associated with the current faculty
+                const facultyUsageCountQuery = `
+SELECT COUNT(*) FROM "Projects" WHERE faculty_id = $1;
+`;
+                const facultyUsageCountResult = await client.query(facultyUsageCountQuery, [currentFacultyId]);
+                const facultyUsageCount = parseInt(facultyUsageCountResult.rows[0].count, 10);
+
+                // Step 3: Check if the new faculty name already exists
                 const checkFacultyQuery = `SELECT faculty_id FROM "Facultys" WHERE faculty_name = $1;`;
                 const existingFaculty = await client.query(checkFacultyQuery, [faculty_name]);
 
@@ -95,21 +103,21 @@ export default async function handler(req, res) {
                     // Faculty already exists → Reassign the project
                     const facultyId = existingFaculty.rows[0].faculty_id;
                     const updateProjectQuery = `
-                        UPDATE "Projects"
-                        SET faculty_id = $1
-                        WHERE project_number = $2;
-                    `;
+    UPDATE "Projects"
+    SET faculty_id = $1
+    WHERE project_number = $2;
+`;
                     await client.query(updateProjectQuery, [facultyId, project_number]);
-                
+
                     // Delete old faculty if unused
                     const deleteOldFacultyQuery = `
-                        DELETE FROM "Facultys"
-                        WHERE faculty_id = $1
-                        AND faculty_id NOT IN (SELECT DISTINCT faculty_id FROM "Projects")
-                        RETURNING faculty_id;
-                    `;
+    DELETE FROM "Facultys"
+    WHERE faculty_id = $1
+    AND faculty_id NOT IN (SELECT DISTINCT faculty_id FROM "Projects")
+    RETURNING faculty_id;
+`;
                     const deleteResult = await client.query(deleteOldFacultyQuery, [currentFacultyId]);
-                
+
                     if (deleteResult.rows.length > 0) {
                         console.log(`Deleted old faculty with ID: ${deleteResult.rows[0].faculty_id}`);
                     }
@@ -117,32 +125,34 @@ export default async function handler(req, res) {
                     if (facultyUsageCount > 1) {
                         // The faculty is shared → Create a new faculty record
                         const createFacultyQuery = `
-                            INSERT INTO "Facultys" (faculty_name)
-                            VALUES ($1)
-                            RETURNING faculty_id;
-                        `;
+        INSERT INTO "Facultys" (faculty_name)
+        VALUES ($1)
+        RETURNING faculty_id;
+    `;
                         const newFacultyResult = await client.query(createFacultyQuery, [faculty_name]);
                         const newFacultyId = newFacultyResult.rows[0].faculty_id;
-                
+
                         // Update the project to use the new faculty
                         const updateProjectQuery = `
-                            UPDATE "Projects"
-                            SET faculty_id = $1
-                            WHERE project_number = $2;
-                        `;
+        UPDATE "Projects"
+        SET faculty_id = $1
+        WHERE project_number = $2;
+    `;
                         await client.query(updateProjectQuery, [newFacultyId, project_number]);
                     } else {
                         // The faculty is NOT shared → Update its name directly
                         const updateFacultyQuery = `
-                            UPDATE "Facultys"
-                            SET faculty_name = $1
-                            WHERE faculty_id = $2;
-                        `;
+        UPDATE "Facultys"
+        SET faculty_name = $1
+        WHERE faculty_id = $2;
+    `;
                         await client.query(updateFacultyQuery, [faculty_name, currentFacultyId]);
                     }
                 }
-                
-                
+
+
+
+
 
             } catch (error) {
                 await client.query("ROLLBACK"); // Rollback transaction if any error occurs
