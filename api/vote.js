@@ -22,6 +22,8 @@ export default async function handler(req, res) {
   const { project_number, project_title, project_long_description, project_short_description, faculty_name, team_name, team_members } = req.body;
 
   const client = await pool.connect();
+
+  let projectId;
   try {
     // Step 1: Query the qrcodes table to get the qr_code_id based on the provided token
     const qrQuery = 'SELECT qr_code_id FROM "qrcodes" WHERE qr_code_token = $1';
@@ -33,13 +35,28 @@ export default async function handler(req, res) {
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
 
+    try {
+        const prIdQuery = 'SELECT project_id FROM "Projects" WHERE project_number = $1';
+        const prResult = await client.query(prIdQuery,[project_number])
+
+        if (prResult.rows.length === 0){
+            return res.status(404).json({error:'project not found in vote.js api line 41' })
+        }
+        
+        projectId = prResult.rows[0].project_id;
+    }
+    catch(error){
+        console.error('Error in project query for vote.js api', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
     // Step 2: Insert a new vote into the votes table
     const voteQuery = `
       INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp)
       VALUES ($1, $2, NOW()) 
       RETURNING vote_id;
     `;
-    const voteResult = await client.query(voteQuery, [project_number, qr_code_id]);
+    const voteResult = await client.query(voteQuery, [projectId, qr_code_id]);
 
     // Step 3: Return the result
     const vote_id = voteResult.rows[0].vote_id;
