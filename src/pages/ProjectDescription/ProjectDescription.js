@@ -5,11 +5,15 @@ import ButtonWithIcon from "../../components/Button/Button-with-icon.js";
 import Loading from "../LoadingVote/Loading.js";
 
 function ProjectDescription() {
-    const { projectId } = useParams();
+    const { project_number } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [loadingMessage, setLoadingMessage] = useState("");
     const [error, setError] = useState(null);
+    const [longDescription, setLongDescription] = useState(""); // Initialize with empty string
+    const [shortDescription, setShortDescription] = useState("");
+    const [projectTitle, setProjectTitle] = useState("");
+    const [facultyName, setFacultyName] = useState(""); // Initialize faculty name state
 
     useEffect(() => {
 
@@ -21,7 +25,7 @@ function ProjectDescription() {
             }
         }, 5000);
 
-        fetch(`/api/getProject?id=${projectNumber}`)
+        fetch(`/api/getProject?id=${project_number}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch project details");
@@ -33,7 +37,6 @@ function ProjectDescription() {
                 if (isMounted) {
                     console.log("Project fetched:", JSON.stringify(data, null, 2));
                     setProject(data);
-                    setEditedProject(data); // Initialize the editable project state
                     setLongDescription(data.project_long_description || ""); // Set long description once data is available
                     setShortDescription(data.project_short_description || ""); 
                     setProjectTitle(data.project_title);
@@ -51,7 +54,7 @@ function ProjectDescription() {
             isMounted = false;
             clearTimeout(timeoutId);
         };
-    }, [projectNumber]);
+    }, [project_number]);
 
     const handleVote = async () => {
         const token = localStorage.getItem("voteToken"); // Retrieve stored token
