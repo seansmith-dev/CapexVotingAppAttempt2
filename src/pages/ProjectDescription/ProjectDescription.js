@@ -118,8 +118,7 @@ function ProjectDescription() {
                     onClick={handleVote}
                     disabled={isVoting} // Disable button while validating token
                 />
-
-                {isVoting && <Loading />} {/* Show loading indicator while validating token */}
+                
             </div>
 
             <main className="about-project">
