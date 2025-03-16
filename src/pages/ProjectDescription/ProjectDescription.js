@@ -90,11 +90,19 @@ function ProjectDescription() {
             console.log("Vote Project:", JSON.stringify(project, null, 2));
 
             const responseBody = await response.json();
-            if (response.ok) {
+            
+
+            if (response.status ===200) {
                 console.log("Project voted for successfully:", responseBody);
                 alert("Project voted for successfully!");
                 navigate('/');  // Redirect after success
-            } else {
+            } else if (response.status === 409){
+                console.log("project already voted for")
+                alert("Project already voted for!");
+                navigate('/no-vote-twice');
+            }
+            
+            else {
                 console.error("Error voting for project:", responseBody);
                 navigate('/projects-list');  // Redirect after success
             }
