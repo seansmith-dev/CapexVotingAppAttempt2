@@ -123,6 +123,7 @@ function ProjectDescription() {
                     const { latitude, longitude } = position.coords;
 
                     try {
+                        console.log("geolocation is eexecuting ")
                         const response = await fetch("/api/check-location", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
