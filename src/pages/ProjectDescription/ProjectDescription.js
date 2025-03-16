@@ -71,13 +71,7 @@ function ProjectDescription() {
             console.log("Token from localStorage validate:", token);
     
             // Call the API endpoint
-            const res = await fetch("/api/validate-token.js", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ token })
-            });
+            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
     
             const data = await res.json(); // Parse JSON response
     
