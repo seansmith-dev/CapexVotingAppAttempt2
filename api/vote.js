@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     const qrResult = await client.query(qrQuery, [token]);
 
     if (qrResult.rows.length === 0) {
-      return res.status(404).json({ error: 'QR code not found.' });
+      return res.status(404).json({ error: 'No QR code not found.' });
     }
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
