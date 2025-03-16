@@ -77,47 +77,14 @@ function ProjectDescription() {
             setIsLoading(false);
         }
 
-        //API to update tables, with vote information
+        if (!navigator.geolocation) {
+            alert("Geolocation not supported. Enable location services to vote.");
+            navigate("/not-allowed");
+            return;
+        }
+
+        //API for geolocation checking. 
         try {
-
-            const response = await fetch(`/api/vote?token=${token}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(project), // Send the updated data
-            });
-            console.log("Vote Project:", JSON.stringify(project, null, 2));
-
-            const responseBody = await response.json();
-
-
-            if (response.status === 200) {
-                console.log("Project voted for successfully:", responseBody);
-                alert("Project voted for successfully!");
-                navigate('/');  // Redirect after success
-            } else if (response.status === 409) {
-                console.log("you have already voted")
-                alert("You have already voted");
-                navigate('/no-vote-twice');
-            }
-            else if (response.status === 404) {
-                console.log("No QR code used", responseBody);
-                alert("You can't vote without a qr code");
-                navigate('/');  // Redirect after success
-            }
-
-            else {
-                console.error("Error voting for project:", responseBody);
-                navigate('/projects-list');  // Redirect after success
-            }
-
-            if (!navigator.geolocation) {
-                alert("Geolocation not supported. Enable location services to vote.");
-                navigate("/not-allowed");
-                return;
-            }
-
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
@@ -155,57 +122,93 @@ function ProjectDescription() {
             setTimeout(() => navigate("/network-error"), 2000);
             setIsLoading(false);
         }
-};
 
-if (isLoading) {
-    return <Loading />; // Show loading when fetching project data
-}
+        //API to update tables, with vote information
+        try {
 
-if (error) {
-    return <div className="error-message">{error}</div>;
-}
+            const response = await fetch(`/api/vote?token=${token}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(project), // Send the updated data
+            });
+            console.log("Vote Project:", JSON.stringify(project, null, 2));
 
-return (
-    <div className="project-description">
-        <div className="text-wrapper">
-            <h1 className="hero__heading page-title">
-                Project {project.project_number} <br />
-                <span className="project-description__title">{project.project_title}</span>
-            </h1>
+            const responseBody = await response.json();
 
-            <div className="team-introduction-wrapper">
-                <div className="team-introduction">
-                    <div className="title-wrapper">
-                        <p className="team-introduction__title">Team Introduction</p>
+
+            if (response.status === 200) {
+                console.log("Project voted for successfully:", responseBody);
+                alert("Project voted for successfully!");
+                navigate('/');  // Redirect after success
+            } else if (response.status === 409) {
+                console.log("you have already voted")
+                alert("You have already voted");
+                navigate('/no-vote-twice');
+            }
+            else if (response.status === 404) {
+                console.log("No QR code used", responseBody);
+                alert("You can't vote without a qr code");
+                navigate('/');  // Redirect after success
+            }
+
+            else {
+                console.error("Error voting for project:", responseBody);
+                navigate('/projects-list');  // Redirect after success
+            }
+
+        };
+
+        if (isLoading) {
+            return <Loading />; // Show loading when fetching project data
+        }
+
+        if (error) {
+            return <div className="error-message">{error}</div>;
+        }
+
+        return (
+            <div className="project-description">
+                <div className="text-wrapper">
+                    <h1 className="hero__heading page-title">
+                        Project {project.project_number} <br />
+                        <span className="project-description__title">{project.project_title}</span>
+                    </h1>
+
+                    <div className="team-introduction-wrapper">
+                        <div className="team-introduction">
+                            <div className="title-wrapper">
+                                <p className="team-introduction__title">Team Introduction</p>
+                            </div>
+                            <div className="team-members-container">
+                                {project.team_members?.map((member, index) => (
+                                    <p key={index} className="team-introduction__team-member">
+                                        {index + 1}. {member.first_name} {member.second_name}
+                                    </p>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <div className="team-members-container">
-                        {project.team_members?.map((member, index) => (
-                            <p key={index} className="team-introduction__team-member">
-                                {index + 1}. {member.first_name} {member.second_name}
-                            </p>
-                        ))}
-                    </div>
+
+                    <ButtonWithIcon
+                        buttonType="primary"
+                        size="medium"
+                        text="Vote"
+                        onClick={handleVote}
+                        disabled={isVoting} // Disable button while validating token
+                    />
                 </div>
+
+                <main className="about-project">
+                    <h2 className="about-project__heading">About</h2>
+                    <div className="project-text__wrapper">
+                        <p className="about-project__text">{project.project_long_description}</p>
+                    </div>
+                    <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
+                </main>
             </div>
+        );
+    }
 
-            <ButtonWithIcon
-                buttonType="primary"
-                size="medium"
-                text="Vote"
-                onClick={handleVote}
-                disabled={isVoting} // Disable button while validating token
-            />
-        </div>
-
-        <main className="about-project">
-            <h2 className="about-project__heading">About</h2>
-            <div className="project-text__wrapper">
-                <p className="about-project__text">{project.project_long_description}</p>
-            </div>
-            <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
-        </main>
-    </div>
-);
-}
-
-export default ProjectDescription;
+    export default ProjectDescription;
