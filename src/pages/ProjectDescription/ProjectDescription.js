@@ -133,22 +133,26 @@ function ProjectDescription() {
                         if (locationData.allowed) {
                             setTimeout(() => navigate("/vote-success"), 2000);
                         } else {
-                            setLoadingMessage("You are not on campus. Voting is not allowed.");
+                            setIsLoading(true);
                             setTimeout(() => navigate("/not-allowed"), 2000);
+                            setIsLoading(false);
                         }
                     } catch (error) {
-                        setLoadingMessage("Network error while checking location.");
+                        setIsLoading(true);
                         setTimeout(() => navigate("/network-error"), 2000);
+                        setIsLoading(false);
                     }
                 },
                 () => {
-                    setLoadingMessage("Unable to retrieve location. Enable geolocation to vote.");
+                    setIsLoading(true);
                     setTimeout(() => navigate("/geo-error"), 2000);
+                    setIsLoading(false);
                 }
             );
         } catch (error) {
-            setLoadingMessage("Network error while checking location.");
+            setIsLoading(true);
             setTimeout(() => navigate("/network-error"), 2000);
+            setIsLoading(false);
         }
 };
 
