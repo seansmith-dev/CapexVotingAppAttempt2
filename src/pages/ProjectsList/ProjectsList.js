@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import './ProjectsList.css';
 import ButtonWithIcon from '../../components/Button/Button-with-icon.js';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import Loading from "../LoadingVote/Loading.js";
 
 function ProjectsList() {
     const [projects, setProjects] = useState([]);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     
     useEffect(() => {
