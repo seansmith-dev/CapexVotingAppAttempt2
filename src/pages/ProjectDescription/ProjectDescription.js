@@ -101,9 +101,10 @@ function ProjectDescription() {
             alert("Network error occurred.");
             return false;
         } finally {
+            setIsLoading(false) 
             setIsVoting(false); // Hide loading indicator after request completes
         }
-        setIsLoading(false) 
+        
     };
 
     if (isLoading) {
