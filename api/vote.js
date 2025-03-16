@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     const qrCodesAlreadyVoted = await client.query(qrQueryVoteTwice, [qr_code_id])
 
     if (qrCodesAlreadyVoted.rows.length > 0){
-        return res.status(409).json({error: 'Already voted'})
+        return res.status(409).json({error: 'Already voted with this QR code'})
     }
 
     try {

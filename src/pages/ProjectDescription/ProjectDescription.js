@@ -97,11 +97,11 @@ function ProjectDescription() {
                 alert("Project voted for successfully!");
                 navigate('/');  // Redirect after success
             } else if (response.status === 409){
-                console.log("project already voted for")
-                alert("Project already voted for!");
+                console.log("you have already voted")
+                alert("You have already voted");
                 navigate('/no-vote-twice');
             }
-            else if (response.status ===404){
+            else if (response.status === 404){
                 console.log("No QR code used", responseBody);
                 alert("You can't vote without a qr code");
                 navigate('/');  // Redirect after success
