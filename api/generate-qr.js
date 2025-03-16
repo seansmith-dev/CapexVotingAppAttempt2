@@ -62,8 +62,8 @@ export default async function handler(req, res) {
     try {
         console.log("Starting database query...");
         const query = `
-          INSERT INTO "qrcodes" ("qr_code_id", "qr_code_token")
-          VALUES (NULL, $1)
+          INSERT INTO "qrcodes" ("qr_code_token")
+          VALUES ($1)
           RETURNING "qr_code_id", "qr_code_token";`;
         
         // Perform the query to insert the token into the database
