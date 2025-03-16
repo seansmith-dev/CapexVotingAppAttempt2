@@ -35,6 +35,13 @@ export default async function handler(req, res) {
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
 
+    const qrQueryVoteTwice = 'SELECT qr_code_id FROM "Votes" WHERE qr_code_id = $1';
+    const qrCodesAlreadyVoted = await client.query(qrQueryVoteTwice, [qr_code_id])
+
+    if (qrCodesAlreadyVoted.rows.length > 0){
+        return res.status(409).json({error: 'Already voted'})
+    }
+
     try {
         const prIdQuery = 'SELECT project_id FROM "Projects" WHERE project_number = $1';
         const prResult = await client.query(prIdQuery,[project_number])

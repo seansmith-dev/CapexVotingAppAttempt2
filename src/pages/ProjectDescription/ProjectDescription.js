@@ -80,7 +80,6 @@ function ProjectDescription() {
         //API to update tables, with vote information
         try {
 
-            
             const response = await fetch(`/api/vote?token=${token}`, {
                 method: "PATCH",
                 headers: {
@@ -89,7 +88,7 @@ function ProjectDescription() {
                 body: JSON.stringify(project), // Send the updated data
             });
             console.log("Vote Project:", JSON.stringify(project, null, 2));
-                
+
             const responseBody = await response.json();
             if (response.ok) {
                 console.log("Project voted for successfully:", responseBody);
