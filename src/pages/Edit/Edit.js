@@ -73,7 +73,7 @@ function Edit() {
             isMounted = false;
             clearTimeout(timeoutId);
         };
-    }, [projectNumber]);
+    }, [project_number]);
 
     // Effect to handle the textarea update after fetching data
     useEffect(() => {
@@ -131,8 +131,8 @@ function Edit() {
 
         try {
 
-            console.log(projectNumber)
-            const response = await fetch(`/api/updateProjects/?project_number=${projectNumber}`, {
+            console.log(project_number)
+            const response = await fetch(`/api/updateProjects/?project_number=${project_number}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
