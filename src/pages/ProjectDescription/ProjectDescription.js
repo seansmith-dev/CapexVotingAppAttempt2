@@ -53,11 +53,6 @@ function ProjectDescription() {
                 return false;
             }
 
-            if (res.status === 200 && data.valid) {
-                console.log("Token is valid");
-                return true;
-            }
-
             if (res.status === 401) {
                 alert("Invalid or expired token. Access denied.");
                 navigate('/projects-list');
@@ -69,8 +64,9 @@ function ProjectDescription() {
                 return false;
             }
 
-            alert("Unexpected error occurred. Please try again.");
-            return false;
+            if (res.status === 200 && data.valid) {
+                console.log("Token is valid");
+            }
 
         } catch (error) {
             console.error("Error validating token:", error);
@@ -79,6 +75,31 @@ function ProjectDescription() {
         } finally {
             setIsVoting(false); // Hide loading indicator after request completes
             setIsLoading(false);
+        }
+
+        try {
+
+            
+            const response = await fetch(`/api/vote`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(project), // Send the updated data
+            });
+            console.log("Edited Project:", JSON.stringify(project, null, 2));
+
+            const responseBody = await response.json();
+            if (response.ok) {
+                console.log("Project updated successfully:", responseBody);
+                alert("Project voted for successfully!");
+                navigate('/');  // Redirect after success
+            } else {
+                console.error("Error voting for project:", responseBody);
+                navigate('/projects-list');  // Redirect after success
+            }
+        } catch (error) {
+            console.error("Error updating project:", error);
         }
     };
 
