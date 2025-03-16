@@ -119,6 +119,21 @@ function ProjectDescription() {
                     <span className="project-description__title">{project.project_title}</span>
                 </h1>
 
+                <div className="team-introduction-wrapper">
+                    <div className="team-introduction">
+                        <div className="title-wrapper">
+                            <p className="team-introduction__title">Team Introduction</p>
+                        </div>
+                        <div className="team-members-container">
+                            {project.team_members?.map((member, index) => (
+                                <p key={index} className="team-introduction__team-member">
+                                    {index + 1}. {member.first_name} {member.second_name}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
                 <ButtonWithIcon
                     buttonType="primary"
                     size="medium"
