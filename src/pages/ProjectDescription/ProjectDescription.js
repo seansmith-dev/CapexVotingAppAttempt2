@@ -77,21 +77,22 @@ function ProjectDescription() {
             setIsLoading(false);
         }
 
+        //API to update tables, with vote information
         try {
 
             
-            const response = await fetch(`/api/vote`, {
+            const response = await fetch(`/api/vote?token=${token}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(project), // Send the updated data
             });
-            console.log("Edited Project:", JSON.stringify(project, null, 2));
-
+            console.log("Vote Project:", JSON.stringify(project, null, 2));
+                
             const responseBody = await response.json();
             if (response.ok) {
-                console.log("Project updated successfully:", responseBody);
+                console.log("Project voted for successfully:", responseBody);
                 alert("Project voted for successfully!");
                 navigate('/');  // Redirect after success
             } else {

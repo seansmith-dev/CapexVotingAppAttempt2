@@ -14,31 +14,49 @@ const pool = new Pool({
   });
 
 export default async function handler(req, res) {
-    if (req.method !== "PUT") {
-        return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'PATCH') {
+    return res.status(405).json({ error: 'Method not allowed. Use PATCH.' });
+  }
+
+  const { token } = req.query; // Get the token from the query string
+  const { project_number, project_title, project_long_description, project_short_description, faculty_name, team_name, team_members } = req.body;
+
+  const client = await pool.connect();
+  try {
+    // Step 1: Query the qrcodes table to get the qr_code_id based on the provided token
+    const qrQuery = 'SELECT qr_code_id FROM "qrcodes" WHERE qr_code_token = $1';
+    const qrResult = await client.query(qrQuery, [token]);
+
+    if (qrResult.rows.length === 0) {
+      return res.status(404).json({ error: 'QR code not found.' });
     }
 
-    const { token } = req.query;
+    const qr_code_id = qrResult.rows[0].qr_code_id;
 
-    if (!token) {
-        return res.status(400).json({ error: "Token is required" });
-    }
+    // Step 2: Insert a new vote into the votes table
+    const voteQuery = `
+      INSERT INTO "votes" (project_id, qr_code_id, votestamp)
+      VALUES ($1, $2, NOW()) 
+      RETURNING vote_id;
+    `;
+    const voteResult = await client.query(voteQuery, [project_number, qr_code_id]);
 
-    try {
-        console.log("Checking token in database:", token);
-        const query = "SELECT qr_code_id FROM qrcodes WHERE qr_code_token = $1";
-        const { rowCount } = await pool.query(query, [token]);
+    // Step 3: Return the result
+    const vote_id = voteResult.rows[0].vote_id;
+   
+    // Return a response indicating the vote was successfully recorded
+    return res.status(200).json({
+      message: 'Vote successfully recorded',
+      vote_id,
+      project_number,
+      qr_code_id,
+      votestamp: new Date().toISOString(),
+    });
 
-        if (rowCount === 0) {
-            console.log("Token not found in database");
-            return res.status(401).json({ valid: false, error: "Invalid or expired token" });
-        }
-
-        console.log("Token is valid");
-        return res.status(200).json({ valid: true });
-
-    } catch (error) {
-        console.error("Database error:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+  } catch (error) {
+    console.error('Error processing vote:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    client.release();
+  }
 }
