@@ -133,6 +133,15 @@ function ProjectDescription() {
         }
     };
 
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
+
+    if (!project) {
+        return <Loading />;
+    }
+
+
     return (
         <div className="project-description">
             <div className="text-wrapper">
