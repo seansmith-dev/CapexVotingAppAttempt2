@@ -53,7 +53,7 @@ function ProjectsList() {
                                     width="slim"
                                     className="pl__btn-layout"
                                     text="Vote"
-                                    buttonNavigateTo={`/project-description/${project.project_id}`}
+                                    buttonNavigateTo={`/project-description/${project.project_number}`}
                                 />
                             </div>
                         </Link>
