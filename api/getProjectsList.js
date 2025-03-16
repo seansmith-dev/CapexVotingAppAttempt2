@@ -24,7 +24,17 @@ export default async function handler(req, res) {
 
   const client = await pool.connect();
   try {
-    const query = `SELECT project_number, project_title FROM "Projects" ORDER BY project_number ASC;;`;
+    const query = `
+      SELECT 
+        p.project_number, 
+        p.project_title, 
+        p.project_short_description, 
+        p.project_long_description, 
+        f.faculty_name
+      FROM "Projects" p
+      JOIN "Facultys" f ON p.faculty_id = f.faculty_id
+      ORDER BY p.project_number ASC;
+    `;
     const result = await client.query(query);
 
     // Return the fetched projects as JSON
