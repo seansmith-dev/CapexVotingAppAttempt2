@@ -60,6 +60,7 @@ function ProjectDescription() {
 
             if (res.status === 401) {
                 alert("Invalid or expired token. Access denied.");
+                navigate('/projects-list');
                 return false;
             }
 
