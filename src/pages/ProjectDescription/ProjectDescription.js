@@ -158,7 +158,12 @@ function ProjectDescription() {
                 navigate('/projects-list');  // Redirect after success
             }
 
-        };
+
+        } catch (error) {
+            console.log("Error when voting");
+            alert("There was an error error voting");
+            navigate('/');  // Redirect after success
+        }
 
         if (isLoading) {
             return <Loading />; // Show loading when fetching project data
@@ -167,48 +172,49 @@ function ProjectDescription() {
         if (error) {
             return <div className="error-message">{error}</div>;
         }
-
-        return (
-            <div className="project-description">
-                <div className="text-wrapper">
-                    <h1 className="hero__heading page-title">
-                        Project {project.project_number} <br />
-                        <span className="project-description__title">{project.project_title}</span>
-                    </h1>
-
-                    <div className="team-introduction-wrapper">
-                        <div className="team-introduction">
-                            <div className="title-wrapper">
-                                <p className="team-introduction__title">Team Introduction</p>
-                            </div>
-                            <div className="team-members-container">
-                                {project.team_members?.map((member, index) => (
-                                    <p key={index} className="team-introduction__team-member">
-                                        {index + 1}. {member.first_name} {member.second_name}
-                                    </p>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <ButtonWithIcon
-                        buttonType="primary"
-                        size="medium"
-                        text="Vote"
-                        onClick={handleVote}
-                        disabled={isVoting} // Disable button while validating token
-                    />
-                </div>
-
-                <main className="about-project">
-                    <h2 className="about-project__heading">About</h2>
-                    <div className="project-text__wrapper">
-                        <p className="about-project__text">{project.project_long_description}</p>
-                    </div>
-                    <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
-                </main>
-            </div>
-        );
     }
 
-    export default ProjectDescription;
+    return (
+        <div className="project-description">
+            <div className="text-wrapper">
+                <h1 className="hero__heading page-title">
+                    Project {project.project_number} <br />
+                    <span className="project-description__title">{project.project_title}</span>
+                </h1>
+
+                <div className="team-introduction-wrapper">
+                    <div className="team-introduction">
+                        <div className="title-wrapper">
+                            <p className="team-introduction__title">Team Introduction</p>
+                        </div>
+                        <div className="team-members-container">
+                            {project.team_members?.map((member, index) => (
+                                <p key={index} className="team-introduction__team-member">
+                                    {index + 1}. {member.first_name} {member.second_name}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <ButtonWithIcon
+                    buttonType="primary"
+                    size="medium"
+                    text="Vote"
+                    onClick={handleVote}
+                    disabled={isVoting} // Disable button while validating token
+                />
+            </div>
+
+            <main className="about-project">
+                <h2 className="about-project__heading">About</h2>
+                <div className="project-text__wrapper">
+                    <p className="about-project__text">{project.project_long_description}</p>
+                </div>
+                <p className="about-project__faculty small--text">Faculty: {project.faculty_name}</p>
+            </main>
+        </div>
+    );
+}
+
+export default ProjectDescription;
