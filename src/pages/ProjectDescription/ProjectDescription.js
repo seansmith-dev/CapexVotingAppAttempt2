@@ -14,6 +14,14 @@ function ProjectDescription() {
 
     useEffect(() => {
         const fetchProjectData = async () => {
+            if (isLoading) {
+                return <Loading />; // Show loading when fetching project data
+            }
+    
+            if (error) {
+                return <div className="error-message">{error}</div>;
+            }
+
             setIsLoading(true);
             try {
                 const response = await fetch(`/api/getProject?id=${project_number}`);
@@ -33,137 +41,6 @@ function ProjectDescription() {
     }, [project_number]);
 
     const handleVote = async () => {
-        const token = localStorage.getItem("voteToken");
-
-        if (!token) {
-            alert("Error: No token found. Please scan the QR code again.");
-            navigate("/projects-list");
-            return;
-        }
-
-        setIsVoting(true); // Show loading indicator for voting
-        setIsLoading(true);
-
-        try {
-            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-            const data = await res.json();
-
-            if (!res.ok || !data.valid) {
-                alert("Invalid or expired token. Access denied.");
-                return false;
-            }
-
-            if (res.status === 401) {
-                alert("Invalid or expired token. Access denied.");
-                navigate('/projects-list');
-                return false;
-            }
-
-            if (res.status === 400) {
-                alert("Token not provided.");
-                return false;
-            }
-
-            if (res.status === 200 && data.valid) {
-                console.log("Token is valid");
-            }
-
-        } catch (error) {
-            console.error("Error validating token:", error);
-            alert("Network error occurred.");
-            return false;
-        } finally {
-            setIsVoting(false); // Hide loading indicator after request completes
-            setIsLoading(false);
-        }
-
-        if (!navigator.geolocation) {
-            alert("Geolocation not supported. Enable location services to vote.");
-            navigate("/not-allowed");
-            return;
-        }
-
-        //API for geolocation checking. 
-        try {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-
-                    try {
-                        console.log("geolocation is eexecuting ")
-                        const response = await fetch("/api/check-location", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ latitude, longitude }),
-                        });
-
-                        const locationData = await response.json();
-                        if (locationData.allowed) {
-                            setTimeout(() => navigate("/vote-success"), 2000);
-                        } else {
-                            setIsLoading(true);
-                            setTimeout(() => navigate("/not-allowed"), 2000);
-                            setIsLoading(false);
-                        }
-                    } catch (error) {
-                        setIsLoading(true);
-                        setTimeout(() => navigate("/network-error"), 2000);
-                        setIsLoading(false);
-                    }
-                },
-                () => {
-                    setIsLoading(true);
-                    setTimeout(() => navigate("/geo-error"), 2000);
-                    setIsLoading(false);
-                }
-            );
-        } catch (error) {
-            setIsLoading(true);
-            setTimeout(() => navigate("/network-error"), 2000);
-            setIsLoading(false);
-        }
-
-        //API to update tables, with vote information
-        try {
-
-            const response = await fetch(`/api/vote?token=${token}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(project), // Send the updated data
-            });
-            console.log("Vote Project:", JSON.stringify(project, null, 2));
-
-            const responseBody = await response.json();
-
-
-            if (response.status === 200) {
-                console.log("Project voted for successfully:", responseBody);
-                alert("Project voted for successfully!");
-                navigate('/');  // Redirect after success
-            } else if (response.status === 409) {
-                console.log("you have already voted")
-                alert("You have already voted");
-                navigate('/no-vote-twice');
-            }
-            else if (response.status === 404) {
-                console.log("No QR code used", responseBody);
-                alert("You can't vote without a qr code");
-                navigate('/');  // Redirect after success
-            }
-
-            else {
-                console.error("Error voting for project:", responseBody);
-                navigate('/projects-list');  // Redirect after success
-            }
-
-
-        } catch (error) {
-            console.log("Error when voting");
-            alert("There was an error error voting");
-            navigate('/');  // Redirect after success
-        }
 
         if (isLoading) {
             return <Loading />; // Show loading when fetching project data
@@ -172,7 +49,121 @@ function ProjectDescription() {
         if (error) {
             return <div className="error-message">{error}</div>;
         }
-    }
+
+        const token = localStorage.getItem("voteToken");
+    
+        if (!token) {
+            alert("Error: No token found. Please scan the QR code again.");
+            navigate("/projects-list");
+            return;
+        }
+    
+        setIsVoting(true);
+        setIsLoading(true);
+    
+        // Step 1: Validate Token
+        try {
+            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+            const data = await res.json();
+    
+            if (!res.ok || !data.valid) {
+                alert("Invalid or expired token. Access denied.");
+                navigate('/projects-list');
+                return;
+            }
+        } catch (error) {
+            alert("Network error occurred while validating token.");
+            setIsVoting(false);
+            setIsLoading(false);
+            return;
+        }
+    
+        // Step 2: Check Geolocation
+        if (!navigator.geolocation) {
+            alert("Geolocation not supported. Enable location services to vote.");
+            navigate("/not-allowed");
+            return;
+        }
+    
+        try {
+            const locationAllowed = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+    
+                        try {
+                            const response = await fetch("/api/check-location", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ latitude, longitude }),
+                            });
+    
+                            const locationData = await response.json();
+    
+                            if (!locationData.allowed) {
+                                alert("You are not allowed to vote from this location.");
+                                navigate("/not-allowed");
+                                resolve(false);
+                            } else {
+                                resolve(true);
+                            }
+                        } catch (error) {
+                            alert("Error checking location. Try again later.");
+                            navigate("/network-error");
+                            resolve(false);
+                        }
+                    },
+                    () => {
+                        alert("Failed to get geolocation.");
+                        navigate("/geo-error");
+                        resolve(false);
+                    }
+                );
+            });
+    
+            if (!locationAllowed) {
+                setIsVoting(false);
+                setIsLoading(false);
+                return; // STOP execution if location is not allowed.
+            }
+        } catch (error) {
+            alert("Unexpected error in geolocation.");
+            setIsVoting(false);
+            setIsLoading(false);
+            return;
+        }
+    
+        // Step 3: Proceed to Vote API (only if geolocation was successful)
+        try {
+            const response = await fetch(`/api/vote?token=${token}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(project),
+            });
+    
+            const responseBody = await response.json();
+    
+            if (response.status === 200) {
+                alert("Project voted for successfully!");
+                navigate('/vote-success');
+            } else if (response.status === 409) {
+                alert("You have already voted.");
+                navigate('/no-vote-twice');
+            } else if (response.status === 404) {
+                alert("You can't vote without a QR code.");
+                navigate('/');
+            } else {
+                alert("Error voting for project.");
+                navigate('/projects-list');
+            }
+        } catch (error) {
+            alert("There was an error voting.");
+            navigate('/');
+        }
+    
+        setIsVoting(false);
+        setIsLoading(false);
+    };
 
     return (
         <div className="project-description">
