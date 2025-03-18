@@ -31,7 +31,7 @@ function Home() {
         <div className="home-wrapper">
             <div className="hero">
                     <h1 className="hero__heading page-title">Capstone <span className= "hero__year">2025</span></h1>
-                    <p className="hero__text page-subtitle">We're super excited you're here<br/>It's time to vote</p>
+                    <p className="hero__text page-subtitle">It's time to vote</p>
                     <ButtonWithIcon buttonType="primary" size="medium" text="Vote" buttonNavigateTo="/voter-registration"/>
             </div>
             <div className="project">
