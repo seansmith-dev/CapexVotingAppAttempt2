@@ -22,3 +22,47 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vercel
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+Capex-Voting-App_FrontEnd/capex-voting-app/node_modules
+Capex-Voting-App_FrontEnd/capex-voting-app/.pnp
+Capex-Voting-App_FrontEnd/capex-voting-app/.pnp.*
+Capex-Voting-App_FrontEnd/capex-voting-app/.yarn/*
+Capex-Voting-App_FrontEnd/capex-voting-app/!.yarn/patches
+Capex-Voting-App_FrontEnd/capex-voting-app/!.yarn/plugins
+Capex-Voting-App_FrontEnd/capex-voting-app/!.yarn/releases
+Capex-Voting-App_FrontEnd/capex-voting-app/!.yarn/versions
+
+# testing
+Capex-Voting-App_FrontEnd/capex-voting-app/coverage
+
+# next.js
+Capex-Voting-App_FrontEnd/capex-voting-app/.next/
+Capex-Voting-App_FrontEnd/capex-voting-app/out/
+
+# production
+Capex-Voting-App_FrontEnd/capex-voting-app/build
+
+# misc
+Capex-Voting-App_FrontEnd/capex-voting-app/.DS_Store
+Capex-Voting-App_FrontEnd/capex-voting-app/*.pem
+
+# debug
+Capex-Voting-App_FrontEnd/capex-voting-app/npm-debug.log*
+Capex-Voting-App_FrontEnd/capex-voting-app/yarn-debug.log*
+Capex-Voting-App_FrontEnd/capex-voting-app/yarn-error.log*
+Capex-Voting-App_FrontEnd/capex-voting-app/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+Capex-Voting-App_FrontEnd/capex-voting-app/.env*
+
+# vercel
+Capex-Voting-App_FrontEnd/capex-voting-app/.vercel
+
+# typescript
+Capex-Voting-App_FrontEnd/capex-voting-app/*.tsbuildinfo
+Capex-Voting-App_FrontEnd/capex-voting-app/next-env.d.ts
+
