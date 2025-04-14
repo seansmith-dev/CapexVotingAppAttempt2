@@ -30,10 +30,9 @@ export default function AdminLogin() {
                 // Set cookie with expiration
                 Cookies.set("admin-token", "your-secure-token", {
                     expires: 1, // 1 day
-                    secure: true,
-                    sameSite: "lax",
+                    secure: false,
+                    sameSite: "strict",
                 });
-
                 router.push("/admin/dashboard");
             } else {
                 setError("Invalid Username or Password");
@@ -45,10 +44,7 @@ export default function AdminLogin() {
 
     return (
         <div className="flex flex-col min-h-screen justify-between">
-            <NavBar
-                heading="Admin Login"
-                links={links}
-            />
+            <NavBar heading="Admin Login" links={links} />
             <div className="flex flex-1 items-center justify-center bg-gray-100">
                 <div className="bg-white p-8 rounded-lg shadow-md w-96">
                     <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">

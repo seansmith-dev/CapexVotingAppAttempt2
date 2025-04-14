@@ -72,7 +72,7 @@ export default function QRScanner({
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-white transition-colors"
+                            className="text-gray-900 hover:text-white transition-colors"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -89,10 +89,10 @@ export default function QRScanner({
                         </button>
                     )}
                 </div>
-                <div className="bg-gray-200 rounded-2xl overflow-hidden aspect-square">
+                <div className="bg-gray-200 rounded-2xl overflow-hidden aspect-square text-black">
                     <div id="reader" className="w-full h-full" />
                 </div>
-                <p className="text-gray-400 text-sm text-center mt-4">
+                <p className="text-gray-900 text-sm text-center mt-4">
                     Position the QR code within the frame to scan
                 </p>
             </div>

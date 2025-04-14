@@ -53,9 +53,7 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="block">
-                            NEWSLETTER
-                        </h3>
+                        <h3 className="block">NEWSLETTER</h3>
                     </div>
                 </div>
 

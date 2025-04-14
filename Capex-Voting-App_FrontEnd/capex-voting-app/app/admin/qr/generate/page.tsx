@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { generateQRCodeDataURL, VoterType } from "@/app/utils/qrGenerator";
+import { generateQRCodeDataURL } from "@/app/utils/qrGenerator";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
-
+import AdminLayout from "@/app/layouts/admin";
 export default function GenerateQRPage() {
     const [industryCount, setIndustryCount] = useState<number>(0);
     const [guestCount, setGuestCount] = useState<number>(0);
@@ -106,9 +106,10 @@ export default function GenerateQRPage() {
     ).length;
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
-                <h1 className="text-2xl font-bold mb-6 text-gray-900">
+        <AdminLayout heading="Generate QR Codes">
+            <div className="bg-gray-100 p-8">
+                <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+                    <h1 className="text-2xl font-bold mb-6 text-gray-900">
                     Generate QR Codes
                 </h1>
 
@@ -237,5 +238,6 @@ export default function GenerateQRPage() {
                 )}
             </div>
         </div>
+        </AdminLayout>
     );
 }

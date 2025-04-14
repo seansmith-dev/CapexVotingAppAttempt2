@@ -1,24 +1,17 @@
 "use client";
 
-import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import HomeIcon from "./components/Icons/HomeIcon";
-import UserIcon from "./components/Icons/UserIcon";
-import OpenBookIcon from "./components/Icons/OpenBookIcon";
 import QRScanner from "./components/QRScanner";
+import RegularNavBar from "./components/RegularNavBar";
 
 export default function Home() {
     const router = useRouter();
     const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0 });
     const [showScanner, setShowScanner] = useState(false);
 
-    const links = [
-        { href: "/", text: "Home", icon: <HomeIcon /> },
-        { href: "/admin", text: "Admin", icon: <UserIcon /> },
-        { href: "/guide", text: "Application Guide", icon: <OpenBookIcon /> },
-    ];
+    
 
     useEffect(() => {
         const fetchRemainingTime = async () => {
@@ -46,7 +39,7 @@ export default function Home() {
                 if (prev.minutes === 0) {
                     return { hours: prev.hours - 1, minutes: 59 };
                 }
-                return { ...prev, minutes: prev.minutes - 1 };
+                return {hours:prev.hours, minutes: prev.minutes - 1 };
             });
         }, 60000); // Update every minute
 
@@ -55,30 +48,76 @@ export default function Home() {
 
     const handleVoteClick = async () => {
         try {
-            navigator.geolocation.getCurrentPosition(async (position) => {
-                const { latitude, longitude } = position.coords;
-                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-                // const response = await fetch("/api/check-location", {
-                //     method: "POST",
-                //     body: JSON.stringify({ latitude, longitude }),
-                // });
-
-                // const data = await response.json();
-                const data = {
-                    allowed: true,
-                };
-                console.log(data);
-
-                if (data.allowed) {
-                    console.log("Showing scanner, " + showScanner);
-                    setShowScanner(true);
-                } else {
-                    alert(
-                        "You are not on campus. Please go to the Swinburne Hawthorn Campus to vote."
+            if ("geolocation" in navigator) {
+                /* geolocation is available */
+                console.log("Geolocation is available");
+            } else {
+                /* geolocation IS NOT available */
+                console.log("Geolocation is not available");
+            }
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    console.log("Getting current position");
+                    const { latitude, longitude } = position.coords;
+                    console.log(
+                        `Latitude: ${latitude}, Longitude: ${longitude}`
                     );
+
+                    alert("Latitude: " + latitude + " Longitude: " + longitude);
+                    // const response = await fetch("/api/check-location", {
+                    //     method: "POST",
+                    //     body: JSON.stringify({ latitude, longitude }),
+                    // });
+
+                    // const data = await response.json();
+                    const data = {
+                        allowed: true,
+                    };
+                    console.log(data);
+
+                    if (data.allowed) {
+                        console.log("Showing scanner, " + showScanner);
+                        setShowScanner(true);
+                    } else {
+                        alert(
+                            "You are not on campus. Please go to the Swinburne Hawthorn Campus to vote."
+                        );
+                    }
+                },
+                (error) => {
+                    // Error Callback
+                    console.error(
+                        `Geolocation error: ${error.message} (Code: ${error.code})`,
+                        error
+                    );
+                    let message = "Unable to retrieve your location.";
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED: // 1
+                            message =
+                                "Location permission denied by user. Please enable location access for this site in your browser settings.";
+                            break;
+                        case error.POSITION_UNAVAILABLE: // 2
+                            message =
+                                "Location information is unavailable. Check network or GPS settings.";
+                            break;
+                        case error.TIMEOUT: // 3
+                            message =
+                                "The request to get user location timed out. Please try again.";
+                            break;
+                        default:
+                            message = `An unknown error occurred (Code: ${error.code}).`;
+                            break;
+                    }
+                    alert(`Geolocation Error: ${message}`);
+                },
+                {
+                    // Geolocation Options
+                    enableHighAccuracy: true, // Request higher accuracy
+                    timeout: 15000, // 15 seconds timeout
+                    maximumAge: 0, // Don't use cached location
                 }
-            });
+            );
         } catch (error) {
             console.error("Error accessing camera:", error);
             alert(
@@ -99,7 +138,7 @@ export default function Home() {
     return (
         <div className="min-h-screen max-w-screen relative flex flex-col">
             {/* Navbar */}
-            <NavBar heading="Capstone Project Expo 2024" links={links} />
+            <RegularNavBar heading="Capstone Project Expo 2024"/>
 
             <div className="relative z-10 flex flex-col items-center justify-center p-4 mx-auto bg-[url('/background.png')] bg-cover bg-center bg-blur-md">
                 {/* <div className="fixed inset-0 bg-gray-900">
