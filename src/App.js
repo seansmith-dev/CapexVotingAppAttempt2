@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from './components/Navbar/Navbar.js';
 import Footer from './components/Footer/footer.js';
+import AdminLogin from './AdminLogin';
 
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
         <main>
           <Routes>
             {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/admin-login" element={<AdminLogin />} />
+
+            
             
           </Routes>
         </main>
