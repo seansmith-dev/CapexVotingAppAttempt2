@@ -162,7 +162,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     return (
         <AdminLayout heading={`${leaderboardType} Leaderboard`}>
-            <div className="bg-gray-100 p-8">
+            <div className=" p-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <div className="mb-6">

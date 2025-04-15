@@ -6,12 +6,12 @@ export default function AdminDashboard() {
 
     return (
         <AdminLayout heading="Admin Dashboard">
-            <div className="flex flex-col flex-1 justify center items-center p-8 overflow-auto">
+            <div className="flex flex-col flex-1 justify-center p-8 overflow-auto">
                 <div className="min-w-[70vw] mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-auto">
                         {/* Project Management */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                        <div className="bg-white rounded-lg shadow p-4 md:p-8">
+                            <h2 className="text-2xl text-center font-bold text-gray-900 mb-8">
                                 Project Management
                             </h2>
                             <div className="space-y-4">
@@ -38,8 +38,8 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* QR Code Management */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                        <div className="bg-white rounded-lg shadow p-4 md:p-8">
+                            <h2 className="text-2xl text-center font-bold text-gray-900 mb-8">
                                 QR Code Management
                             </h2>
                             <div className="space-y-4">
@@ -65,8 +65,8 @@ export default function AdminDashboard() {
                         </div>
 
                         {/* Leaderboards */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h2 className="text-xl text-center font-bold text-gray-900 mb-4">
+                        <div className="bg-white rounded-lg shadow p-4 md:p-8">
+                            <h2 className="text-2xl text-center font-bold text-gray-900 mb-8">
                                 Leaderboards
                             </h2>
                             <div className="space-y-4">

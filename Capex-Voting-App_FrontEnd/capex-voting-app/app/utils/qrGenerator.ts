@@ -1,10 +1,10 @@
 import QRCode from 'qrcode';
 
-export type VoterType = 'INDUSTRY' | 'GUEST';
+// export type VoterType = 'INDUSTRY' | 'GUEST';
 
 export interface QRCodeData {
     voterId: string;
-    voterType: VoterType;
+    // voterType: VoterType;
 }
 
 export async function generateQRCodeDataURL(data: QRCodeData): Promise<string> {

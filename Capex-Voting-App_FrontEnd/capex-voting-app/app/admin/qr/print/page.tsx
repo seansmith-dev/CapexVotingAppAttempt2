@@ -1,43 +1,66 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
+import QRCode from "qrcode";
+import AdminLayout from "@/app/layouts/admin";
+import { Printer } from "lucide-react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+
+// Mock QR codes
+const mockQRCodes: QRCodeForPrint[] = [
+    { voterId: "6xKCDFvY8ek2QvUdKqq0a", dataUrl: "6xKCDFvY8ek2QvUdKqq0a" },
+    { voterId: "7yLDEGwZ9fl3RxVeLrr1b", dataUrl: "7yLDEGwZ9fl3RxVeLrr1b" },
+    { voterId: "8zMEFHx0ag4SyWfMss2c", dataUrl: "8zMEFHx0ag4SyWfMss2c" },
+    { voterId: "9aNFGIy1bh5TzXgNtt3d", dataUrl: "9aNFGIy1bh5TzXgNtt3d" },
+    { voterId: "0bOGHJz2ci6UaYhOuu4e", dataUrl: "0bOGHJz2ci6UaYhOuu4e" },
+];
 
 export default function PrintQRPage() {
-    const [qrCodes, setQrCodes] = useState<QRCodeForPrint[]>([]);
     const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
+    const [qrCodes, setQrCodes] = useState<QRCodeForPrint[]>(mockQRCodes);
     const [loading, setLoading] = useState(true);
-    const [showPrintDialog, setShowPrintDialog] = useState(false);
-    const [industryCount, setIndustryCount] = useState(0);
-    const [guestCount, setGuestCount] = useState(0);
-    const [printMode, setPrintMode] = useState<"selected" | "all" | null>(null);
 
     useEffect(() => {
-        fetchUnprintedCodes();
+        const fetchQRCodes = async () => {
+            try {
+                // TODO: Uncomment when API is ready
+                // const response = await fetch("/api/qrcodes/unprinted");
+                // const data = await response.json();
+                // setQrCodes(data);
+
+                // Using mock data for now
+                const updatedCodes = await Promise.all(
+                    mockQRCodes.map(async (qr) => {
+                        const dataUrl = await QRCode.toDataURL(
+                            `voterId: ${qr.voterId}`
+                        );
+                        return { ...qr, dataUrl };
+                    })
+                );
+                setQrCodes(updatedCodes);
+            } catch (error) {
+                console.error("Error fetching QR codes:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchQRCodes();
     }, []);
 
-    const fetchUnprintedCodes = async () => {
-        try {
-            const response = await fetch("/api/qrcodes/unprinted");
-            const data = await response.json();
-            setQrCodes(data);
-        } catch (error) {
-            console.error("Error fetching QR codes:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handlePrintWithCounts = () => {
-        const industryQRs = qrCodes.filter(
-            (code) => code.voterType === "INDUSTRY"
+    const handlePrintSelected = async () => {
+        const codesToPrint = qrCodes.filter((code) =>
+            selectedCodes.includes(code.voterId)
         );
-        const guestQRs = qrCodes.filter((code) => code.voterType === "GUEST");
-
-        const selectedIndustryQRs = industryQRs.slice(0, industryCount);
-        const selectedGuestQRs = guestQRs.slice(0, guestCount);
-        const codesToPrint = [...selectedIndustryQRs, ...selectedGuestQRs];
-
         if (codesToPrint.length === 0) {
             alert("Please select at least one QR code to print");
             return;
@@ -46,188 +69,165 @@ export default function PrintQRPage() {
         const doc = generateQRCodesPDF(codesToPrint);
         doc.save("qr-codes.pdf");
 
-        // Update printed status
-        fetch("/api/qrcodes/print", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ids: codesToPrint.map((code) => code.id) }),
-        }).then(() => {
-            fetchUnprintedCodes();
+        try {
+            // TODO: Uncomment when API is ready
+            // await fetch("/api/qrcodes/print", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ ids: codesToPrint.map(code => code.voterId) }),
+            // });
+
+            // Remove printed codes from the list
+            setQrCodes(
+                qrCodes.filter((code) => !selectedCodes.includes(code.voterId))
+            );
             setSelectedCodes([]);
-            setShowPrintDialog(false);
-            setIndustryCount(0);
-            setGuestCount(0);
-            setPrintMode(null);
-        });
+        } catch (error) {
+            console.error("Error updating printed status:", error);
+        }
     };
 
-    const openPrintDialog = (mode: "selected" | "all") => {
-        setPrintMode(mode);
-        setShowPrintDialog(true);
+    const handlePrintAll = async () => {
+        if (qrCodes.length === 0) {
+            alert("No QR codes available to print");
+            return;
+        }
+
+        const doc = generateQRCodesPDF(qrCodes);
+        doc.save("qr-codes.pdf");
+
+        try {
+            // TODO: Uncomment when API is ready
+            // await fetch("/api/qrcodes/print", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ ids: qrCodes.map(code => code.voterId) }),
+            // });
+
+            // Clear all codes after printing
+            setQrCodes([]);
+            setSelectedCodes([]);
+        } catch (error) {
+            console.error("Error updating printed status:", error);
+        }
     };
 
-    const handlePrintSelected = () => {
-        openPrintDialog("selected");
-    };
+    const handlePrintSingle = async (code: QRCodeForPrint) => {
+        const doc = generateQRCodesPDF([code]);
+        doc.save(`qr-code-${code.voterId}.pdf`);
 
-    const handlePrintAll = () => {
-        openPrintDialog("all");
+        try {
+            // TODO: Uncomment when API is ready
+            // await fetch("/api/qrcodes/print", {
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     body: JSON.stringify({ ids: [code.voterId] }),
+            // });
+
+            // Remove the printed code from the list
+            setQrCodes(qrCodes.filter((qr) => qr.voterId !== code.voterId));
+            setSelectedCodes(selectedCodes.filter((id) => id !== code.voterId));
+        } catch (error) {
+            console.error("Error updating printed status:", error);
+        }
     };
 
     if (loading) {
-        return <div className="min-h-screen bg-gray-100 p-8">Loading...</div>;
+        return (
+            <AdminLayout heading="Print QR Codes">
+                <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
+                    <div className="text-center">Loading...</div>
+                </div>
+            </AdminLayout>
+        );
     }
 
-    const availableIndustryCount = qrCodes.filter(
-        (code) => code.voterType === "INDUSTRY"
-    ).length;
-    const availableGuestCount = qrCodes.filter(
-        (code) => code.voterType === "GUEST"
-    ).length;
-
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
+        <AdminLayout heading="Print QR Codes">
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-                {showPrintDialog ? (
-                    <div className="space-y-6">
-                        <h2 className="text-xl font-bold">
-                            Select QR Codes to Print
-                        </h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Number of Industry QR Codes (Available:{" "}
-                                    {availableIndustryCount})
-                                </label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max={availableIndustryCount}
-                                    value={industryCount}
-                                    onChange={(e) =>
-                                        setIndustryCount(
-                                            Math.min(
-                                                parseInt(e.target.value) || 0,
-                                                availableIndustryCount
-                                            )
-                                        )
-                                    }
-                                    className="w-full p-2 border rounded"
-                                />
-                            </div>
+                <div className="flex flex-col gap-6 justify-between items-center mb-6">
+                    <h1 className="text-3xl text-center font-bold">
+                        Print QR Codes
+                    </h1>
+                    <div className="flex w-full gap-4">
+                        <Button
+                            onClick={handlePrintSelected}
+                            disabled={selectedCodes.length === 0}
+                            variant="secondary"
+                            className="min-w-[150px] flex-1"
+                        >
+                            Print Selected ({selectedCodes.length})
+                        </Button>
+                        <Button
+                            onClick={handlePrintAll}
+                            disabled={qrCodes.length === 0}
+                            variant="default"
+                            className="min-w-[150px] flex-1"
+                        >
+                            Print All ({qrCodes.length})
+                        </Button>
+                    </div>
+                </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Number of Guest QR Codes (Available:{" "}
-                                    {availableGuestCount})
-                                </label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max={availableGuestCount}
-                                    value={guestCount}
-                                    onChange={(e) =>
-                                        setGuestCount(
-                                            Math.min(
-                                                parseInt(e.target.value) || 0,
-                                                availableGuestCount
-                                            )
-                                        )
-                                    }
-                                    className="w-full p-2 border rounded"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex space-x-4">
-                            <button
-                                onClick={handlePrintWithCounts}
-                                disabled={
-                                    industryCount === 0 && guestCount === 0
-                                }
-                                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded disabled:bg-gray-400"
-                            >
-                                Print QR Codes
-                            </button>
-
-                            <button
-                                onClick={() => {
-                                    setShowPrintDialog(false);
-                                    setIndustryCount(0);
-                                    setGuestCount(0);
-                                    setPrintMode(null);
-                                }}
-                                className="flex-1 bg-gray-600 text-white py-2 px-4 rounded"
-                            >
-                                Cancel
-                            </button>
-                        </div>
+                {qrCodes.length === 0 ? (
+                    <div className="text-center py-8">
+                        No QR codes available to print
                     </div>
                 ) : (
-                    <>
-                        <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl font-bold">
-                                Print QR Codes
-                            </h1>
-                            <div className="space-x-4">
-                                <button
-                                    onClick={handlePrintSelected}
-                                    disabled={selectedCodes.length === 0}
-                                    className="bg-blue-600 text-white py-2 px-4 rounded disabled:bg-gray-400"
-                                >
-                                    Print Selected ({selectedCodes.length})
-                                </button>
-                                <button
-                                    onClick={handlePrintAll}
-                                    disabled={qrCodes.length === 0}
-                                    className="bg-green-600 text-white py-2 px-4 rounded disabled:bg-gray-400"
-                                >
-                                    Print All ({qrCodes.length})
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-12">Select</TableHead>
+                                <TableHead>QR Code</TableHead>
+                                <TableHead className="w-24">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {qrCodes.map((code) => (
-                                <div
-                                    key={code.id}
-                                    className="flex items-center p-4 border rounded"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedCodes.includes(
-                                            code.id
-                                        )}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                setSelectedCodes([
-                                                    ...selectedCodes,
-                                                    code.id,
-                                                ]);
-                                            } else {
-                                                setSelectedCodes(
-                                                    selectedCodes.filter(
-                                                        (id) => id !== code.id
-                                                    )
-                                                );
+                                <TableRow key={code.voterId}>
+                                    <TableCell>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedCodes.includes(
+                                                code.voterId
+                                            )}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedCodes([
+                                                        ...selectedCodes,
+                                                        code.voterId,
+                                                    ]);
+                                                } else {
+                                                    setSelectedCodes(
+                                                        selectedCodes.filter(
+                                                            (id) =>
+                                                                id !==
+                                                                code.voterId
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                            className="h-4 w-4"
+                                        />
+                                    </TableCell>
+                                    <TableCell>{code.voterId}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            onClick={() =>
+                                                handlePrintSingle(code)
                                             }
-                                        }}
-                                        className="mr-4"
-                                    />
-                                    <div>
-                                        <p className="font-medium">
-                                            {code.voterType}
-                                        </p>
-                                        <p className="text-sm text-gray-600">
-                                            {code.voterId}
-                                        </p>
-                                    </div>
-                                </div>
+                                            variant="ghost"
+                                            size="icon"
+                                        >
+                                            <Printer className="h-4 w-4" />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </div>
-                    </>
+                        </TableBody>
+                    </Table>
                 )}
             </div>
-        </div>
+        </AdminLayout>
     );
 }

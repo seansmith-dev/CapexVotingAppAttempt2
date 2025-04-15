@@ -32,8 +32,9 @@ export default function QRScanner({
         scannerRef.current.render(
             (decodedText) => {
                 setData(decodedText);
-                
-                // onScanSuccess(decodedText);
+                console.log(decodedText);
+                console.log(decodedText.substring(9));
+                onScanSuccess(decodedText.substring(9));
             },
             (error) => {
                 onScanError?.(error);
@@ -72,7 +73,7 @@ export default function QRScanner({
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="text-gray-900 hover:text-white transition-colors"
+                            className="text-white transition-colors"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +93,7 @@ export default function QRScanner({
                 <div className="bg-gray-200 rounded-2xl overflow-hidden aspect-square text-black">
                     <div id="reader" className="w-full h-full" />
                 </div>
-                <p className="text-gray-900 text-sm text-center mt-4">
+                <p className="text-white text-sm text-center mt-4">
                     Position the QR code within the frame to scan
                 </p>
             </div>
