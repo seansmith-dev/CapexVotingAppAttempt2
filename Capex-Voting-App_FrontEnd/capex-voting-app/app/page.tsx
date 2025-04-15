@@ -128,7 +128,7 @@ export default function Home() {
 
     const handleScanSuccess = (decodedText: string) => {
         setShowScanner(false);
-        router.push(`/projects?data=${encodeURIComponent(decodedText)}`);
+        router.push(`/VoterRegistration`);
     };
 
     const handleScanError = (error: any) => {
