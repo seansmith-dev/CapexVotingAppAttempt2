@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { useState } from "react";
+
+import styles from "./QRScanner.module.css";
 
 interface QRScannerProps {
     onScanSuccess: (decodedText: string) => void;
@@ -16,7 +17,6 @@ export default function QRScanner({
     onClose,
 }: QRScannerProps) {
     const scannerRef = useRef<Html5QrcodeScanner | null>(null);
-    const [data, setData] = useState("");
     useEffect(() => {
         // Initialize scanner
         scannerRef.current = new Html5QrcodeScanner(
@@ -24,6 +24,8 @@ export default function QRScanner({
             {
                 fps: 10,
                 qrbox: { width: 300, height: 300 },
+                rememberLastUsedCamera: false,
+                showTorchButtonIfSupported: true,
             },
             false
         );
@@ -31,7 +33,6 @@ export default function QRScanner({
         // Render scanner
         scannerRef.current.render(
             (decodedText) => {
-                setData(decodedText);
                 console.log(decodedText);
                 console.log(decodedText.substring(9));
                 onScanSuccess(decodedText.substring(9));
@@ -50,10 +51,10 @@ export default function QRScanner({
     }, [onScanSuccess, onScanError]);
 
     return (
-        <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-md bg-zinc-800 rounded-3xl shadow-lg p-6">
+        <div className="fixed h-full inset-0 bg-black/90 z-100 flex flex-col items-center justify-center p-4">
+            <div className="w-full my-15 max-w-lg bg-zinc-800 rounded-3xl shadow-lg p-6 flex flex-col">
                 <div className="flex justify-between items-center mb-4">
-                    <div className="flex items-center">
+                    <div className="flex-1 justify-center flex items-center">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
@@ -66,13 +67,18 @@ export default function QRScanner({
                                 clipRule="evenodd"
                             />
                         </svg>
-                        <span className="text-red-500 text-lg font-semibold">
-                            Scan QR Code. data: {data}
+                        <span className="text-red-500 text-xl text-center font-semibold">
+                            Scan QR Code
                         </span>
                     </div>
                     {onClose && (
                         <button
-                            onClick={onClose}
+                            onClick={() => {
+                                if (scannerRef.current) {
+                                    scannerRef.current.clear();
+                                }
+                                onClose();
+                            }}
                             className="text-white transition-colors"
                         >
                             <svg
@@ -90,8 +96,11 @@ export default function QRScanner({
                         </button>
                     )}
                 </div>
-                <div className="bg-gray-200 rounded-2xl overflow-hidden aspect-square text-black">
-                    <div id="reader" className="w-full h-full" />
+                <div className="bg-gray-800 flex-1 rounded-2xl overflow-auto text-white">
+                    <div
+                        id="reader"
+                        className={`${styles["html5-qrcode-button-camera-stop"]} w-full h-full border-transparent`}
+                    />
                 </div>
                 <p className="text-white text-sm text-center mt-4">
                     Position the QR code within the frame to scan
