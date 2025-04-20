@@ -13,7 +13,6 @@ export default function Home() {
     const router = useRouter();
     const [showScanner, setShowScanner] = useState(false);
 
-    
     const handleVoteClick = async () => {
         try {
             if ("geolocation" in navigator) {
@@ -104,55 +103,52 @@ export default function Home() {
 
     return (
         <>
-        <AuroraBackground>
-            <motion.div
-                initial={{ opacity: 0.0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                    delay: 0.3,
-                    duration: 0.8,
-                    ease: "easeInOut",
-                }}
-                className="bg-purple-800/20 min-h-screen min-w-screen relative flex flex-col"
-            >
-                {/* Navbar */}
-                <RegularNavBar
-                    heading="Capstone Project Expo 2024"
-                    transparent={true}
-                />
-
-                <div className="text-center space-y-20 p-16 flex-1 flex flex-col justify-center items-center w-7/10 m-auto">
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
-                        Welcome to Swinburne Capstone Project Expo 2025
-                    </h1>
-                    <p className="text-xl md:text-2xl lg:text-3xl text-gray-600">
-                        Here you can vote for your favourite project in the
-                        expo. Your vote matters in recognizing outstanding
-                        innovation and creativity.
-                    </p>
-                    <Button
-                        onClick={handleVoteClick}
-                        className="relative group overflow-hidden px-8 py-8 font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-purple-700 text-white hover:from-blue-700 hover:to-purple-900 transition-all duration-300 shadow-lg text-xl md:text-2xl lg:text-3xl"
-                    >
-                        <span className="relative z-10">Vote Now</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </Button>
-                </div>
-
-               
-
-
-                {showScanner && (
-                    <QRScanner
-                        onScanSuccess={handleScanSuccess}
-                        onScanError={handleScanError}
-                        onClose={() => setShowScanner(false)}
+            <AuroraBackground>
+                <motion.div
+                    initial={{ opacity: 0.0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{
+                        delay: 0.3,
+                        duration: 0.8,
+                        ease: "easeInOut",
+                    }}
+                    className="bg-purple-800/20 min-h-screen min-w-screen relative flex flex-col"
+                >
+                    {/* Navbar */}
+                    <RegularNavBar
+                        heading="Capstone Project Expo 2024"
+                        transparent={true}
                     />
-                )}
-            </motion.div>
-        </AuroraBackground>
 
-                <Footer />
-                </>
+                    <div className="text-center space-y-20 p-16 flex-1 flex flex-col justify-center items-center md:w-7/10 lg:w-7/10 m-auto">
+                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
+                            Welcome to Swinburne Capstone Project Expo 2025
+                        </h1>
+                        <p className="text-xl md:text-2xl lg:text-3xl text-gray-600">
+                            Here you can vote for your favourite project in the
+                            expo. Your vote matters in recognizing outstanding
+                            innovation and creativity.
+                        </p>
+                        <Button
+                            onClick={handleVoteClick}
+                            className="relative group overflow-hidden px-8 py-8 font-semibold rounded-lg bg-gradient-to-r from-blue-500 to-purple-700 text-white hover:from-blue-700 hover:to-purple-900 transition-all duration-300 shadow-lg text-xl md:text-2xl lg:text-3xl"
+                        >
+                            <span className="relative z-10">Vote Now</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </Button>
+                    </div>
+
+                    {showScanner && (
+                        <QRScanner
+                            onScanSuccess={handleScanSuccess}
+                            onScanError={handleScanError}
+                            onClose={() => setShowScanner(false)}
+                        />
+                    )}
+                </motion.div>
+            </AuroraBackground>
+
+            <Footer />
+        </>
     );
 }

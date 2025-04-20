@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,6 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,11 +22,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import NavBar from "@/app/components/NavBar";
-import HomeIcon from "@/app/components/Icons/HomeIcon";
-import UserIcon from "@/app/components/Icons/UserIcon";
-import OpenBookIcon from "@/app/components/Icons/OpenBookIcon";
 import Footer from "@/app/components/Footer";
+import RegularNavBar from "@/app/components/RegularNavBar";
 interface Project {
     id: string;
     name: string;
@@ -95,12 +91,33 @@ export default function VotePage() {
     const [selectedProject, setSelectedProject] = useState<string | null>(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isOriginalButtonVisible, setIsOriginalButtonVisible] =
+        useState(false); // State for original button visibility
+    const originalButtonRef = useRef<HTMLDivElement>(null); // Ref for the original button container
 
-    const links = [
-        { href: "/", text: "Home", icon: <HomeIcon /> },
-        { href: "/admin", text: "Admin", icon: <UserIcon /> },
-        { href: "/guide", text: "Application Guide", icon: <OpenBookIcon /> },
-    ];
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsOriginalButtonVisible(entry.isIntersecting);
+            },
+            {
+                root: null, // relative to document viewport
+                rootMargin: "0px",
+                threshold: 0.1, // trigger if 10% of the element is visible
+            }
+        );
+
+        const currentButtonRef = originalButtonRef.current;
+        if (currentButtonRef) {
+            observer.observe(currentButtonRef);
+        }
+
+        return () => {
+            if (currentButtonRef) {
+                observer.unobserve(currentButtonRef);
+            }
+        };
+    }, [voterType]);
 
     if (!qrCode) {
         router.push("/");
@@ -140,13 +157,13 @@ export default function VotePage() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <NavBar heading="Vote Registration" links={links} />
+            <RegularNavBar heading="Vote Registration" />
             <div className="flex-1 bg-gray-100 p-4">
                 <div className="max-w-4xl mx-auto">
                     <Card className="h-[60vh] mb-6 relative overflow-hidden flex justify-center">
                         <div className="bg-gray-700/80 bg-blend-darken absolute inset-0 bg-[url('/campus.jpg')] bg-cover bg-center" />
                         <div className="relative z-10">
-                            <CardHeader className="text-center gap-8 w-7/10 m-auto text-white">
+                            <CardHeader className="text-center gap-8 md:w-7/10 lg:w-7/10 m-auto text-white">
                                 <CardTitle className="text-3xl">
                                     {voterType
                                         ? "Cast Your Vote Now"
@@ -162,7 +179,7 @@ export default function VotePage() {
                     </Card>
 
                     {!voterType ? (
-                        <Card className="mb-6">
+                        <Card className="mb-6 p-6">
                             <CardHeader>
                                 <CardTitle className="text-2xl text-center">
                                     You are a...
@@ -178,7 +195,7 @@ export default function VotePage() {
                                                 : "outline"
                                         }
                                         size="lg"
-                                        className="min-w-[200px]"
+                                        className="flex-1 max-w-[200px]"
                                         onClick={() => {
                                             setVoterType("INDUSTRY");
                                             setSearchQuery("");
@@ -194,7 +211,7 @@ export default function VotePage() {
                                                 : "outline"
                                         }
                                         size="lg"
-                                        className="min-w-[200px]"
+                                        className="flex-1 max-w-[200px]"
                                         onClick={() => {
                                             setVoterType("GUEST");
                                             setSearchQuery("");
@@ -291,7 +308,10 @@ export default function VotePage() {
                                 )}
                             </div>
 
-                            <div className="mt-6 flex justify-center">
+                            <div
+                                ref={originalButtonRef}
+                                className="mt-6 flex justify-center"
+                            >
                                 <Button
                                     onClick={() => setShowConfirmation(true)}
                                     disabled={!selectedProject}
@@ -315,12 +335,16 @@ export default function VotePage() {
                                             Once submitted, you cannot change
                                             your vote. Are you sure you want to
                                             vote for{" "}
-                                            {
-                                                mockProjects.find(
-                                                    (p) =>
-                                                        p.id === selectedProject
-                                                )?.name
-                                            }
+                                            <span className="font-bold">
+                                                {" "}
+                                                {
+                                                    mockProjects.find(
+                                                        (p) =>
+                                                            p.id ===
+                                                            selectedProject
+                                                    )?.name
+                                                }
+                                            </span>
                                             ?
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
@@ -336,8 +360,28 @@ export default function VotePage() {
                             </AlertDialog>
                         </>
                     )}
+                    {selectedProject &&
+                        voterType &&
+                        !isOriginalButtonVisible && (
+                            <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+                                <div className="mx-auto pointer-events-auto">
+                                    <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 flex justify-center items-center">
+                                        <Button
+                                            onClick={() =>
+                                                setShowConfirmation(true)
+                                            }
+                                            // Button takes full width of its container
+                                            className="max-w-4xl w-full text-lg py-6 font-bold shadow-lg m-auto"
+                                        >
+                                            Submit Vote
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                 </div>
             </div>
+
             <Footer />
         </div>
     );
