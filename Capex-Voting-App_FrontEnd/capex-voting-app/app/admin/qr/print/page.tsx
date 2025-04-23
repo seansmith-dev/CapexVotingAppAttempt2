@@ -1,233 +1,152 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
-import QRCode from "qrcode";
-import AdminLayout from "@/app/layouts/admin";
-import { Printer } from "lucide-react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import RegularNavBar from "@/app/components/RegularNavBar";
+import Footer from "@/app/components/Footer";
+import { useRouter } from "next/navigation";
 
-// Mock QR codes
-const mockQRCodes: QRCodeForPrint[] = [
-    { voterId: "6xKCDFvY8ek2QvUdKqq0a", dataUrl: "6xKCDFvY8ek2QvUdKqq0a" },
-    { voterId: "7yLDEGwZ9fl3RxVeLrr1b", dataUrl: "7yLDEGwZ9fl3RxVeLrr1b" },
-    { voterId: "8zMEFHx0ag4SyWfMss2c", dataUrl: "8zMEFHx0ag4SyWfMss2c" },
-    { voterId: "9aNFGIy1bh5TzXgNtt3d", dataUrl: "9aNFGIy1bh5TzXgNtt3d" },
-    { voterId: "0bOGHJz2ci6UaYhOuu4e", dataUrl: "0bOGHJz2ci6UaYhOuu4e" },
-];
+type QRCode = {
+  id: string;
+  voterId: string;
+  voterType: string;
+  printed: boolean;
+};
 
 export default function PrintQRPage() {
-    const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
-    const [qrCodes, setQrCodes] = useState<QRCodeForPrint[]>(mockQRCodes);
-    const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-    useEffect(() => {
-        const fetchQRCodes = async () => {
-            try {
-                // TODO: Uncomment when API is ready
-                // const response = await fetch("/api/qrcodes/unprinted");
-                // const data = await response.json();
-                // setQrCodes(data);
+  // ✅ Mock QR code data (all initially Not Printed)
+  const [qrCodes, setQrCodes] = useState<QRCode[]>([
+    { id: "1", voterId: "4576", voterType: "GUEST", printed: false },
+    { id: "2", voterId: "8902", voterType: "INDUSTRY", printed: false },
+    { id: "3", voterId: "3125", voterType: "INDUSTRY", printed: false },
+    { id: "4", voterId: "7645", voterType: "INDUSTRY", printed: false },
+    { id: "5", voterId: "1290", voterType: "GUEST", printed: false },
+    { id: "6", voterId: "4587", voterType: "GUEST", printed: false },
+    { id: "7", voterId: "9871", voterType: "INDUSTRY", printed: false },
+    { id: "8", voterId: "3321", voterType: "GUEST", printed: false }
+  ]);
 
-                // Using mock data for now
-                const updatedCodes = await Promise.all(
-                    mockQRCodes.map(async (qr) => {
-                        const dataUrl = await QRCode.toDataURL(
-                            `voterId: ${qr.voterId}`
-                        );
-                        return { ...qr, dataUrl };
-                    })
-                );
-                setQrCodes(updatedCodes);
-            } catch (error) {
-                console.error("Error fetching QR codes:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+  // Track selected QR code IDs.
+  const [selected, setSelected] = useState<string[]>([]);
 
-        fetchQRCodes();
-    }, []);
+  // Toggle selection for a QR code.
+  const handleSelectionChange = (id: string) => {
+    setSelected((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((x) => x !== id);
+      }
+      return [...prev, id];
+    });
+  };
 
-    const handlePrintSelected = async () => {
-        const codesToPrint = qrCodes.filter((code) =>
-            selectedCodes.includes(code.voterId)
-        );
-        if (codesToPrint.length === 0) {
-            alert("Please select at least one QR code to print");
-            return;
-        }
-
-        const doc = generateQRCodesPDF(codesToPrint);
-        doc.save("qr-codes.pdf");
-
-        try {
-            // TODO: Uncomment when API is ready
-            // await fetch("/api/qrcodes/print", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ ids: codesToPrint.map(code => code.voterId) }),
-            // });
-
-            // Remove printed codes from the list
-            setQrCodes(
-                qrCodes.filter((code) => !selectedCodes.includes(code.voterId))
-            );
-            setSelectedCodes([]);
-        } catch (error) {
-            console.error("Error updating printed status:", error);
-        }
-    };
-
-    const handlePrintAll = async () => {
-        if (qrCodes.length === 0) {
-            alert("No QR codes available to print");
-            return;
-        }
-
-        const doc = generateQRCodesPDF(qrCodes);
-        doc.save("qr-codes.pdf");
-
-        try {
-            // TODO: Uncomment when API is ready
-            // await fetch("/api/qrcodes/print", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ ids: qrCodes.map(code => code.voterId) }),
-            // });
-
-            // Clear all codes after printing
-            setQrCodes([]);
-            setSelectedCodes([]);
-        } catch (error) {
-            console.error("Error updating printed status:", error);
-        }
-    };
-
-    const handlePrintSingle = async (code: QRCodeForPrint) => {
-        const doc = generateQRCodesPDF([code]);
-        doc.save(`qr-code-${code.voterId}.pdf`);
-
-        try {
-            // TODO: Uncomment when API is ready
-            // await fetch("/api/qrcodes/print", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({ ids: [code.voterId] }),
-            // });
-
-            // Remove the printed code from the list
-            setQrCodes(qrCodes.filter((qr) => qr.voterId !== code.voterId));
-            setSelectedCodes(selectedCodes.filter((id) => id !== code.voterId));
-        } catch (error) {
-            console.error("Error updating printed status:", error);
-        }
-    };
-
-    if (loading) {
-        return (
-            <AdminLayout heading="Print QR Codes">
-                <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-                    <div className="text-center">Loading...</div>
-                </div>
-            </AdminLayout>
-        );
-    }
-
-    return (
-        <AdminLayout heading="Print QR Codes">
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-                <div className="flex flex-col gap-6 justify-between items-center mb-6">
-                    <h1 className="text-3xl text-center font-bold">
-                        Print QR Codes
-                    </h1>
-                    <div className="flex w-full gap-4">
-                        <Button
-                            onClick={handlePrintSelected}
-                            disabled={selectedCodes.length === 0}
-                            variant="secondary"
-                            className="min-w-[150px] flex-1"
-                        >
-                            Print Selected ({selectedCodes.length})
-                        </Button>
-                        <Button
-                            onClick={handlePrintAll}
-                            disabled={qrCodes.length === 0}
-                            variant="default"
-                            className="min-w-[150px] flex-1"
-                        >
-                            Print All ({qrCodes.length})
-                        </Button>
-                    </div>
-                </div>
-
-                {qrCodes.length === 0 ? (
-                    <div className="text-center py-8">
-                        No QR codes available to print
-                    </div>
-                ) : (
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-12">Select</TableHead>
-                                <TableHead>QR Code</TableHead>
-                                <TableHead className="w-24">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {qrCodes.map((code) => (
-                                <TableRow key={code.voterId}>
-                                    <TableCell>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedCodes.includes(
-                                                code.voterId
-                                            )}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    setSelectedCodes([
-                                                        ...selectedCodes,
-                                                        code.voterId,
-                                                    ]);
-                                                } else {
-                                                    setSelectedCodes(
-                                                        selectedCodes.filter(
-                                                            (id) =>
-                                                                id !==
-                                                                code.voterId
-                                                        )
-                                                    );
-                                                }
-                                            }}
-                                            className="h-4 w-4"
-                                        />
-                                    </TableCell>
-                                    <TableCell>{code.voterId}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            onClick={() =>
-                                                handlePrintSingle(code)
-                                            }
-                                            variant="ghost"
-                                            size="icon"
-                                        >
-                                            <Printer className="h-4 w-4" />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                )}
-            </div>
-        </AdminLayout>
+  // Bulk print the selected QR codes. This sends the selected codes to the API endpoint,
+  // which saves them in a JSON file.
+  const handleBulkPrint = async () => {
+    const selectedCodes = qrCodes.filter((code) =>
+      selected.includes(code.id)
     );
+    if (selectedCodes.length > 0) {
+      try {
+        const response = await fetch("/api/saveSelected", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(selectedCodes)
+        });
+
+        console.log("API response status:", response.status);
+        if (!response.ok) {
+          throw new Error("Failed to save selected QR codes");
+        }
+        console.log("Selected QR codes saved to JSON file successfully.");
+
+        // Update the printed status for each selected QR code.
+        const updatedCodes = qrCodes.map((code) =>
+          selected.includes(code.id) ? { ...code, printed: true } : code
+        );
+        setQrCodes(updatedCodes);
+
+        // Clear the selection after saving.
+        setSelected([]);
+      } catch (error) {
+        console.error("Error printing QR codes:", error);
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <RegularNavBar heading="Capstone Project Expo 2024" />
+
+      {/* Banner with heading */}
+      <div className="relative">
+        <img
+          src="/background.png"
+          alt="Expo Banner"
+          className="w-full object-cover h-40 md:h-52"
+        />
+        <h2 className="absolute top-5 left-1/2 transform -translate-x-1/2 text-white text-xl font-bold bg-red-500 px-6 py-2 rounded-xl">
+          Print QR Code
+        </h2>
+      </div>
+
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="absolute top-[220px] left-4 bg-white p-2 rounded-full shadow"
+      >
+        ←
+      </button>
+
+      {/* Bulk print button and QR Code List */}
+      <div className="relative z-10 px-4 py-6 flex flex-col items-center gap-4">
+        {qrCodes.length === 0 ? (
+          <p className="text-center text-gray-600">No QR Codes Available.</p>
+        ) : (
+          <>
+            {/* Bulk Print Action */}
+            <div className="w-full max-w-xs flex justify-end mb-2">
+              <button
+                onClick={handleBulkPrint}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-4 py-1 rounded-xl"
+              >
+                Print Selected QR Codes
+              </button>
+            </div>
+
+            {/* QR Code Rows */}
+            {qrCodes.map((code) => (
+              <div
+                key={code.id}
+                className="flex items-center bg-gray-100 w-full max-w-xs px-4 py-2 rounded-xl shadow"
+              >
+                <input
+                  type="checkbox"
+                  checked={selected.includes(code.id)}
+                  onChange={() => handleSelectionChange(code.id)}
+                  className="mr-2"
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">
+                    QR code ID: {code.voterId}
+                  </p>
+                  <p
+                    className={`text-xs ${
+                      code.printed ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {code.printed ? "Printed" : "Not Printed"}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+
+      <Footer />
+    </div>
+  );
 }
