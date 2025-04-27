@@ -102,7 +102,7 @@ export default async function handler(req, res) {
     try {
       // Insert Project
       const projectQuery = `
-        INSERT INTO "Projects" (project_title, project_short_description, project_long_description, faculty_id, team_id)
+        INSERT INTO "Projects" (project_title, faculty_id)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
