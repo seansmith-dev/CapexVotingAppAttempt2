@@ -105,13 +105,6 @@ export default function VotePage() {
             }
         );
 
-        
-
-        useEffect(() => {
-            // Access the URL parameters using window.location (which is only available client-side)
-            const searchParams = new URLSearchParams(window.location.search);
-            setQrCode(searchParams.get('code')); // Setting the 'code' query parameter to state
-          }, []); 
 
         const currentButtonRef = originalButtonRef.current;
         if (currentButtonRef) {
@@ -125,10 +118,19 @@ export default function VotePage() {
         };
     }, [voterType]);
 
-    if (!qrCode) {
-        router.push("/");
-        return null;
-    }
+    useEffect(() => {
+        // Access the URL parameters using window.location (which is only available client-side)
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('code'); // Setting the 'code' query parameter to state
+        
+        if (!code) {
+            router.push('/'); // Redirect to homepage if no code is found
+        } else {
+            setQrCode(code); // Otherwise, set the QR code state
+            console.log("Search params:", window.location.search);
+            console.log("QR Code found:", code);
+        }
+      }, [router]); 
 
     // Filter projects based on search query
     const filteredProjects = mockProjects.filter(
