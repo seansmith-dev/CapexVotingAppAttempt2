@@ -1,4 +1,4 @@
-import pkg from 'pg';  // Default import of the entire 'pg' module
+import { Pool } from 'pg';    // Default import of the entire 'pg' module
 const { Pool } = pkg;  // Destructure 'Pool' from the 'pg' module
 
 const pool = new Pool({
