@@ -28,8 +28,6 @@ export default async function handler(req, res) {
       SELECT 
         p.project_number, 
         p.project_title, 
-        p.project_short_description, 
-        p.project_long_description, 
         f.faculty_name
       FROM "Projects" p
       JOIN "Facultys" f ON p.faculty_id = f.faculty_id

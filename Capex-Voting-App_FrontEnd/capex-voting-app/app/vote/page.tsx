@@ -93,6 +93,36 @@ export default function VotePage() {
         useState(false); // State for original button visibility
     const originalButtonRef = useRef<HTMLDivElement>(null); // Ref for the original button container
 
+    const [projects, setProjects] = useState<Project[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch(`/api/getProjectsList.js`)
+            .then((response) => response.json())
+            .then((data) => {
+                const formattedProjects: Project[] = data.map((item: any) => ({
+                    id: item.project_number.toString(), // convert number to string
+                    name: item.project_title,
+                    faculty: item.faculty_name,
+                }));
+                setProjects(data);
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
+                setError("Error fetching projects.");
+                router.push("/");
+            });
+    }, [router]);
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    if (projects === null) {
+        return null; // Show loading only while fetching
+    }
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -133,7 +163,7 @@ export default function VotePage() {
     }, [router]);
 
     // Filter projects based on search query
-    const filteredProjects = mockProjects.filter(
+    const filteredProjects = projects.filter(
         (project) =>
             project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             project.faculty.toLowerCase().includes(searchQuery.toLowerCase())
