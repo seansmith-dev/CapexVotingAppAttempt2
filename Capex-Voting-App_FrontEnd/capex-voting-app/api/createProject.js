@@ -101,6 +101,10 @@ export default async function handler(req, res) {
         RETURNING project_id;
     `;
     const projectResult = await client.query(projectQuery, [project_title, facultyId]);
+    if (!projectResult.rows[0].project_id) {
+      throw new Error('Failed to create project.');
+    }
+
     projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
 
 
