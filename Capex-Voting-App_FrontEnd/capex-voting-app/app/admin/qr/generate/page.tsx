@@ -22,12 +22,13 @@ export default function GenerateQRPage() {
             for (let i = 0; i < industryCount; i++) {
                 const voterId = `IND-${Date.now()}-${i}`;
                 const dataUrl = await generateQRCodeDataURL({
-                    voterId,
+                    voterId, voterType: "INDUSTRY"
+                    
                 });
                 codes.push({
-                    
-                    dataUrl,
                     voterId,
+                    dataUrl,
+                    voterType: "INDUSTRY",
                 });
             }
 
@@ -36,11 +37,12 @@ export default function GenerateQRPage() {
                 const voterId = `GST-${Date.now()}-${i}`;
                 const dataUrl = await generateQRCodeDataURL({
                     voterId,
-                    
+                    voterType: "GUEST",
                 });
                 codes.push({
-                    dataUrl,
                     voterId,
+                    dataUrl,
+                    voterType: "GUEST",
                 });
             }
 
@@ -70,10 +72,7 @@ export default function GenerateQRPage() {
                 (code) => code.voterType === "GUEST"
             );
 
-            const selectedIndustryQRs = industryQRs.slice(
-                0,
-                printIndustryCount
-            );
+            const selectedIndustryQRs = industryQRs.slice(0,printIndustryCount);
             const selectedGuestQRs = guestQRs.slice(0, printGuestCount);
             const codesToPrint = [...selectedIndustryQRs, ...selectedGuestQRs];
 
@@ -85,7 +84,7 @@ export default function GenerateQRPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ids: codesToPrint.map((code) => code.id),
+                    ids: codesToPrint.map((code) => code.voterId),
                 }),
             });
         }

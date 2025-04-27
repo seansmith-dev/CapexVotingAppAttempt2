@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 
 export interface QRCodeData {
     voterId: string;
-    // voterType: VoterType;
+    voterType: string;
 }
 
 export async function generateQRCodeDataURL(data: QRCodeData): Promise<string> {

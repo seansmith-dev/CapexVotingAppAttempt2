@@ -3,7 +3,7 @@ import { jsPDF } from "jspdf";
 export interface QRCodeForPrint {
     // id: string;
     dataUrl: string;
-    // voterType: string;
+    voterType: string;
     voterId: string;
 }
 
