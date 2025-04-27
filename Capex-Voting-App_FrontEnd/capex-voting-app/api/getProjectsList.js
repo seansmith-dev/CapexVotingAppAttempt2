@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     `;
     const result = await client.query(query);
 
+    console.log("list of projects", result);
     // Return the fetched projects as JSON
     return res.status(200).json(result.rows);
   } catch (error) {
