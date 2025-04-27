@@ -23,12 +23,10 @@ export default function GenerateQRPage() {
                 const voterId = `IND-${Date.now()}-${i}`;
                 const dataUrl = await generateQRCodeDataURL({
                     voterId,
-                    voterType: "INDUSTRY",
                 });
                 codes.push({
-                    id: voterId,
+                    
                     dataUrl,
-                    voterType: "INDUSTRY",
                     voterId,
                 });
             }
@@ -38,12 +36,10 @@ export default function GenerateQRPage() {
                 const voterId = `GST-${Date.now()}-${i}`;
                 const dataUrl = await generateQRCodeDataURL({
                     voterId,
-                    voterType: "GUEST",
+                    
                 });
                 codes.push({
-                    id: voterId,
                     dataUrl,
-                    voterType: "GUEST",
                     voterId,
                 });
             }
