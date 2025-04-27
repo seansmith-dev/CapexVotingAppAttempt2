@@ -264,7 +264,6 @@ export default function CreateProject() {
 
             if (response.status === 201) {
                 alert('Project created successfully!');
-                router.push("/");
                 console.log("201 response status executed");
             }
             else if (response.status === 409) {
