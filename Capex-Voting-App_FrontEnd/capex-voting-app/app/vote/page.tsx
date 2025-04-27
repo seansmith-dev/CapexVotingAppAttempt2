@@ -173,7 +173,7 @@ export default function VotePage() {
     }, [router]);
 
     // Filter projects based on search query
-    const filteredProjects = projects.filter(
+    const filteredProjects = projects ? projects.filter(
         (project) =>
             project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             project.faculty.toLowerCase().includes(searchQuery.toLowerCase())
