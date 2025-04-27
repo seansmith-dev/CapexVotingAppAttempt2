@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,6 +157,7 @@ export default function VotePage() {
     };
 
     return (
+        <Suspense>
         <div className="min-h-screen flex flex-col">
             <RegularNavBar heading="Vote Registration" />
             <div className="flex-1 bg-gray-100 p-4">
@@ -384,5 +386,6 @@ export default function VotePage() {
 
             <Footer />
         </div>
+    </Suspense>
     );
 }
