@@ -43,10 +43,10 @@ export default async function handler(req, res) {
   });
 
   // Destructure the constants from req.body
-  const { project_title, short_description, long_description, faculty_name, team_name, team_members } = req.body;
+  const { project_title, faculty_name } = req.body;
   const client = await pool.connect();
 
-  let facultyId, teamId, projectId, memberId;
+  let facultyId, projectId;
 
   console.log("Received project data:", req.body);
 
@@ -100,35 +100,9 @@ export default async function handler(req, res) {
     }
 
     try {
-
-      // Insert Team (or get existing one)
-      const teamQuery = `
-          INSERT INTO "Teams" (team_name)
-          VALUES ($1)
-          ON CONFLICT (team_name) DO NOTHING
-          RETURNING team_id;
-      `;
-      console.log("team query executed ");
-      const teamResult = await client.query(teamQuery, [team_name]);
-      if (teamResult.rows.length > 0) {
-        console.log("team id was returned ");
-        teamId = teamResult.rows[0].team_id;
-      } else {
-        // If the team already exists, send an error response that project already created
-        console.log("Already created executing")
-        return res.status(408).json({ message: "This team has already created a project." });
-      }
-    }
-    catch (error) {
-      console.error("Error inserting team name:", error);
-      return res.status(500).json({ error: "Internal Server Error returning team name" });
-    }
-
-
-    try {
       // Insert Project
       const projectQuery = `
-        INSERT INTO "Projects" (project_title, project_short_description, project_long_description, faculty_id, team_id)
+        INSERT INTO "Projects" (project_title, faculty_id)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
@@ -138,45 +112,6 @@ export default async function handler(req, res) {
     catch (error) {
       console.error("Error inserting project into project table:", error);
       res.status(500).json({ error: "Internal Server Error returning project" });
-    }
-
-
-    // Insert Members (or get existing ones) and link to TeamMembership
-    const memberInsertQuery = `
-        INSERT INTO "Members" (member_first_name, member_second_name)
-        VALUES ($1, $2)
-        RETURNING member_id;
-    `;
-
-    const teamMembershipQuery = `
-        INSERT INTO "TeamMembership" (team_id, member_id)
-        VALUES ($1, $2)
-        ON CONFLICT DO NOTHING;
-    `;
-
-    for (let member of team_members) {
-
-      if (!member.first_name) {
-        await client.query("ROLLBACK");
-        return res.status(400).json({ error: "Each team member must have a first name" });
-      }
-
-      try {
-        const memberResult = await client.query(memberInsertQuery, [member.first_name, member.last_name]);
-        memberId = memberResult.rows[0].member_id;
-      }
-      catch (error) {
-        return res.status(500).json({ error: "Internal Server Error in the members table" });
-      }
-
-      try {
-        await client.query(teamMembershipQuery, [teamId, memberId]);
-      }
-      catch (error) {
-        console.error("Error inserting into the teamMembership table:", error);
-        res.status(500).json({ error: "Internal Server Error in the teamMembership table" });
-      }
-
     }
 
     await client.query("COMMIT"); // Commit transaction
