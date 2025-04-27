@@ -97,8 +97,13 @@ export default function VotePage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`/api/getProjectsList.js`)
-            .then((response) => response.json())
+        fetch(`/api/getProjectsList`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return response.json();
+            })
             .then((data) => {
                 const formattedProjects: Project[] = data.map((item: any) => ({
                     id: item.project_number.toString(), // convert number to string
@@ -111,9 +116,14 @@ export default function VotePage() {
             .catch((error) => {
                 console.error("Error fetching projects:", error);
                 setError("Error fetching projects.");
-                router.push("/");
             });
-    }, [router]);
+    }, []);
+
+    useEffect(() => {
+        if (error) {
+            router.push("/");
+        }
+    }, [error, router]);
 
     if (error) {
         return <div>{error}</div>;
