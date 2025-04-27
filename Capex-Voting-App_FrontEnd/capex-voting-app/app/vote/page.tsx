@@ -105,7 +105,7 @@ export default function VotePage() {
                     name: item.project_title,
                     faculty: item.faculty_name,
                 }));
-                setProjects(data);
+                setProjects(formattedProjects);
                 console.log(data)
             })
             .catch((error) => {
