@@ -1,5 +1,4 @@
-
-import { Pool } from 'pg'; 
+import pkg from 'pg';  // Default import of the entire 'pg' module
 const { Pool } = pkg;  // Destructure 'Pool' from the 'pg' module
 
 const pool = new Pool({
@@ -47,7 +46,7 @@ export default async function handler(req, res) {
   const { project_title, faculty_name } = req.body;
   const client = await pool.connect();
 
-  let facultyId, projectId;
+  let facultyId,projectId 
 
   console.log("Received project data:", req.body);
 
@@ -103,7 +102,7 @@ export default async function handler(req, res) {
     try {
       // Insert Project
       const projectQuery = `
-        INSERT INTO "Projects" (project_title, faculty_id)
+        INSERT INTO "Projects" (project_title, project_short_description, project_long_description, faculty_id, team_id)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
