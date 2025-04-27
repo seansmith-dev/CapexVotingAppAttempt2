@@ -94,24 +94,24 @@ export default async function handler(req, res) {
       }
     }
 
-  // Insert Project
-  const projectQuery = `
+    // Insert Project
+    const projectQuery = `
         INSERT INTO "Projects" (project_title, faculty_id)
         VALUES ($1, $2)
         RETURNING project_id;
     `;
-  const projectResult = await client.query(projectQuery, [project_title, facultyId]);
-  projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
+    const projectResult = await client.query(projectQuery, [project_title, facultyId]);
+    projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
 
 
-await client.query("COMMIT"); // Commit transaction
-res.status(201).json({ message: "Project created successfully!" });
+    await client.query("COMMIT"); // Commit transaction
+    res.status(201).json({ message: "Project created successfully!" });
 
-} catch (error) {
-  await client.query("ROLLBACK"); // Rollback transaction in case of error
-  console.error("Error inserting project:", error);
-  res.status(500).json({ error: "Internal Server Error" });
-} finally {
-  client.release();
+  } catch (error) {
+    await client.query("ROLLBACK"); // Rollback transaction in case of error
+    console.error("Error inserting project:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    client.release();
+  }
 }
-
