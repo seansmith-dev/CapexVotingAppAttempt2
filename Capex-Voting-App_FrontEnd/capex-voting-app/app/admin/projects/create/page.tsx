@@ -108,50 +108,6 @@ export default function CreateProject() {
         e.preventDefault();
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const projectData = {
-            project_title,
-            faculty_name,
-        };
-        try {
-            const response = await fetch('/api/createProject', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(projectData),
-            });
-
-            console.log("Sending project data:", JSON.stringify(projectData, null, 2));
-
-
-            const responseData = await response.json(); // Extract JSON data
-
-            if (response.status === 201) {
-                alert('Project created successfully!');
-                router.push("/");
-                console.log("201 response status executed");
-            }
-            else if (response.status === 409) {
-                console.log("The alert executed");
-                alert(responseData.message || 'Project with this title already exists!');
-            }
-            else if (response.status === 408) {
-                console.log("The response 408 executed");
-                alert(responseData.message || 'Your team has already created a project.');
-            }
-            else {
-                console.log("The alert executed");
-                alert('Something went wrong.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred.');
-        }
-    };
-
     const handleManualSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -282,6 +238,50 @@ export default function CreateProject() {
             toast.error("Failed to upload projects. Please try again.");
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const projectData = {
+            project_title: formData.name,
+            faculty_name: formData.faculty,
+        };
+        try {
+            const response = await fetch('/api/createProject', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(projectData),
+            });
+
+            console.log("Sending project data:", JSON.stringify(projectData, null, 2));
+
+
+            const responseData = await response.json(); // Extract JSON data
+
+            if (response.status === 201) {
+                alert('Project created successfully!');
+                router.push("/");
+                console.log("201 response status executed");
+            }
+            else if (response.status === 409) {
+                console.log("The alert executed");
+                alert(responseData.message || 'Project with this title already exists!');
+            }
+            else if (response.status === 408) {
+                console.log("The response 408 executed");
+                alert(responseData.message || 'Your team has already created a project.');
+            }
+            else {
+                console.log("The alert executed");
+                alert('Something went wrong.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred.');
         }
     };
 
