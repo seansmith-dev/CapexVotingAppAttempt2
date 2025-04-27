@@ -106,7 +106,7 @@ export default async function handler(req, res) {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING project_id;
     `;
-      const projectResult = await client.query(projectQuery, [project_title, short_description, long_description, facultyId, teamId]);
+      const projectResult = await client.query(projectQuery, [project_title, facultyId]);
       projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
     }
     catch (error) {
