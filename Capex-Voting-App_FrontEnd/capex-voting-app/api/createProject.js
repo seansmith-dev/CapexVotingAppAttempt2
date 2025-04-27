@@ -106,7 +106,7 @@ export default async function handler(req, res) {
     }
 
     projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
-
+    console.log("Created project with ID:", projectId);
 
     await client.query("COMMIT"); // Commit transaction
     res.status(201).json({ message: "Project created successfully!" });
