@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,9 +82,6 @@ const mockProjects: Project[] = [
 
 export default function VotePage() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const qrCode = searchParams.get("code");
-
     const [voterType, setVoterType] = useState<"INDUSTRY" | "GUEST" | null>(
         null
     );
@@ -107,6 +103,14 @@ export default function VotePage() {
                 threshold: 0.1, // trigger if 10% of the element is visible
             }
         );
+
+        const [qrCode, setQrCode] = useState<string | null>(null);
+
+        useEffect(() => {
+            // Access the URL parameters using window.location (which is only available client-side)
+            const searchParams = new URLSearchParams(window.location.search);
+            setQrCode(searchParams.get('code')); // Setting the 'code' query parameter to state
+          }, []); 
 
         const currentButtonRef = originalButtonRef.current;
         if (currentButtonRef) {
@@ -157,7 +161,7 @@ export default function VotePage() {
     };
 
     return (
-        <Suspense>
+        
             <div className="min-h-screen flex flex-col">
                 <RegularNavBar heading="Vote Registration" />
                 <div className="flex-1 bg-gray-100 p-4">
@@ -385,6 +389,6 @@ export default function VotePage() {
 
                 <Footer />
             </div>
-        </Suspense>
+        
     );
 }
