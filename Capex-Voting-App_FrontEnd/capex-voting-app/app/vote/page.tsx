@@ -82,6 +82,7 @@ const mockProjects: Project[] = [
 
 export default function VotePage() {
     const router = useRouter();
+    const [qrCode, setQrCode] = useState<string | null>(null);
     const [voterType, setVoterType] = useState<"INDUSTRY" | "GUEST" | null>(
         null
     );
@@ -104,7 +105,7 @@ export default function VotePage() {
             }
         );
 
-        const [qrCode, setQrCode] = useState<string | null>(null);
+        
 
         useEffect(() => {
             // Access the URL parameters using window.location (which is only available client-side)
