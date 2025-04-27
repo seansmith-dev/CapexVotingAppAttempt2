@@ -241,8 +241,8 @@ export default function CreateProject() {
         }
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
         const projectData = {
             project_title: formData.name,
