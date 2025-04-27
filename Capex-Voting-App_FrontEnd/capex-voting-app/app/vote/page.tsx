@@ -177,7 +177,8 @@ export default function VotePage() {
         (project) =>
             project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             project.faculty.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
+    : [];
 
     const handleVote = async () => {
         if (!voterType || !selectedProject) return;
