@@ -12,6 +12,17 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
     const router = useRouter();
     const [showScanner, setShowScanner] = useState(false);
+    
+    useEffect(() => {
+        // Check for 'token' in the URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+
+        if (token) {
+            // Redirect directly to the /vote page with the token
+            router.push(`/vote?token=${token}`);
+        }
+    }, [router]);
 
     const handleVoteClick = async () => {
         try {
