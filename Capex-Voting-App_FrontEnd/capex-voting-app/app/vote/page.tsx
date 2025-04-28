@@ -188,19 +188,19 @@ export default function VotePage() {
             return;
         }
 
-        // try {
-        //     const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-        //     const data = await res.json();
+        try {
+            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+            const data = await res.json();
 
-        //     if (!res.ok || !data.valid) {
-        //         alert("Invalid or expired token. Access denied.");
-        //         router.push('/');
-        //         return;
-        //     }
-        // } catch (error) {
-        //     alert("Network error occurred while validating token.");
-        //     return;
-        // }
+            if (!res.ok || !data.valid) {
+                alert("Invalid or expired token. Access denied.");
+                router.push('/');
+                return;
+            }
+        } catch (error) {
+            alert("Network error occurred while validating token.");
+            return;
+        }
 
         // try {
         //     const response = await fetch(`/api/vote?token=${token}`, {
@@ -390,7 +390,10 @@ export default function VotePage() {
                                 className="mt-6 flex justify-center"
                             >
                                 <Button
-                                    onClick={() => setShowConfirmation(true)}
+                                    onClick={() => {
+                                        setShowConfirmation(true);
+                                        handleVote();  // <-- call it here
+                                      }}
                                     disabled={!selectedProject}
                                     className="min-w-[200px] w-full text-lg py-6 font-bold"
                                 >
