@@ -51,6 +51,7 @@ export default function GenerateQRPage() {
                 console.log(data.qrImages);
                 setGeneratedCodes(data.qrImages);
                 setShowPrintDialog(true);
+                console.log(codes)
               } else {
                 alert("Error generating QR codes");
               }
