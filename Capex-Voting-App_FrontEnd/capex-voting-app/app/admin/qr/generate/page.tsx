@@ -48,8 +48,8 @@ export default function GenerateQRPage() {
           
               const data = await response.json();
               if (data.success) {
-                console.log(data.qrImages);
-                setGeneratedCodes(data.qrImages);
+                console.log(data);
+                setGeneratedCodes(data);
                 setShowPrintDialog(true);
                 console.log(codes)
               } else {
