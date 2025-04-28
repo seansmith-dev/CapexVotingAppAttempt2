@@ -15,8 +15,7 @@ export default function GenerateQRPage() {
 
     const generateQRCodes = async () => {
         setIsGenerating(true);
-        const codes = [];
-        // const codes: QRCodeForPrint[] = [];
+        const codes: QRCodeForPrint[] = [];
 
         try {
             // Generate Industry QR codes
@@ -26,6 +25,7 @@ export default function GenerateQRPage() {
                 codes.push({
                     voterId,
                     voterType: "INDUSTRY",
+                    dataUrl: "",
                 });
             }
 
@@ -36,6 +36,7 @@ export default function GenerateQRPage() {
                 codes.push({
                     voterId,
                     voterType: "GUEST",
+                     dataUrl: "",
                 });
             }
 
