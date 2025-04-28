@@ -153,7 +153,7 @@ export default function VotePage() {
     useEffect(() => {
         // Access the URL parameters using window.location (which is only available client-side)
         const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get('code'); // Setting the 'code' query parameter to state
+        const code = searchParams.get('token'); // Setting the 'code' query parameter to state
 
         if (!code) {
             router.push('/'); // Redirect to homepage if no code is found
