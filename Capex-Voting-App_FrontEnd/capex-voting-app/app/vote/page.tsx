@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -104,7 +104,7 @@ export default function VotePage() {
         if (!token) {
             router.push('/'); // Redirect to homepage if no code is found
         } else {
-            localStorage.setItem('votingToken', token); 
+            localStorage.setItem('votingToken', token);
             setQrCode(token); // Otherwise, set the QR code state
             console.log("Search params:", window.location.search);
             console.log("QR Code found:", token);
@@ -175,13 +175,13 @@ export default function VotePage() {
             project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             project.faculty.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    : [];
+        : [];
 
     const handleVote = async () => {
         if (!voterType || !selectedProject) return;
 
         const token = localStorage.getItem('votingToken');
-        
+
         if (!token) {
             alert("You must scan a qr code to vote");
             router.push("/");
@@ -206,7 +206,7 @@ export default function VotePage() {
             const response = await fetch(`/api/vote?token=${token}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ project_number: selectedProject,}),
+                body: JSON.stringify({ project_number: selectedProject, }),
             });
 
             const responseBody = await response.json();
@@ -214,6 +214,11 @@ export default function VotePage() {
             if (response.status === 200) {
                 //Removing token, since already voted and don't want home showing messages. 
                 localStorage.removeItem('votingToken');
+                const { token, ...queryParams } = router.query ; // Destructure token from the query params
+                router.replace({
+                    pathname: router.pathname, // Keep the current path
+                    query: queryParams, // Only include the remaining query parameters
+                }, undefined, { shallow: true }); // shallow: true prevents reloading
                 alert("Project voted for successfully!");
                 router.push('/');
             } else if (response.status === 409) {
@@ -231,7 +236,7 @@ export default function VotePage() {
             router.push('/');
         }
 
-        
+
     };
 
     return (
@@ -395,7 +400,7 @@ export default function VotePage() {
                                     onClick={() => {
                                         setShowConfirmation(true);
                                         handleVote();  // <-- call it here
-                                      }}
+                                    }}
                                     disabled={!selectedProject}
                                     className="min-w-[200px] w-full text-lg py-6 font-bold"
                                 >
