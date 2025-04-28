@@ -48,6 +48,7 @@ export default function GenerateQRPage() {
           
               const data = await response.json();
               if (data.success) {
+                nsole.log(data.qrImages);
                 setGeneratedCodes(data.qrImages);
                 setShowPrintDialog(true);
               } else {
