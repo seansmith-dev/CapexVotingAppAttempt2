@@ -125,14 +125,6 @@ export default function VotePage() {
         }
     }, [error, router]);
 
-    if (error) {
-        return <div>{error}</div>;
-    }
-
-    if (projects === null) {
-        return null; // Show loading only while fetching
-    }
-
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -171,6 +163,10 @@ export default function VotePage() {
             console.log("QR Code found:", code);
         }
     }, [router]);
+
+    if (projects === null) {
+        return null; // Show loading only while fetching
+    }
 
     // Filter projects based on search query
     const filteredProjects = projects ? projects.filter(
