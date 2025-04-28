@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     const insertQuery = `
       INSERT INTO "qrcodes" ("leaderboard_id", "qr_code_token", "qr_code_printed_flag", "qr_code_voter_id")
       VALUES ($1, $2, $3, $4)
-      RETURNING "qr_code_id", "qr_code_token", "qr_code_type";
+      RETURNING "qr_code_id", "qr_code_token", "leaderboard_id";
     `;
 
     // Loop through each code and insert into the database
