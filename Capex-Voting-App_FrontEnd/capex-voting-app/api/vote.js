@@ -34,6 +34,7 @@ export default async function handler(req, res) {
     }
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
+    const qr_code_leaderboard_id = qrResult.rows[0].qr_code_leaderboard_id;
 
     const qrQueryVoteTwice = 'SELECT qr_code_id FROM "Votes" WHERE qr_code_id = $1';
     const qrCodesAlreadyVoted = await client.query(qrQueryVoteTwice, [qr_code_id])
@@ -59,11 +60,11 @@ export default async function handler(req, res) {
 
     // Step 2: Insert a new vote into the votes table
     const voteQuery = `
-      INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp)
-      VALUES ($1, $2, NOW()) 
+      INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp, leaderboard_id)
+      VALUES ($1, $2, NOW(), $3) 
       RETURNING vote_id;
     `;
-    const voteResult = await client.query(voteQuery, [projectId, qr_code_id]);
+    const voteResult = await client.query(voteQuery, [projectId, qr_code_id, qr_code_leaderboard_id]);
 
     // Step 3: Return the result
     const vote_id = voteResult.rows[0].vote_id;
