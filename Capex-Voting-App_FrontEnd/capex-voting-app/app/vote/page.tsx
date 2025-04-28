@@ -153,14 +153,14 @@ export default function VotePage() {
     useEffect(() => {
         // Access the URL parameters using window.location (which is only available client-side)
         const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get('token'); // Setting the 'code' query parameter to state
+        const token = searchParams.get('token'); // Setting the 'code' query parameter to state
 
-        if (!code) {
+        if (!token) {
             router.push('/'); // Redirect to homepage if no code is found
         } else {
-            setQrCode(code); // Otherwise, set the QR code state
+            setQrCode(token); // Otherwise, set the QR code state
             console.log("Search params:", window.location.search);
-            console.log("QR Code found:", code);
+            console.log("QR Code found:", token);
         }
     }, [router]);
 
