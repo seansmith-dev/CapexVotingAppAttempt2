@@ -68,7 +68,11 @@ export default async function handler(req, res) {
       codes.map(async (code) => {
         const qrUrl = `https://capex-voting-appattempt2.vercel.app/?token=${code.token}`;
         const qrImage = await QRCode.toDataURL(qrUrl);
-        return { voterId: code.voterId, voterType: code.voterType, dataUrl: qrImage };
+        return { 
+          voterId: code.voterId, 
+          voterType: code.voterType, 
+          dataUrl: qrImage, 
+        };
       })
     );
 
