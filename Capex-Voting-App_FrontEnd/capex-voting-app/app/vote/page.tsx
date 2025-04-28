@@ -95,6 +95,7 @@ export default function VotePage() {
 
     const [projects, setProjects] = useState<Project[] | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isVoting, setIsVoting] = useState(false);
 
     useEffect(() => {
         // Access the URL parameters using window.location (which is only available client-side)
@@ -179,6 +180,7 @@ export default function VotePage() {
 
     const handleVote = async () => {
         if (!voterType || !selectedProject) return;
+        setIsVoting(true);
 
         const token = localStorage.getItem('votingToken');
 
@@ -240,7 +242,7 @@ export default function VotePage() {
             router.push('/');
         }
 
-
+        setIsVoting(false); 
     };
 
     return (
@@ -405,7 +407,7 @@ export default function VotePage() {
                                         setShowConfirmation(true);
                                         handleVote();  // <-- call it here
                                     }}
-                                    disabled={!selectedProject}
+                                    disabled={isVoting || !selectedProject}
                                     className="min-w-[200px] w-full text-lg py-6 font-bold"
                                 >
                                     Submit Vote
