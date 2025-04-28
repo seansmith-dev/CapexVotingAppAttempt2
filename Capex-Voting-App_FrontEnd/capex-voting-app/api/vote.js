@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   }
 
   const { token } = req.query; // Get the token from the query string
-  const { project_number, project_title, project_long_description, project_short_description, faculty_name, team_name, team_members } = req.body;
+  const { project_number} = req.body;
 
   const client = await pool.connect();
 

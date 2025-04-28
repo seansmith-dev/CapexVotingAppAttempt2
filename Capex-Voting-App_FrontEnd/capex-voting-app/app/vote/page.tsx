@@ -97,6 +97,21 @@ export default function VotePage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        // Access the URL parameters using window.location (which is only available client-side)
+        const searchParams = new URLSearchParams(window.location.search);
+        const token = searchParams.get('token'); // Setting the 'code' query parameter to state
+
+        if (!token) {
+            router.push('/'); // Redirect to homepage if no code is found
+        } else {
+            localStorage.setItem('votingToken', token); 
+            setQrCode(token); // Otherwise, set the QR code state
+            console.log("Search params:", window.location.search);
+            console.log("QR Code found:", token);
+        }
+    }, [router]);
+
+    useEffect(() => {
         fetch(`/api/getProjectsList`)
             .then((response) => {
                 if (!response.ok) {
@@ -150,20 +165,6 @@ export default function VotePage() {
         };
     }, [voterType]);
 
-    useEffect(() => {
-        // Access the URL parameters using window.location (which is only available client-side)
-        const searchParams = new URLSearchParams(window.location.search);
-        const token = searchParams.get('token'); // Setting the 'code' query parameter to state
-
-        if (!token) {
-            router.push('/'); // Redirect to homepage if no code is found
-        } else {
-            setQrCode(token); // Otherwise, set the QR code state
-            console.log("Search params:", window.location.search);
-            console.log("QR Code found:", token);
-        }
-    }, [router]);
-
     if (projects === null) {
         return null; // Show loading only while fetching
     }
@@ -179,25 +180,56 @@ export default function VotePage() {
     const handleVote = async () => {
         if (!voterType || !selectedProject) return;
 
-        try {
-            // TODO: Uncomment when API is ready
-            // await fetch("/api/votes", {
-            //     method: "POST",
-            //     headers: { "Content-Type": "application/json" },
-            //     body: JSON.stringify({
-            //         qrCode,
-            //         voterType,
-            //         projectId: selectedProject,
-            //     }),
-            // });
-
-            // For now, just show success and redirect
-            alert("Vote registered successfully!");
+        const token = localStorage.getItem('authToken');
+        
+        if (!token) {
+            alert("You must scan a qr code to vote");
             router.push("/");
-        } catch (error) {
-            console.error("Error submitting vote:", error);
-            alert("Failed to submit vote. Please try again.");
+            return;
         }
+
+        try {
+            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+            const data = await res.json();
+
+            if (!res.ok || !data.valid) {
+                alert("Invalid or expired token. Access denied.");
+                router.push('/');
+                return;
+            }
+        } catch (error) {
+            alert("Network error occurred while validating token.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/vote?token=${token}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ project_number: selectedProject,}),
+            });
+
+            const responseBody = await response.json();
+
+            if (response.status === 200) {
+                alert("Project voted for successfully!");
+                router.push('/');
+            } else if (response.status === 409) {
+                alert("You have already voted.");
+                router.push('/');
+            } else if (response.status === 404) {
+                alert("You can't vote without a QR code.");
+                router.push('/');
+            } else {
+                alert("Error voting for project.");
+                router.push('/');
+            }
+        } catch (error) {
+            alert("There was an error voting.");
+            router.push('/');
+        }
+
+        
     };
 
     return (

@@ -68,6 +68,7 @@ export default function CreateProject() {
     const [file, setFile] = useState<File | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [showNewFacultyInput, setShowNewFacultyInput] = useState(false);
+    
 
     // Build unique faculties list from projects
     const uniqueFaculties = Array.from(
