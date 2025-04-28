@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
     // Insert QR Codes into the database
     const insertQuery = `
-      INSERT INTO "qrcodes" ("qr_code__type", "qr_code_token", "qr_code_printed_flag")
+      INSERT INTO "qrcodes" ("qr_code_type", "qr_code_token", "qr_code_printed_flag")
       VALUES ($1, $2, $3)
       RETURNING "qr_code_id", "qr_code_token", "qr_code_type";
     `;
