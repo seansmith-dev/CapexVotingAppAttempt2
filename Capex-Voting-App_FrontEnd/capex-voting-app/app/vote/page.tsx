@@ -180,7 +180,7 @@ export default function VotePage() {
     const handleVote = async () => {
         if (!voterType || !selectedProject) return;
 
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('votingToken');
         
         if (!token) {
             alert("You must scan a qr code to vote");
