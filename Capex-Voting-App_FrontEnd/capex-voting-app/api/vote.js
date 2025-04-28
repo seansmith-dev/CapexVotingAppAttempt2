@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
     const qr_code_leaderboard_id = qrResult.rows[0].leaderboard_id;
-    console.log("The qr_code_leaderboard_id is",qr_code_leaderboard_id)
+    console.log("The qr_code_leaderboard_id is a bit",qr_code_leaderboard_id)
 
     const qrQueryVoteTwice = 'SELECT qr_code_id FROM "Votes" WHERE qr_code_id = $1';
     const qrCodesAlreadyVoted = await client.query(qrQueryVoteTwice, [qr_code_id])
