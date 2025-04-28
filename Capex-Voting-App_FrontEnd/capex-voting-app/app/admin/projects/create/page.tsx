@@ -26,12 +26,19 @@ import { Upload, FileUp } from "lucide-react";
 import Cookies from "js-cookie";
 import Papa from "papaparse";
 import AdminLayout from "@/app/layouts/admin";
+import { useEffect} from "react";
 
 const faculties = [
     "Science, Computing and Engineering Technologies",
     "Health, Arts and Design",
     "Business, Law and Entrepreneurship",
 ];
+
+interface Project {
+    name: string;
+    faculty: string;
+}
+
 
 // Mock data for projects
 const mockProjects = [
@@ -52,13 +59,14 @@ const mockProjects = [
 export default function CreateProject() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         name: "",
         faculty: "",
         newFaculty: "",
     });
     const [file, setFile] = useState<File | null>(null);
-    const [projects, setProjects] = useState(mockProjects);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [showNewFacultyInput, setShowNewFacultyInput] = useState(false);
 
     // Build unique faculties list from projects
@@ -66,11 +74,32 @@ export default function CreateProject() {
         new Set(projects.map((project) => project.faculty))
     );
 
+    useEffect(() => {
+        fetch(`/api/getProjectsList`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const formattedProjects = data.map((item: any) => ({
+                    name: item.project_title,
+                    faculty: item.faculty_name,
+                }));
+                setProjects(formattedProjects);
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
+                setError("Error fetching projects.");
+            });
+    }, []);
+
     const handleAddNewFaculty = () => {
         if (formData.newFaculty.trim()) {
             // Add the new faculty to the list
             const newProject = {
-                id: String(projects.length + 1),
                 name: formData.name,
                 faculty: formData.newFaculty.trim(),
             };
@@ -136,7 +165,7 @@ export default function CreateProject() {
             */
 
             // Add new project to the list
-            const newProject = {
+            const newProject: Project = {
                 name: formData.name,
                 faculty: formData.faculty,
             };
@@ -193,7 +222,7 @@ export default function CreateProject() {
                         return;
                     }
 
-                    const newProjects = results.data.map((row: any) => ({
+                    const newProjects: Project[] = results.data.map((row: any) => ({
                         name: row["name"],
                         faculty: row["faculty"],
                     }));
