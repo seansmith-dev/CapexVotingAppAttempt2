@@ -91,7 +91,7 @@ export default async function handler(req, res) {
       const voterTypeInt = voterType === 'INDUSTRY' ? 1 : 0;
 
       // Insert each QR code and store its ID
-      const result = await pool.query(insertQuery, [voterType, token, false, voterId]);
+      const result = await pool.query(insertQuery, [voterTypeInt, token, false, voterId]);
       if (result.rows.length > 0) {
         qrCodeIds.push(result.rows[0].qr_code_id);
       }
