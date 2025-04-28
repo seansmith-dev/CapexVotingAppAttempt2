@@ -42,9 +42,9 @@ export default async function handler(req, res) {
 
     // Insert QR Codes into the database
     const insertQuery = `
-      INSERT INTO "qrcodes" ("qr_code_token", "voter_type")
-      VALUES ($1, $2)
-      RETURNING "qr_code_id", "qr_code_token", "voter_type";
+      INSERT INTO "qrcodes" ("qr_code__type", "qr_code_token", "qr_code_printed_flag")
+      VALUES ($1, $2, $3)
+      RETURNING "qr_code_id", "qr_code_token", "qr_code_type";
     `;
 
     // Loop through each code and insert into the database
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       const { voterId, voterType } = code;
       
       // Insert each QR code and store its ID
-      const result = await pool.query(insertQuery, [token, voterType]);
+      const result = await pool.query(insertQuery, [voterType, token, TRUE]);
       if (result.rows.length > 0) {
         qrCodeIds.push(result.rows[0].qr_code_id);
       }
