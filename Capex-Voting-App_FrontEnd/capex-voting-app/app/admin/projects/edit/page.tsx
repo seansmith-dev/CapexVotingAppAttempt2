@@ -99,17 +99,34 @@ export default function EditProjects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [editForm, setEditForm] = useState({
         name: "",
         faculty: "",
     });
-    useEffect(() => {
-        // Commented out actual fetch call
-        // fetchProjects();
 
-        // Using mock data instead
-        setProjects(mockProjects);
-        setIsLoading(false);
+    useEffect(() => {
+        fetch(`/api/getProjectsList`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const formattedProjects: Project[] = data.map((item: any) => ({
+                    id: item.project_number.toString(), // convert number to string
+                    name: item.project_title,
+                    faculty: item.faculty_name,
+                }));
+                setProjects(formattedProjects);
+                setIsLoading(false);
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
+                setError("Error fetching projects.");
+            });
     }, []);
 
     // Commented out actual fetch function
