@@ -79,6 +79,8 @@ export default function GenerateQRPage() {
             const doc = generateQRCodesPDF(codesToPrint);
             doc.save("qr-codes.pdf");
 
+            console.log("logging codesToPrint", codesToPrint);
+
             // Update printed status in API
             fetch("/api/qrcodes/print", {
                 method: "POST",
