@@ -202,32 +202,32 @@ export default function VotePage() {
             return;
         }
 
-        try {
-            const response = await fetch(`/api/vote?token=${token}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ project_number: selectedProject,}),
-            });
+        // try {
+        //     const response = await fetch(`/api/vote?token=${token}`, {
+        //         method: "PATCH",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ project_number: selectedProject,}),
+        //     });
 
-            const responseBody = await response.json();
+        //     const responseBody = await response.json();
 
-            if (response.status === 200) {
-                alert("Project voted for successfully!");
-                router.push('/');
-            } else if (response.status === 409) {
-                alert("You have already voted.");
-                router.push('/');
-            } else if (response.status === 404) {
-                alert("You can't vote without a QR code.");
-                router.push('/');
-            } else {
-                alert("Error voting for project.");
-                router.push('/');
-            }
-        } catch (error) {
-            alert("There was an error voting.");
-            router.push('/');
-        }
+        //     if (response.status === 200) {
+        //         alert("Project voted for successfully!");
+        //         router.push('/');
+        //     } else if (response.status === 409) {
+        //         alert("You have already voted.");
+        //         router.push('/');
+        //     } else if (response.status === 404) {
+        //         alert("You can't vote without a QR code.");
+        //         router.push('/');
+        //     } else {
+        //         alert("Error voting for project.");
+        //         router.push('/');
+        //     }
+        // } catch (error) {
+        //     alert("There was an error voting.");
+        //     router.push('/');
+        // }
 
         
     };
