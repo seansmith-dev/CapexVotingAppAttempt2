@@ -82,7 +82,7 @@ export default function GenerateQRPage() {
             console.log("logging codesToPrint", codesToPrint);
 
             // Update printed status in API
-            fetch("/api/qrcodes/print", {
+            fetch("/api/updatePrintedStatus", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
