@@ -51,7 +51,9 @@ export default async function handler(req, res) {
     for (const code of codes) {
       const token = nanoid(); // Generate a unique token for each QR code
       const { voterId, voterType } = code;
-      
+
+      code.token = token;
+
       // Insert each QR code and store its ID
       const result = await pool.query(insertQuery, [voterType, token, true]);
       if (result.rows.length > 0) {
@@ -66,7 +68,7 @@ export default async function handler(req, res) {
       codes.map(async (code) => {
         const qrUrl = `https://capex-voting-appattempt2.vercel.app/?token=${code.token}`;
         const qrImage = await QRCode.toDataURL(qrUrl);
-        return { voterId: code.voterId, dataUrl: qrImage };
+        return { voterId: code.voterId, voterType: code.voterType, dataUrl: qrImage };
       })
     );
 
