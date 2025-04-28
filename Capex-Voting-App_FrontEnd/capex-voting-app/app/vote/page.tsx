@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from 'next/router';
+import { useRouter, NextRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -81,7 +81,9 @@ const mockProjects: Project[] = [
 ];
 
 export default function VotePage() {
-    const router = useRouter();
+    
+
+    const router = useRouter() as NextRouter;
     const [qrCode, setQrCode] = useState<string | null>(null);
     const [voterType, setVoterType] = useState<"INDUSTRY" | "GUEST" | null>(
         null
@@ -214,11 +216,9 @@ export default function VotePage() {
             if (response.status === 200) {
                 //Removing token, since already voted and don't want home showing messages. 
                 localStorage.removeItem('votingToken');
-                const { token, ...queryParams } = router.query ; // Destructure token from the query params
-                router.replace({
-                    pathname: router.pathname, // Keep the current path
-                    query: queryParams, // Only include the remaining query parameters
-                }, undefined, { shallow: true }); // shallow: true prevents reloading
+                const searchParams = new URLSearchParams(window.location.search);
+                searchParams.delete('token'); // Remove token query param
+                router.replace(router.pathname + '?' + searchParams.toString()); // Correct usage
                 alert("Project voted for successfully!");
                 router.push('/');
             } else if (response.status === 409) {
