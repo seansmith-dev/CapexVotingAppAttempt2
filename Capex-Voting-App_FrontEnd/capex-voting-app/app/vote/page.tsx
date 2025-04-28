@@ -187,6 +187,7 @@ export default function VotePage() {
         if (!token) {
             alert("You must scan a qr code to vote");
             router.push("/");
+            setIsVoting(false);
             return;
         }
 
@@ -197,10 +198,12 @@ export default function VotePage() {
             if (!res.ok || !data.valid) {
                 alert("Invalid or expired token. Access denied.");
                 router.push('/');
+                setIsVoting(false);
                 return;
             }
         } catch (error) {
             alert("Network error occurred while validating token.");
+            setIsVoting(false);
             return;
         }
 
