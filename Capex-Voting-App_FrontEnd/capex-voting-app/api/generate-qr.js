@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     // Generate QR Codes as data URLs
     const qrImages = await Promise.all(
       codes.map(async (code) => {
-        const qrUrl = `https://capex-voting-appattempt2.vercel.app/?token=${code.token}`;
+        const qrUrl = `https://capex-voting-appattempt2.vercel.app/vote?token=${code.token}`;
         const qrImage = await QRCode.toDataURL(qrUrl);
         return { 
           voterId: code.voterId, 
