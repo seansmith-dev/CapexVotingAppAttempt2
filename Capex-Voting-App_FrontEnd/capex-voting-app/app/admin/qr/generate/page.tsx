@@ -15,19 +15,16 @@ export default function GenerateQRPage() {
 
     const generateQRCodes = async () => {
         setIsGenerating(true);
-        const codes: QRCodeForPrint[] = [];
+        const codes = [];
+        // const codes: QRCodeForPrint[] = [];
 
         try {
             // Generate Industry QR codes
             for (let i = 0; i < industryCount; i++) {
                 const voterId = `IND-${Date.now()}-${i}`;
-                const dataUrl = await generateQRCodeDataURL({
-                    voterId, voterType: "INDUSTRY"
-                    
-                });
+                
                 codes.push({
                     voterId,
-                    dataUrl,
                     voterType: "INDUSTRY",
                 });
             }
@@ -35,26 +32,27 @@ export default function GenerateQRPage() {
             // Generate Guest QR codes
             for (let i = 0; i < guestCount; i++) {
                 const voterId = `GST-${Date.now()}-${i}`;
-                const dataUrl = await generateQRCodeDataURL({
-                    voterId,
-                    voterType: "GUEST",
-                });
+            
                 codes.push({
                     voterId,
-                    dataUrl,
                     voterType: "GUEST",
                 });
             }
 
             // Store in API
-            await fetch("/api/qrcodes", {
+            const response = await fetch("/api/generate-qr", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(codes),
-            });
-
-            setGeneratedCodes(codes);
-            setShowPrintDialog(true);
+                body: JSON.stringify({ codes }),
+              });
+          
+              const data = await response.json();
+              if (data.success) {
+                setGeneratedCodes(data.qrImages);
+                setShowPrintDialog(true);
+              } else {
+                alert("Error generating QR codes");
+              }
         } catch (error) {
             console.error("Error generating QR codes:", error);
             alert("Failed to generate QR codes");
