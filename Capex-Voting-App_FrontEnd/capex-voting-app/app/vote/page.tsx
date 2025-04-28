@@ -188,19 +188,19 @@ export default function VotePage() {
             return;
         }
 
-        try {
-            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-            const data = await res.json();
+        // try {
+        //     const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+        //     const data = await res.json();
 
-            if (!res.ok || !data.valid) {
-                alert("Invalid or expired token. Access denied.");
-                router.push('/');
-                return;
-            }
-        } catch (error) {
-            alert("Network error occurred while validating token.");
-            return;
-        }
+        //     if (!res.ok || !data.valid) {
+        //         alert("Invalid or expired token. Access denied.");
+        //         router.push('/');
+        //         return;
+        //     }
+        // } catch (error) {
+        //     alert("Network error occurred while validating token.");
+        //     return;
+        // }
 
         // try {
         //     const response = await fetch(`/api/vote?token=${token}`, {
