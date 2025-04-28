@@ -42,36 +42,36 @@ export default async function handler(req, res) {
   try {
     console.log("Starting database query...");
 
-     // Check if the specific leaderboards exist, and insert them if not
-  //    const checkLeaderboardQuery = `
-  //    SELECT * FROM "Leaderboards" WHERE "leaderboard_type" IN ('GUEST', 'INDUSTRY');
-  //  `;
-  //  const checkResult = await pool.query(checkLeaderboardQuery);
+    //  Check if the specific leaderboards exist, and insert them if not
+     const checkLeaderboardQuery = `
+     SELECT * FROM "Leaderboards" WHERE "leaderboard_type" IN ('GUEST', 'INDUSTRY');
+   `;
+   const checkResult = await pool.query(checkLeaderboardQuery);
 
-  //  const existingLeaderboards = checkResult.rows.map(row => row.leaderboard_type);
+   const existingLeaderboards = checkResult.rows.map(row => row.leaderboard_type);
 
-  //  const leaderboardsToInsert = [];
+   const leaderboardsToInsert = [];
 
-  //  if (!existingLeaderboards.includes('GUEST')) {
-  //    leaderboardsToInsert.push('GUEST');
-  //  }
-  //  if (!existingLeaderboards.includes('INDUSTRY')) {
-  //    leaderboardsToInsert.push('INDUSTRY');
-  //  }
+   if (!existingLeaderboards.includes('GUEST')) {
+     leaderboardsToInsert.push('GUEST');
+   }
+   if (!existingLeaderboards.includes('INDUSTRY')) {
+     leaderboardsToInsert.push('INDUSTRY');
+   }
 
-  //  if (leaderboardsToInsert.length > 0) {
-  //    const insertLeaderboardQuery = `
-  //      INSERT INTO "Leaderboards" ("leaderboard_type", "leaderboard_no_votes")
-  //      VALUES ($1, 0)
-  //      RETURNING "leaderboard_type";
-  //    `;
+   if (leaderboardsToInsert.length > 0) {
+     const insertLeaderboardQuery = `
+       INSERT INTO "Leaderboards" ("leaderboard_type", "leaderboard_no_votes")
+       VALUES ($1, 0)
+       RETURNING "leaderboard_type";
+     `;
 
-  //    for (const leaderboardType of leaderboardsToInsert) {
-  //      await pool.query(insertLeaderboardQuery, [leaderboardType]);
-  //    }
+     for (const leaderboardType of leaderboardsToInsert) {
+       await pool.query(insertLeaderboardQuery, [leaderboardType]);
+     }
 
-  //    console.log(`Inserted missing leaderboards: ${leaderboardsToInsert.join(', ')}`);
-  //  }
+     console.log(`Inserted missing leaderboards: ${leaderboardsToInsert.join(', ')}`);
+   }
 
     // Insert QR Codes into the database
     const insertQuery = `
