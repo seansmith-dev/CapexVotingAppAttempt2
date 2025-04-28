@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   let projectId;
   try {
     // Step 1: Query the qrcodes table to get the qr_code_id based on the provided token
-    const qrQuery = 'SELECT qr_code_id FROM "qrcodes" WHERE qr_code_token = $1';
+    const qrQuery = 'SELECT qr_code_id,leaderboard_id FROM "qrcodes" WHERE qr_code_token = $1';
     const qrResult = await client.query(qrQuery, [token]);
 
     if (qrResult.rows.length === 0) {
