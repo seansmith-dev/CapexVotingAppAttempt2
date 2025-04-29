@@ -34,8 +34,8 @@ export default function QRScanner({
         scannerRef.current.render(
             (decodedText) => {
                 console.log(decodedText);
-                console.log(decodedText.substring(9));
-                onScanSuccess(decodedText.substring(9));
+                console.log(decodedText);
+                onScanSuccess(decodedText);
             },
             (error) => {
                 onScanError?.(error);
