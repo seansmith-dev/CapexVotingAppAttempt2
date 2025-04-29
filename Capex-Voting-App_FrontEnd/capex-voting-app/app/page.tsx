@@ -20,9 +20,9 @@ export default function Home() {
 
         if (token) {
             // Redirect directly to the /vote page with the token
-            router.push(`/vote?token=${token}`);
+            window.location.href = `/vote?token=${token}`;
         }
-    }, [router]);
+    }, []);
 
     const handleVoteClick = async () => {
         try {
