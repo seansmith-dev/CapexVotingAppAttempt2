@@ -25,6 +25,7 @@ export default async function handler(req, res) {
   try {
     await client.query("BEGIN");
 
+    console.log("the method is", req.method)
     if (req.method === "PUT") {
       const { name, faculty } = req.body;
 
