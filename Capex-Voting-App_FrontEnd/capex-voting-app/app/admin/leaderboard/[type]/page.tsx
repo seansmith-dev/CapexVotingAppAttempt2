@@ -131,9 +131,8 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                 return;
             }
 
-            const response = await fetch(
-                `/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
-                {
+            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
+                {                                   
                     headers: {
                         Authorization: `Bearer ${adminToken}`,
                     },

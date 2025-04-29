@@ -24,15 +24,17 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing leaderboard_type query parameter" });
   }
 
+  const leaderboardType = leaderboard_type.toUpperCase();
+
   try {
     // Step 1: Get the leaderboard_id from the type
     const leaderboardResult = await pool.query(
       `SELECT leaderboard_id FROM "Leaderboards" WHERE leaderboard_type = $1`,
-      [leaderboard_type]
+      [leaderboardType]
     );
 
     if (leaderboardResult.rowCount === 0) {
-      return res.status(404).json({ error: `Leaderboard type '${leaderboard_type}' not found` });
+      return res.status(404).json({ error: `Leaderboard type '${leaderboardType}' not found` });
     }
 
     const leaderboardId = leaderboardResult.rows[0].leaderboard_id;
