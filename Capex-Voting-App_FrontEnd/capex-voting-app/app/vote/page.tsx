@@ -179,6 +179,8 @@ export default function VotePage() {
         : [];
 
     const handleVote = async () => {
+        if (isVoting) return; // Prevent double calls immediately
+
         if (!voterType || !selectedProject) return;
         setIsVoting(true);
 
