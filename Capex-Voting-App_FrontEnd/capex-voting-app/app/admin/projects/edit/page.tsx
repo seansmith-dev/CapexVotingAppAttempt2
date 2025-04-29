@@ -100,6 +100,7 @@ export default function EditProjects() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    
     const [editForm, setEditForm] = useState({
         name: "",
         faculty: "",
@@ -161,22 +162,21 @@ export default function EditProjects() {
     };
     */
 
-    const handleSave = (projectId: string) => {
+    const handleSave = async (projectId: string) => {
         // Commented out actual update function
-        /*
+        
         try {
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
+            // const adminToken = Cookies.get("admin-token");
+            // if (!adminToken) {
+            //     toast.error("Admin session expired. Please login again.");
+            //     router.push("/admin");
+            //     return;
+            // }
 
-            const response = await fetch(`/api/projects/${editingProject.id}`, {
+            const response = await fetch(`/api/projects/${projectId}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${adminToken}`,
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(editForm),
             });
@@ -191,7 +191,7 @@ export default function EditProjects() {
             console.error("Error updating project:", error);
             toast.error("Failed to update project. Please try again.");
         }
-        */
+        
 
         // Mock update functionality
         setProjects(
