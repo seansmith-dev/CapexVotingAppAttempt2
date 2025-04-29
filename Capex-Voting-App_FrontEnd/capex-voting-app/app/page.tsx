@@ -105,9 +105,18 @@ export default function Home() {
 
     const handleScanSuccess = (decodedText: string) => {
         setShowScanner(false);
-        console.log("this is the decoded text:", decodedText)
-        window.location.href = decodedText;
-    };    
+        console.log("this is the decoded text:", decodedText);
+    
+        // Strip the base URL from the decodedText to get just the path and query string
+        const baseUrl = window.location.origin;  // e.g., 'https://capex-voting-app-attempt2.vercel.app'
+        const strippedUrl = decodedText.replace(baseUrl, '');  // Remove the base URL from the decoded text
+    
+        console.log("Stripped URL (path + query):", strippedUrl);
+        
+        // Now you can use strippedUrl for the redirection
+        window.location.href = strippedUrl; // Reconstruct full URL and redirect
+    };
+    
 
     const handleScanError = (error: any) => {
         console.error("QR Code scan error:", error);
