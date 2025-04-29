@@ -186,7 +186,7 @@ export default function EditProjects() {
             }
 
             toast.success("Project updated successfully!");
-            fetchProjects();
+            
         } catch (error) {
             console.error("Error updating project:", error);
             toast.error("Failed to update project. Please try again.");
