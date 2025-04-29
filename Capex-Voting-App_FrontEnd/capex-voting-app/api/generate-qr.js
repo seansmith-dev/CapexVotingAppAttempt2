@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   const { codes } = req.body; // Expect an array of QR code objects with { voterId, voterType }
-  
+
   if (!codes || codes.length === 0) {
     return res.status(400).json({ error: "No QR codes provided" });
   }
@@ -43,35 +43,46 @@ export default async function handler(req, res) {
     console.log("Starting database query...");
 
     //  Check if the specific leaderboards exist, and insert them if not
-     const checkLeaderboardQuery = `
+    const checkLeaderboardQuery = `
      SELECT * FROM "Leaderboards" WHERE "leaderboard_type" IN ('GUEST', 'INDUSTRY');
    `;
-   const checkResult = await pool.query(checkLeaderboardQuery);
+    const checkResult = await pool.query(checkLeaderboardQuery);
 
-   const existingLeaderboards = checkResult.rows.map(row => row.leaderboard_type);
+    const existingLeaderboards = checkResult.rows.map(row => row.leaderboard_type);
 
-   const leaderboardsToInsert = [];
+    const leaderboardsToInsert = [];
 
-   if (!existingLeaderboards.includes('GUEST')) {
-     leaderboardsToInsert.push('GUEST');
-   }
-   if (!existingLeaderboards.includes('INDUSTRY')) {
-     leaderboardsToInsert.push('INDUSTRY');
-   }
+    if (!existingLeaderboards.includes('GUEST')) {
+      leaderboardsToInsert.push('GUEST');
+    }
+    if (!existingLeaderboards.includes('INDUSTRY')) {
+      leaderboardsToInsert.push('INDUSTRY');
+    }
 
-   if (leaderboardsToInsert.length > 0) {
-     const insertLeaderboardQuery = `
+    if (leaderboardsToInsert.length > 0) {
+      const insertLeaderboardQuery = `
        INSERT INTO "Leaderboards" ("leaderboard_type", "leaderboard_no_votes")
        VALUES ($1, 0)
        RETURNING "leaderboard_type";
      `;
 
-     for (const leaderboardType of leaderboardsToInsert) {
-       await pool.query(insertLeaderboardQuery, [leaderboardType]);
-     }
+      const leaderboardIdMapQuery = `
+        SELECT leaderboard_id, leaderboard_type FROM "Leaderboards" WHERE leaderboard_type IN ('GUEST', 'INDUSTRY');
+      `;
 
-     console.log(`Inserted missing leaderboards: ${leaderboardsToInsert.join(', ')}`);
-   }
+      const leaderboardIdMapResult = await pool.query(leaderboardIdMapQuery);
+
+      const leaderboardIdMap = {};
+      for (const row of leaderboardIdMapResult.rows) {
+        leaderboardIdMap[row.leaderboard_type] = row.leaderboard_id;
+      }
+
+      for (const leaderboardType of leaderboardsToInsert) {
+        await pool.query(insertLeaderboardQuery, [leaderboardType]);
+      }
+
+      console.log(`Inserted missing leaderboards: ${leaderboardsToInsert.join(', ')}`);
+    }
 
     // Insert QR Codes into the database
     const insertQuery = `
@@ -87,9 +98,10 @@ export default async function handler(req, res) {
 
       code.token = token;
 
-      // Convert voterType to integer (0 for GUEST, 1 for INDUSTRY)
-      const voterTypeInt = voterType === 'INDUSTRY' ? 1 : 0;
-
+      const leaderboardId = leaderboardIdMap[voterType];  // e.g. GUEST => 5
+      if (!leaderboardId) {
+        return res.status(400).json({ error: `Invalid voterType: ${voterType}` });
+      }
       // Insert each QR code and store its ID
       const result = await pool.query(insertQuery, [voterTypeInt, token, false, voterId]);
       if (result.rows.length > 0) {
@@ -104,10 +116,10 @@ export default async function handler(req, res) {
       codes.map(async (code) => {
         const qrUrl = `https://capex-voting-app-attempt2.vercel.app/vote?token=${code.token}`;
         const qrImage = await QRCode.toDataURL(qrUrl);
-        return { 
-          voterId: code.voterId, 
-          voterType: code.voterType, 
-          dataUrl: qrImage, 
+        return {
+          voterId: code.voterId,
+          voterType: code.voterType,
+          dataUrl: qrImage,
         };
       })
     );
