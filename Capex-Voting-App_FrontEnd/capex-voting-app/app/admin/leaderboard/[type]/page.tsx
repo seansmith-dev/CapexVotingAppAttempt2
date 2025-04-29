@@ -207,7 +207,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                             Rank
                                         </TableHead>
                                         <TableHead>Project Name</TableHead>
-                                        <TableHead className="hidden md:inline lg:inline">
+                                        <TableHead className="hidden md:inline">
                                             Faculty
                                         </TableHead>
                                         <TableHead className="text-right">
@@ -243,7 +243,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                             <TableCell>
                                                 {project.name}
                                             </TableCell>
-                                            <TableCell className="hidden md:inline lg:inline">
+                                            <TableCell className="hidden md:inline">
                                                 {project.faculty}
                                             </TableCell>
                                             <TableCell className="text-right">
