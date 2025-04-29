@@ -66,9 +66,14 @@ export default async function handler(req, res) {
        RETURNING "leaderboard_type";
      `;
 
+      for (const leaderboardType of leaderboardsToInsert) {
+        await pool.query(insertLeaderboardQuery, [leaderboardType]);
+      }
+
+      // Now re-fetch the updated leaderboard IDs
       const leaderboardIdMapQuery = `
-        SELECT leaderboard_id, leaderboard_type FROM "Leaderboards" WHERE leaderboard_type IN ('GUEST', 'INDUSTRY');
-      `;
+      SELECT leaderboard_id, leaderboard_type FROM "Leaderboards" WHERE leaderboard_type IN ('GUEST', 'INDUSTRY');
+    `;
 
       const leaderboardIdMapResult = await pool.query(leaderboardIdMapQuery);
 
@@ -76,6 +81,7 @@ export default async function handler(req, res) {
       for (const row of leaderboardIdMapResult.rows) {
         leaderboardIdMap[row.leaderboard_type] = row.leaderboard_id;
       }
+
 
       for (const leaderboardType of leaderboardsToInsert) {
         await pool.query(insertLeaderboardQuery, [leaderboardType]);
@@ -103,7 +109,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: `Invalid voterType: ${voterType}` });
       }
       // Insert each QR code and store its ID
-      const result = await pool.query(insertQuery, [voterTypeInt, token, false, voterId]);
+      const result = await pool.query(insertQuery, [leaderboardId, token, false, voterId]);
       if (result.rows.length > 0) {
         qrCodeIds.push(result.rows[0].qr_code_id);
       }
