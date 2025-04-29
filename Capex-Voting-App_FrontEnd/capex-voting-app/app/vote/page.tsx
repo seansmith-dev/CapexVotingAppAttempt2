@@ -215,7 +215,7 @@ export default function VotePage() {
             });
 
             const responseBody = await response.json();
-
+            console.log("the status code is ", response.status)
             if (response.status === 200) {
                 //Removing token, since already voted and don't want home showing messages. 
                 localStorage.removeItem('votingToken');
