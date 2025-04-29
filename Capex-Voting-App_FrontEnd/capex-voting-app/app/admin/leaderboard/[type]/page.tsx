@@ -147,7 +147,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
             console.log("This is the data retrieved",data)
 
-            setProjects(data);
+            setProjects(data.projects);
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
             toast.error("Failed to fetch leaderboard. Please try again.");

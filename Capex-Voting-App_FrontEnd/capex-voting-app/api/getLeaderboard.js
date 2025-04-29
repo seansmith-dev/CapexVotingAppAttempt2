@@ -54,6 +54,8 @@ export default async function handler(req, res) {
     `, [leaderboardId]);
 
     return res.status(200).json({
+      leaderboard_type,
+      leaderboard_id: leaderboardId,
       projects: projectResult.rows,
     });
 
