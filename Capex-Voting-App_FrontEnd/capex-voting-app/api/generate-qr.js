@@ -65,29 +65,24 @@ export default async function handler(req, res) {
        VALUES ($1, 0)
        RETURNING "leaderboard_type";
      `;
-
-      for (const leaderboardType of leaderboardsToInsert) {
-        await pool.query(insertLeaderboardQuery, [leaderboardType]);
-      }
-
-      // Now re-fetch the updated leaderboard IDs
-      const leaderboardIdMapQuery = `
-      SELECT leaderboard_id, leaderboard_type FROM "Leaderboards" WHERE leaderboard_type IN ('GUEST', 'INDUSTRY');
-    `;
-
-      const leaderboardIdMapResult = await pool.query(leaderboardIdMapQuery);
-
-      const leaderboardIdMap = {};
-      for (const row of leaderboardIdMapResult.rows) {
-        leaderboardIdMap[row.leaderboard_type] = row.leaderboard_id;
-      }
-
-
+     
       for (const leaderboardType of leaderboardsToInsert) {
         await pool.query(insertLeaderboardQuery, [leaderboardType]);
       }
 
       console.log(`Inserted missing leaderboards: ${leaderboardsToInsert.join(', ')}`);
+    }
+
+    // Now re-fetch the updated leaderboard IDs
+    const leaderboardIdMapQuery = `
+    SELECT leaderboard_id, leaderboard_type FROM "Leaderboards" WHERE leaderboard_type IN ('GUEST', 'INDUSTRY');
+  `;
+
+    const leaderboardIdMapResult = await pool.query(leaderboardIdMapQuery);
+
+    const leaderboardIdMap = {};
+    for (const row of leaderboardIdMapResult.rows) {
+      leaderboardIdMap[row.leaderboard_type] = row.leaderboard_id;
     }
 
     // Insert QR Codes into the database
