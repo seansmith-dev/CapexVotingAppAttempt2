@@ -108,16 +108,16 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     useEffect(() => {
         // Commented out actual fetch call
-        //fetchLeaderboard();
+        fetchLeaderboard();
 
         // Using mock data instead
-        mockProjects.map((project) => {
-            project.votes = Math.floor(Math.random() * 1000);
-        });
-        mockProjects.sort((a, b) => b.votes - a.votes);
-        mockProjects.forEach((project, index) => {
-            project.rank = index + 1;
-        });
+        // mockProjects.map((project) => {
+        //     project.votes = Math.floor(Math.random() * 1000);
+        // });
+        // mockProjects.sort((a, b) => b.votes - a.votes);
+        // mockProjects.forEach((project, index) => {
+        //     project.rank = index + 1;
+        // });
         setProjects(mockProjects);
         setLoading(false);
     }, []);
@@ -132,19 +132,22 @@ export default function Leaderboard({ params }: LeaderboardProps) {
             }
 
             const response = await fetch(
-                `/api/leaderboard/${resolvedParams.type}`,
+                `/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
                 {
                     headers: {
                         Authorization: `Bearer ${adminToken}`,
                     },
                 }
             );
+            
+            const data = await response.json();
 
             if (!response.ok) {
                 throw new Error("Failed to fetch leaderboard");
             }
 
-            const data = await response.json();
+            console.log("This is the data retrieved",data)
+
             setProjects(data);
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
