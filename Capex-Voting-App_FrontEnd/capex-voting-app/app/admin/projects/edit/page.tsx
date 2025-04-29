@@ -174,7 +174,7 @@ export default function EditProjects() {
             // }
 
             const response = await fetch(`/api/projects/updateOrDelete?projectId=${projectId}`, {
-                method: "PUT",                      
+                method: "POST",                      
                 headers: {
                     "Content-Type": "application/json"
                 },
