@@ -69,6 +69,14 @@ export default async function handler(req, res) {
 
     // Step 3: Return the result
     const vote_id = voteResult.rows[0].vote_id;
+
+    const projectLeaderboardVotesQuery = `
+      INSERT INTO "ProjectLeaderboardVotes" (project_id, leaderboard_id, vote_count)
+      VALUES ($1, $2, 1)
+      ON CONFLICT (project_id, leaderboard_id)
+      DO UPDATE SET vote_count = "ProjectLeaderboardVotes".vote_count + 1;
+    `;
+    await client.query(projectLeaderboardVotesQuery, [projectId, qr_code_leaderboard_id]);
    
     // Return a response indicating the vote was successfully recorded
     return res.status(200).json({
