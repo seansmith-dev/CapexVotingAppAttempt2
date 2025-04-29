@@ -22,7 +22,7 @@ export default function Home() {
             // Redirect directly to the /vote page with the token
             window.location.href = `/vote?token=${token}`;
         }
-    }, []);
+    }, [router]);
 
     const handleVoteClick = async () => {
         try {
@@ -105,6 +105,7 @@ export default function Home() {
 
     const handleScanSuccess = (decodedText: string) => {
         setShowScanner(false);
+        console.log("this is the decoded text:", decodedText)
         window.location.href = decodedText;
     };    
 
