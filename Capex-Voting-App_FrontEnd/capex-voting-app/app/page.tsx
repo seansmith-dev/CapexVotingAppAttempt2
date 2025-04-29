@@ -105,7 +105,7 @@ export default function Home() {
 
     const handleScanSuccess = (decodedText: string) => {
         setShowScanner(false);
-        router.push(`/vote?code=${encodeURIComponent(decodedText)}`);
+        router.push(`${encodeURIComponent(decodedText)}`);
     };
 
     const handleScanError = (error: any) => {
