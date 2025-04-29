@@ -105,8 +105,8 @@ export default function Home() {
 
     const handleScanSuccess = (decodedText: string) => {
         setShowScanner(false);
-        router.push(`${encodeURIComponent(decodedText)}`);
-    };
+        window.location.href = decodedText;
+    };    
 
     const handleScanError = (error: any) => {
         console.error("QR Code scan error:", error);
