@@ -118,7 +118,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
         // mockProjects.forEach((project, index) => {
         //     project.rank = index + 1;
         // });
-        setProjects(mockProjects);
+        // setProjects(mockProjects);
         setLoading(false);
     }, []);
 
@@ -147,7 +147,17 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
             console.log("This is the data retrieved",data)
 
-            setProjects(data.projects);
+            const transformedProjects: Project[] = data.projects.map(
+                (project: any, index: number) => ({
+                    id: String(project.project_id),
+                    name: project.project_title,
+                    faculty: project.faculty_name,
+                    votes: project.vote_count,
+                    rank: index + 1,
+                })
+            );
+
+            setProjects(transformedProjects);
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
             toast.error("Failed to fetch leaderboard. Please try again.");
