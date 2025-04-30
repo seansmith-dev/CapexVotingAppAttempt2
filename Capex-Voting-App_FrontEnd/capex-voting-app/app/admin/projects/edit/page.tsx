@@ -172,7 +172,7 @@ export default function EditProjects() {
             //     router.push("/admin");
             //     return;
             // }
-
+            console.log(editForm)
             const response = await fetch(`/api/updateOrDelete?projectId=${projectId}`, {
                 method: "PUT",                       
                 headers: {
