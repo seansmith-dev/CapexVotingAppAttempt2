@@ -15,6 +15,7 @@ const pool = new Pool({
 
 export default async function handler(req, res) {
   const { projectId } = req.query;
+  console.log("the method is", req.method)
   const projectNumber = projectId
   const client = await pool.connect();
 
@@ -25,8 +26,8 @@ export default async function handler(req, res) {
   try {
     await client.query("BEGIN");
 
-    console.log("the method is", req.method)
-    if (req.method === "POST") {
+    
+    if (req.method === "PUT") {
       const { name, faculty } = req.body;
 
       if (!name || !faculty) {
