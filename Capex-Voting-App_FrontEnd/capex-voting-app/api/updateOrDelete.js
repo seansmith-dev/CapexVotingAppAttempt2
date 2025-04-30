@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
   try {
     await client.query("BEGIN");
-
+    console.log("the method is", req.method)
     
     if (req.method === "PUT") {
       const { name, faculty } = req.body;
@@ -75,6 +75,7 @@ export default async function handler(req, res) {
       // You can plug in your existing delete logic here
       return res.status(501).json({ error: "Delete functionality not implemented in this version" });
     } else {
+      console.log(req.method)
       return res.status(405).json({ error: "Method not allowed" });
     }
 
