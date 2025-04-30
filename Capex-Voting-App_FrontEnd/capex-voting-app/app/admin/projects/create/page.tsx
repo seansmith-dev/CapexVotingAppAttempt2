@@ -97,24 +97,23 @@ export default function CreateProject() {
     }, []);
 
     const handleAddNewFaculty = () => {
-        const trimmed = formData.newFaculty.trim();
-        if (trimmed && !uniqueFaculties.includes(trimmed)) {
+        if (formData.newFaculty.trim()) {
+            // Add the new faculty to the list
             const newProject = {
-                name: formData.name || "[Untitled Project]",
-                faculty: trimmed,
+                id: String(projects.length + 1),
+                name: formData.name,
+                faculty: formData.newFaculty.trim(),
             };
-            setProjects((prev) => [...prev, newProject]);
+            setProjects([...projects, newProject]);
             setFormData({
                 ...formData,
-                faculty: trimmed,
+                faculty: formData.newFaculty.trim(),
                 newFaculty: "",
             });
             setShowNewFacultyInput(false);
             toast.success("New faculty added successfully!");
-        } else {
-            setShowNewFacultyInput(false);
         }
-    };    
+    };  
     
     // const handleAddNewFaculty = () => {
     //     if (formData.newFaculty.trim()) {
