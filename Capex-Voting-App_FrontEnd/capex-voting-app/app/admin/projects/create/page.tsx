@@ -99,11 +99,6 @@ export default function CreateProject() {
     const handleAddNewFaculty = () => {
         const trimmed = formData.newFaculty.trim();
         if (trimmed && !uniqueFaculties.includes(trimmed)) {
-            const newProject = {
-                name: formData.name || "[Untitled Project]",
-                faculty: trimmed,
-            };
-            setProjects((prev) => [...prev, newProject]);
             setFormData({
                 ...formData,
                 faculty: trimmed,
@@ -114,7 +109,8 @@ export default function CreateProject() {
         } else {
             setShowNewFacultyInput(false);
         }
-    };    
+    };
+        
     
     // const handleAddNewFaculty = () => {
     //     if (formData.newFaculty.trim()) {
