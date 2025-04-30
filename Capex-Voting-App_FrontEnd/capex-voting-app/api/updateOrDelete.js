@@ -14,8 +14,8 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
-  const { projectId } = req.query;
   console.log("the method is", req.method)
+  const { projectId } = req.query;
   const projectNumber = projectId
   const client = await pool.connect();
 
