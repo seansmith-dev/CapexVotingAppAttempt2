@@ -26,7 +26,13 @@ export default async function handler(req, res) {
   try {
     await client.query("BEGIN");
     console.log("the method is", req.method)
-    
+
+    if (req.method !== "PUT" && req.method !== "DELETE") {
+      res.setHeader("Allow", ["PUT", "DELETE"]);
+      console.log("the method is", req.method)
+      return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+    }
+
     if (req.method === "PUT") {
       const { name, faculty } = req.body;
 
