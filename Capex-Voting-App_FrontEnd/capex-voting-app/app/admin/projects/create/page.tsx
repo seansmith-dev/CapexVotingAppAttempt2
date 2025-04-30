@@ -68,7 +68,6 @@ export default function CreateProject() {
     const [file, setFile] = useState<File | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [showNewFacultyInput, setShowNewFacultyInput] = useState(false);
-    
 
     // Build unique faculties list from projects
     const uniqueFaculties = Array.from(
@@ -98,22 +97,42 @@ export default function CreateProject() {
     }, []);
 
     const handleAddNewFaculty = () => {
-        if (formData.newFaculty.trim()) {
-            // Add the new faculty to the list
+        const trimmed = formData.newFaculty.trim();
+        if (trimmed && !uniqueFaculties.includes(trimmed)) {
             const newProject = {
-                name: formData.name,
-                faculty: formData.newFaculty.trim(),
+                name: formData.name || "[Untitled Project]",
+                faculty: trimmed,
             };
-            setProjects([...projects, newProject]);
+            setProjects((prev) => [...prev, newProject]);
             setFormData({
                 ...formData,
-                faculty: formData.newFaculty.trim(),
+                faculty: trimmed,
                 newFaculty: "",
             });
             setShowNewFacultyInput(false);
             toast.success("New faculty added successfully!");
+        } else {
+            setShowNewFacultyInput(false);
         }
-    };
+    };    
+    
+    // const handleAddNewFaculty = () => {
+    //     if (formData.newFaculty.trim()) {
+    //         // Add the new faculty to the list
+    //         const newProject = {
+    //             name: formData.name,
+    //             faculty: formData.newFaculty.trim(),
+    //         };
+    //         setProjects([...projects, newProject]);
+    //         setFormData({
+    //             ...formData,
+    //             faculty: formData.newFaculty.trim(),
+    //             newFaculty: "",
+    //         });
+    //         setShowNewFacultyInput(false);
+    //         toast.success("New faculty added successfully!");
+    //     }
+    // };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
