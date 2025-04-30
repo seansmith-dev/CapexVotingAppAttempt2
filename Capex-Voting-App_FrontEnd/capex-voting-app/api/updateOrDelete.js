@@ -78,8 +78,46 @@ export default async function handler(req, res) {
       res.status(200).json({ message: "Project updated successfully!" });
 
     } else if (req.method === "DELETE") {
-      // You can plug in your existing delete logic here
-      return res.status(501).json({ error: "Delete functionality not implemented in this version" });
+      try {
+        // 1. Get project_id from project_number
+        const projectResult = await client.query(
+          `SELECT project_id FROM "Projects" WHERE project_number = $1`,
+          [projectNumber]
+        );
+
+        if (projectResult.rows.length === 0) {
+          await client.query("ROLLBACK");
+          return res.status(404).json({ error: "Project not found" });
+        }
+
+        const projectId = projectResult.rows[0].project_id;
+
+        // 2. Delete from ProjectLeaderboardVotes
+        await client.query(
+          `DELETE FROM "ProjectLeaderboardVotes" WHERE project_id = $1`,
+          [projectId]
+        );
+
+        // 3. Delete from Votes
+        await client.query(
+          `DELETE FROM "Votes" WHERE project_id = $1`,
+          [projectId]
+        );
+
+        // 4. Delete from Projects
+        await client.query(
+          `DELETE FROM "Projects" WHERE project_id = $1`,
+          [projectId]
+        );
+
+        await client.query("COMMIT");
+        return res.status(200).json({ message: "Project deleted successfully" });
+
+      } catch (err) {
+        await client.query("ROLLBACK");
+        console.error("Delete error:", err);
+        return res.status(500).json({ error: "Internal server error during delete" });
+      }
     } else {
       console.log(req.method)
       return res.status(405).json({ error: "Method not allowed" });

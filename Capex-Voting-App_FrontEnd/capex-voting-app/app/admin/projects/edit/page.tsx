@@ -172,7 +172,6 @@ export default function EditProjects() {
             //     router.push("/admin");
             //     return;
             // }
-            console.log(editForm)
             const response = await fetch(`/api/updateOrDelete?projectId=${projectId}`, {
                 method: "PUT",                       
                 headers: {
@@ -206,19 +205,19 @@ export default function EditProjects() {
 
     const handleDelete = async (projectId: string) => {
         // Commented out actual delete function
-        /*
+        
         try {
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
+            // const adminToken = Cookies.get("admin-token");
+            // if (!adminToken) {
+            //     toast.error("Admin session expired. Please login again.");
+            //     router.push("/admin");
+            //     return;
+            // }
 
-            const response = await fetch(`/api/projects/${projectId}`, {
-                method: "DELETE",
+            const response = await fetch(`/api/updateOrDelete?projectId=${projectId}`, {
+                method: "DELETE",                       
                 headers: {
-                    Authorization: `Bearer ${adminToken}`,
+                    "Content-Type": "application/json"
                 },
             });
 
@@ -227,12 +226,11 @@ export default function EditProjects() {
             }
 
             toast.success("Project deleted successfully!");
-            fetchProjects();
         } catch (error) {
             console.error("Error deleting project:", error);
             toast.error("Failed to delete project. Please try again.");
         }
-        */
+        
 
         // Mock delete functionality
         setProjects(projects.filter((project) => project.id !== projectId));
