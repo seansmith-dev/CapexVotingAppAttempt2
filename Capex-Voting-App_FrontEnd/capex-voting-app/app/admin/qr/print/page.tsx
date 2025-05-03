@@ -77,73 +77,84 @@ export default function PrintQRPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <RegularNavBar heading="Capstone Project Expo 2024" />
 
-      {/* Banner with heading */}
-      <div className="relative">
-        <img
-          src="/background.png"
-          alt="Expo Banner"
-          className="w-full object-cover h-40 md:h-52"
-        />
-        <h2 className="absolute top-5 left-1/2 transform -translate-x-1/2 text-white text-xl font-bold bg-red-500 px-6 py-2 rounded-xl">
-          Print QR Code
-        </h2>
-      </div>
+      {/* Main Content Container */}
+      <div className="flex-1 container mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="mb-6">
+          <button
+            onClick={() => router.back()}
+            className="text-gray-600 hover:text-gray-800 mb-4 flex items-center"
+          >
+            <span className="text-xl mr-1">←</span> Back
+          </button>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Print QR Codes</h1>
+          <p className="text-gray-600">Select and print QR codes for voters</p>
+        </div>
 
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className="absolute top-[220px] left-4 bg-white p-2 rounded-full shadow"
-      >
-        ←
-      </button>
-
-      {/* Bulk print button and QR Code List */}
-      <div className="relative z-10 px-4 py-6 flex flex-col items-center gap-4">
-        {qrCodes.length === 0 ? (
-          <p className="text-center text-gray-600">No QR Codes Available.</p>
-        ) : (
-          <>
-            {/* Bulk Print Action */}
-            <div className="w-full max-w-xs flex justify-end mb-2">
-              <button
-                onClick={handleBulkPrint}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-4 py-1 rounded-xl"
-              >
-                Print Selected QR Codes
-              </button>
-            </div>
-
-            {/* QR Code Rows */}
-            {qrCodes.map((code) => (
-              <div
-                key={code.id}
-                className="flex items-center bg-gray-100 w-full max-w-xs px-4 py-2 rounded-xl shadow"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(code.id)}
-                  onChange={() => handleSelectionChange(code.id)}
-                  className="mr-2"
-                />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">
-                    QR code ID: {code.voterId}
-                  </p>
-                  <p
-                    className={`text-xs ${
-                      code.printed ? "text-green-500" : "text-red-500"
+        {/* QR Codes Section */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          {qrCodes.length === 0 ? (
+            <p className="text-center text-gray-600">No QR Codes Available.</p>
+          ) : (
+            <>
+              {/* Bulk Print Action */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={handleBulkPrint}
+                  disabled={selected.length === 0}
+                  className={`px-4 py-2 rounded-md font-medium text-sm
+                    ${selected.length === 0 
+                      ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
                     }`}
-                  >
-                    {code.printed ? "Printed" : "Not Printed"}
-                  </p>
-                </div>
+                >
+                  Print Selected ({selected.length})
+                </button>
               </div>
-            ))}
-          </>
-        )}
+
+              {/* QR Code Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {qrCodes.map((code) => (
+                  <div
+                    key={code.id}
+                    className="border rounded-lg p-4 hover:border-blue-500 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(code.id)}
+                        onChange={() => handleSelectionChange(code.id)}
+                        className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">
+                          Voter ID: {code.voterId}
+                        </p>
+                        <div className="flex items-center mt-1">
+                          <span className="text-sm text-gray-500 mr-2">
+                            {code.voterType}
+                          </span>
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
+                              code.printed
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {code.printed ? 'Printed' : 'Not Printed'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <Footer />
