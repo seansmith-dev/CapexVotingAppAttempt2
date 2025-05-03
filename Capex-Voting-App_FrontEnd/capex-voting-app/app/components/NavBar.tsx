@@ -22,27 +22,39 @@ interface NavBarProps {
         icon: React.ReactNode;
         onClick?: () => void;
     }>;
+    transparent?: boolean;
 }
 
-export default function NavBar({ heading, links }: NavBarProps) {
+export default function NavBar({
+    heading,
+    links,
+    transparent = false,
+}: NavBarProps) {
     const pathname = usePathname();
 
     return (
-        <nav className="relative z-100 bg-gray-900 backdrop-blur-sm shadow-md border-gray-700">
-            <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
+        <nav
+            className={`relative z-100 backdrop-blur-sm ${
+                transparent
+                    ? "bg-transparent"
+                    : "bg-gray-900 shadow border-gray-700"
+            }`}
+        >
+            <div className="w-full flex items-center justify-between mx-auto p-4">
                 <div className="flex items-center space-x-6 flex-1">
-                    <Image
-                        src="/logo.png"
-                        alt="Logo"
-                        width={90}
-                        height={50}
-                        className="h-8 w-auto"
-                    />
-                    <span className="flex-1 self-center text-xl font-semibold text-white md:text-left text-center">
+                    <Link href="/">
+                        <Image
+                            src="/logo.png"
+                            alt="Logo"
+                            width={90}
+                            height={50}
+                            className="h-8 w-auto"
+                        />
+                    </Link>
+                    <span className="flex-1 self-center text-xl font-semibold text-white md:text-left lg:text-left text-center truncate">
                         {heading}
                     </span>
                 </div>
-
                 {/* Mobile Menu */}
                 <Sheet>
                     <SheetTrigger asChild>
@@ -56,7 +68,11 @@ export default function NavBar({ heading, links }: NavBarProps) {
                     </SheetTrigger>
                     <SheetContent
                         side="right"
-                        className="w-3/5 bg-gray-900/80 backdrop-blur-sm shadow-md border-gray-700 text-white mt-6"
+                        className={`w-3/5 ${
+                transparent
+                    ? "bg-transparent border-transparent"
+                    : "bg-gray-900 shadow border-gray-700"
+            } backdrop-blur-sm shadow-md text-white mt-[22px]`}
                     >
                         <SheetHeader>
                             <SheetTitle className="text-white hidden">

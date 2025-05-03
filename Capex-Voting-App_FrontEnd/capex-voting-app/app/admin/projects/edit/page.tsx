@@ -99,17 +99,35 @@ export default function EditProjects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    
     const [editForm, setEditForm] = useState({
         name: "",
         faculty: "",
     });
-    useEffect(() => {
-        // Commented out actual fetch call
-        // fetchProjects();
 
-        // Using mock data instead
-        setProjects(mockProjects);
-        setIsLoading(false);
+    useEffect(() => {
+        fetch(`/api/getProjectsList`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const formattedProjects: Project[] = data.map((item: any) => ({
+                    id: item.project_number.toString(), // convert number to string
+                    name: item.project_title,
+                    faculty: item.faculty_name,
+                }));
+                setProjects(formattedProjects);
+                setIsLoading(false);
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
+                setError("Error fetching projects.");
+            });
     }, []);
 
     // Commented out actual fetch function
@@ -144,22 +162,20 @@ export default function EditProjects() {
     };
     */
 
-    const handleSave = (projectId: string) => {
+    const handleSave = async (projectId: string) => {
         // Commented out actual update function
-        /*
+        
         try {
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
-
-            const response = await fetch(`/api/projects/${editingProject.id}`, {
-                method: "PUT",
+            // const adminToken = Cookies.get("admin-token");
+            // if (!adminToken) {
+            //     toast.error("Admin session expired. Please login again.");
+            //     router.push("/admin");
+            //     return;
+            // }
+            const response = await fetch(`/api/updateOrDelete?projectId=${projectId}`, {
+                method: "PUT",                       
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${adminToken}`,
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(editForm),
             });
@@ -169,12 +185,12 @@ export default function EditProjects() {
             }
 
             toast.success("Project updated successfully!");
-            fetchProjects();
+            
         } catch (error) {
             console.error("Error updating project:", error);
             toast.error("Failed to update project. Please try again.");
         }
-        */
+        
 
         // Mock update functionality
         setProjects(
@@ -189,19 +205,19 @@ export default function EditProjects() {
 
     const handleDelete = async (projectId: string) => {
         // Commented out actual delete function
-        /*
+        
         try {
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
+            // const adminToken = Cookies.get("admin-token");
+            // if (!adminToken) {
+            //     toast.error("Admin session expired. Please login again.");
+            //     router.push("/admin");
+            //     return;
+            // }
 
-            const response = await fetch(`/api/projects/${projectId}`, {
-                method: "DELETE",
+            const response = await fetch(`/api/updateOrDelete?projectId=${projectId}`, {
+                method: "DELETE",                       
                 headers: {
-                    Authorization: `Bearer ${adminToken}`,
+                    "Content-Type": "application/json"
                 },
             });
 
@@ -210,12 +226,11 @@ export default function EditProjects() {
             }
 
             toast.success("Project deleted successfully!");
-            fetchProjects();
         } catch (error) {
             console.error("Error deleting project:", error);
             toast.error("Failed to delete project. Please try again.");
         }
-        */
+        
 
         // Mock delete functionality
         setProjects(projects.filter((project) => project.id !== projectId));

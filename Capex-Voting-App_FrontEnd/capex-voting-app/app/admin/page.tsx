@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import HomeIcon from "../components/Icons/HomeIcon";
-import UserIcon from "../components/Icons/UserIcon";
-import OpenBookIcon from "../components/Icons/OpenBookIcon";
+import RegularNavBar from "../components/RegularNavBar";
 import Cookies from "js-cookie";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function AdminLogin() {
     const [username, setUsername] = useState("");
@@ -15,11 +14,6 @@ export default function AdminLogin() {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    const links = [
-        { href: "/", text: "Home", icon: <HomeIcon /> },
-        { href: "/admin", text: "Admin", icon: <UserIcon /> },
-        { href: "/guide", text: "Application Guide", icon: <OpenBookIcon /> },
-    ];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,9 +38,10 @@ export default function AdminLogin() {
 
     return (
         <div className="flex flex-col min-h-screen justify-between">
-            <NavBar heading="Admin Login" links={links} />
-            <div className="flex flex-1 items-center justify-center bg-gray-100">
-                <div className="bg-white p-8 rounded-lg shadow-md w-96">
+            <RegularNavBar heading="Admin Login"/>
+            <div className="flex flex-1 items-center justify-center bg-[url('/background.png')] bg-cover bg-center">
+                <div className=" h-full w-full backdrop-blur-md absolute top-0 left-0"></div>
+                <div className="z-1 bg-white p-8 m-8 rounded-lg shadow-md w-96">
                     <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">
                         Admin Login
                     </h1>
@@ -57,13 +52,13 @@ export default function AdminLogin() {
                     )}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label
+                            <Label
                                 htmlFor="username"
                                 className="block text-sm font-medium text-gray-900"
                             >
                                 Username
-                            </label>
-                            <input
+                            </Label>
+                            <Input
                                 type="text"
                                 id="username"
                                 value={username}
@@ -73,13 +68,13 @@ export default function AdminLogin() {
                             />
                         </div>
                         <div>
-                            <label
+                            <Label
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-900"
                             >
                                 Password
-                            </label>
-                            <input
+                            </Label>
+                            <Input
                                 type="password"
                                 id="password"
                                 value={password}

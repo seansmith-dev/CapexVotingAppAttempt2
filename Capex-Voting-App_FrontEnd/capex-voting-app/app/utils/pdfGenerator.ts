@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 
 export interface QRCodeForPrint {
-    id: string;
+    // id: string;
     dataUrl: string;
     voterType: string;
     voterId: string;
@@ -39,17 +39,18 @@ export function generateQRCodesPDF(qrCodes: QRCodeForPrint[]): jsPDF {
         // Footer text
         doc.setFontSize(12);
         doc.setFont("helvetica", "normal");
-        doc.text("Note: This is a unique QR code", x + 5, y + qrSize + 10);
+        doc.text("Note: This is a unique QR code", x + 5, y + qrSize + 5);
         doc.setFontSize(10);
         doc.text(
             "You can only vote once using this QR code",
             x + 1,
-            y + qrSize + 20
+            y + qrSize + 12
         );
         // Voter type and ID
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text(`QR Code Id - ${qr.voterId}`, x, y + qrSize + 30);
+        doc.text(`QR Code Id`, x+20, y + qrSize + 20);
+        doc.text(`${qr.voterId}`, x+8, y + qrSize + 28);
     });
 
     return doc;

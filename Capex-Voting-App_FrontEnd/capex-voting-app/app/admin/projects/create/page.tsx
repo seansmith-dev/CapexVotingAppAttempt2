@@ -26,12 +26,19 @@ import { Upload, FileUp } from "lucide-react";
 import Cookies from "js-cookie";
 import Papa from "papaparse";
 import AdminLayout from "@/app/layouts/admin";
+import { useEffect} from "react";
 
 const faculties = [
     "Science, Computing and Engineering Technologies",
     "Health, Arts and Design",
     "Business, Law and Entrepreneurship",
 ];
+
+interface Project {
+    name: string;
+    faculty: string;
+}
+
 
 // Mock data for projects
 const mockProjects = [
@@ -52,19 +59,42 @@ const mockProjects = [
 export default function CreateProject() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         name: "",
         faculty: "",
         newFaculty: "",
     });
     const [file, setFile] = useState<File | null>(null);
-    const [projects, setProjects] = useState(mockProjects);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [showNewFacultyInput, setShowNewFacultyInput] = useState(false);
 
     // Build unique faculties list from projects
     const uniqueFaculties = Array.from(
         new Set(projects.map((project) => project.faculty))
     );
+
+    useEffect(() => {
+        fetch(`/api/getProjectsList`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch projects");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const formattedProjects = data.map((item: any) => ({
+                    name: item.project_title,
+                    faculty: item.faculty_name,
+                }));
+                setProjects(formattedProjects);
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error("Error fetching projects:", error);
+                setError("Error fetching projects.");
+            });
+    }, []);
 
     const handleAddNewFaculty = () => {
         if (formData.newFaculty.trim()) {
@@ -83,7 +113,25 @@ export default function CreateProject() {
             setShowNewFacultyInput(false);
             toast.success("New faculty added successfully!");
         }
-    };
+    };  
+    
+    // const handleAddNewFaculty = () => {
+    //     if (formData.newFaculty.trim()) {
+    //         // Add the new faculty to the list
+    //         const newProject = {
+    //             name: formData.name,
+    //             faculty: formData.newFaculty.trim(),
+    //         };
+    //         setProjects([...projects, newProject]);
+    //         setFormData({
+    //             ...formData,
+    //             faculty: formData.newFaculty.trim(),
+    //             newFaculty: "",
+    //         });
+    //         setShowNewFacultyInput(false);
+    //         toast.success("New faculty added successfully!");
+    //     }
+    // };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -136,7 +184,7 @@ export default function CreateProject() {
             */
 
             // Add new project to the list
-            const newProject = {
+            const newProject: Project = {
                 name: formData.name,
                 faculty: formData.faculty,
             };
@@ -193,7 +241,7 @@ export default function CreateProject() {
                         return;
                     }
 
-                    const newProjects = results.data.map((row: any) => ({
+                    const newProjects: Project[] = results.data.map((row: any) => ({
                         name: row["name"],
                         faculty: row["faculty"],
                     }));
@@ -241,6 +289,49 @@ export default function CreateProject() {
         }
     };
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const projectData = {
+            project_title: formData.name,
+            faculty_name: formData.faculty,
+        };
+        try {
+            const response = await fetch('/api/createProject', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(projectData),
+            });
+
+            console.log("Sending project data:", JSON.stringify(projectData, null, 2));
+
+
+            const responseData = await response.json(); // Extract JSON data
+
+            if (response.status === 201) {
+                alert('Project created successfully!');
+                console.log("201 response status executed");
+            }
+            else if (response.status === 409) {
+                console.log("The alert executed");
+                alert(responseData.message || 'Project with this title already exists!');
+            }
+            else if (response.status === 408) {
+                console.log("The response 408 executed");
+                alert(responseData.message || 'Your team has already created a project.');
+            }
+            else {
+                console.log("The alert executed");
+                alert('Something went wrong.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        }
+    };
+
     return (
         <AdminLayout heading="Create New Project">
             <div className="flex flex-col flex-1  p-10">
@@ -262,7 +353,7 @@ export default function CreateProject() {
 
                             <TabsContent value="manual">
                                 <form
-                                    onSubmit={handleManualSubmit}
+                                    onSubmit={handleSubmit}
                                     className="space-y-6"
                                 >
                                     <div className="space-y-2">

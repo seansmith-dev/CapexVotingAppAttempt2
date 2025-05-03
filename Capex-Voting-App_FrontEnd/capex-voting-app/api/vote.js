@@ -19,14 +19,14 @@ export default async function handler(req, res) {
   }
 
   const { token } = req.query; // Get the token from the query string
-  const { project_number, project_title, project_long_description, project_short_description, faculty_name, team_name, team_members } = req.body;
+  const { project_number} = req.body;
 
   const client = await pool.connect();
 
   let projectId;
   try {
     // Step 1: Query the qrcodes table to get the qr_code_id based on the provided token
-    const qrQuery = 'SELECT qr_code_id FROM "qrcodes" WHERE qr_code_token = $1';
+    const qrQuery = 'SELECT qr_code_id,leaderboard_id FROM "qrcodes" WHERE qr_code_token = $1';
     const qrResult = await client.query(qrQuery, [token]);
 
     if (qrResult.rows.length === 0) {
@@ -34,6 +34,8 @@ export default async function handler(req, res) {
     }
 
     const qr_code_id = qrResult.rows[0].qr_code_id;
+    const qr_code_leaderboard_id = qrResult.rows[0].leaderboard_id;
+    console.log("The qr_code_leaderboard_id is a bit",qr_code_leaderboard_id)
 
     const qrQueryVoteTwice = 'SELECT qr_code_id FROM "Votes" WHERE qr_code_id = $1';
     const qrCodesAlreadyVoted = await client.query(qrQueryVoteTwice, [qr_code_id])
@@ -59,14 +61,22 @@ export default async function handler(req, res) {
 
     // Step 2: Insert a new vote into the votes table
     const voteQuery = `
-      INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp)
-      VALUES ($1, $2, NOW()) 
+      INSERT INTO "Votes" (project_id, qr_code_id, vote_timestamp, leaderboard_id)
+      VALUES ($1, $2, NOW(), $3) 
       RETURNING vote_id;
     `;
-    const voteResult = await client.query(voteQuery, [projectId, qr_code_id]);
+    const voteResult = await client.query(voteQuery, [projectId, qr_code_id, qr_code_leaderboard_id]);
 
     // Step 3: Return the result
     const vote_id = voteResult.rows[0].vote_id;
+
+    const projectLeaderboardVotesQuery = `
+      INSERT INTO "ProjectLeaderboardVotes" (project_id, leaderboard_id, vote_count)
+      VALUES ($1, $2, 1)
+      ON CONFLICT (project_id, leaderboard_id)
+      DO UPDATE SET vote_count = "ProjectLeaderboardVotes".vote_count + 1;
+    `;
+    await client.query(projectLeaderboardVotesQuery, [projectId, qr_code_leaderboard_id]);
    
     // Return a response indicating the vote was successfully recorded
     return res.status(200).json({

@@ -9,6 +9,6 @@ const links = [
     { href: "/guide", text: "Application Guide", icon: <BookOpen /> },
 ];
 
-export default function RegularNavBar({heading}: {heading: string}) {
-    return <NavBar heading={heading} links={links} />;
+export default function RegularNavBar({heading, transparent=false}: {heading: string, transparent?: boolean}) {
+    return <NavBar heading={heading} links={links} transparent={transparent} />;
 }

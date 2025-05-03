@@ -21,42 +21,40 @@ export default function GenerateQRPage() {
             // Generate Industry QR codes
             for (let i = 0; i < industryCount; i++) {
                 const voterId = `IND-${Date.now()}-${i}`;
-                const dataUrl = await generateQRCodeDataURL({
-                    voterId,
-                    voterType: "INDUSTRY",
-                });
+                
                 codes.push({
-                    id: voterId,
-                    dataUrl,
-                    voterType: "INDUSTRY",
                     voterId,
+                    voterType: "INDUSTRY",
+                    dataUrl: "",
                 });
             }
 
             // Generate Guest QR codes
             for (let i = 0; i < guestCount; i++) {
                 const voterId = `GST-${Date.now()}-${i}`;
-                const dataUrl = await generateQRCodeDataURL({
-                    voterId,
-                    voterType: "GUEST",
-                });
+            
                 codes.push({
-                    id: voterId,
-                    dataUrl,
-                    voterType: "GUEST",
                     voterId,
+                    voterType: "GUEST",
+                    dataUrl: "",
                 });
             }
 
             // Store in API
-            await fetch("/api/qrcodes", {
+            const response = await fetch("/api/generate-qr", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(codes),
-            });
-
-            setGeneratedCodes(codes);
-            setShowPrintDialog(true);
+                body: JSON.stringify({ codes }),
+              });
+          
+              const data = await response.json();
+              if (data.success) {
+                console.log(data.qrImages);
+                setGeneratedCodes(data.qrImages);
+                setShowPrintDialog(true);
+              } else {
+                alert("Error generating QR codes");
+              }
         } catch (error) {
             console.error("Error generating QR codes:", error);
             alert("Failed to generate QR codes");
@@ -74,22 +72,21 @@ export default function GenerateQRPage() {
                 (code) => code.voterType === "GUEST"
             );
 
-            const selectedIndustryQRs = industryQRs.slice(
-                0,
-                printIndustryCount
-            );
+            const selectedIndustryQRs = industryQRs.slice(0,printIndustryCount);
             const selectedGuestQRs = guestQRs.slice(0, printGuestCount);
             const codesToPrint = [...selectedIndustryQRs, ...selectedGuestQRs];
 
             const doc = generateQRCodesPDF(codesToPrint);
             doc.save("qr-codes.pdf");
 
+            console.log("logging codesToPrint", codesToPrint);
+
             // Update printed status in API
-            fetch("/api/qrcodes/print", {
+            fetch("/api/updatePrintedStatus", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ids: codesToPrint.map((code) => code.id),
+                    ids: codesToPrint.map((code) => code.voterId),
                 }),
             });
         }

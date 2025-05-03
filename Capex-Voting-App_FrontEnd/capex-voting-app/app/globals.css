@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@theme inline {
+  --animate-aurora: aurora 60s linear infinite;
+  @keyframes aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -111,6 +128,70 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
 }
+
+#html5-qrcode-button-camera-stop.html5-qrcode-element{
+    padding: 7px 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    margin: 10px;
+    box-shadow: var(--shadow-lg);
+    width: 60%;
+    cursor: pointer;
+}
+
+#html5-qrcode-button-camera-start.html5-qrcode-element{
+    padding: 7px 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    margin: 10px;
+    box-shadow: var(--shadow-lg);
+    width: 60%;
+    cursor: pointer;
+}
+
+#html5-qrcode-button-camera-permission.html5-qrcode-element{
+    padding: 7px 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    margin: 10px;
+    box-shadow: var(--shadow-lg);
+    width: 60%;
+    cursor: pointer;
+}
+
+#reader{
+  border: transparent !important;
+}
+
+#reader__scan_region > img{
+  margin: auto;
+  color: #fff;
+  filter: invert(100%);
+}
+
+#html5-qrcode-anchor-scan-type-change{
+    padding: 7px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    margin: 10px;
+    width: 60% !important;
+    text-decoration-line: none !important;
+    display: inline-block;
+}
+
+#html5-qrcode-button-file-selection{
+  text-decoration-line: underline !important;
+  cursor: pointer;
+}
+
 
 @layer base {
     * {

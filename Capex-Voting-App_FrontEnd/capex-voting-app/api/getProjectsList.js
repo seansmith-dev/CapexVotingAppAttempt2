@@ -28,8 +28,6 @@ export default async function handler(req, res) {
       SELECT 
         p.project_number, 
         p.project_title, 
-        p.project_short_description, 
-        p.project_long_description, 
         f.faculty_name
       FROM "Projects" p
       JOIN "Facultys" f ON p.faculty_id = f.faculty_id
@@ -37,6 +35,7 @@ export default async function handler(req, res) {
     `;
     const result = await client.query(query);
 
+    console.log("list of projects", result.rows);
     // Return the fetched projects as JSON
     return res.status(200).json(result.rows);
   } catch (error) {

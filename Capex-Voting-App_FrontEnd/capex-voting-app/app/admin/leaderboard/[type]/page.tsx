@@ -108,17 +108,17 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     useEffect(() => {
         // Commented out actual fetch call
-        //fetchLeaderboard();
+        fetchLeaderboard();
 
         // Using mock data instead
-        mockProjects.map((project) => {
-            project.votes = Math.floor(Math.random() * 1000);
-        });
-        mockProjects.sort((a, b) => b.votes - a.votes);
-        mockProjects.forEach((project, index) => {
-            project.rank = index + 1;
-        });
-        setProjects(mockProjects);
+        // mockProjects.map((project) => {
+        //     project.votes = Math.floor(Math.random() * 1000);
+        // });
+        // mockProjects.sort((a, b) => b.votes - a.votes);
+        // mockProjects.forEach((project, index) => {
+        //     project.rank = index + 1;
+        // });
+        // setProjects(mockProjects);
         setLoading(false);
     }, []);
 
@@ -131,21 +131,33 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                 return;
             }
 
-            const response = await fetch(
-                `/api/leaderboard/${resolvedParams.type}`,
-                {
+            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
+                {                                   
                     headers: {
                         Authorization: `Bearer ${adminToken}`,
                     },
                 }
             );
+            
+            const data = await response.json();
 
             if (!response.ok) {
                 throw new Error("Failed to fetch leaderboard");
             }
 
-            const data = await response.json();
-            setProjects(data);
+            console.log("This is the data retrieved",data)
+
+            const transformedProjects: Project[] = data.projects.map(
+                (project: any, index: number) => ({
+                    id: String(project.project_id),
+                    name: project.project_title,
+                    faculty: project.faculty_name,
+                    votes: project.vote_count,
+                    rank: index + 1,
+                })
+            );
+
+            setProjects(transformedProjects);
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
             toast.error("Failed to fetch leaderboard. Please try again.");
@@ -162,7 +174,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     return (
         <AdminLayout heading={`${leaderboardType} Leaderboard`}>
-            <div className="bg-gray-100 p-8">
+            <div className=" p-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <div className="mb-6">
@@ -195,7 +207,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                             Rank
                                         </TableHead>
                                         <TableHead>Project Name</TableHead>
-                                        <TableHead className="hidden md:inline lg:inline">
+                                        <TableHead className="hidden table-cell">
                                             Faculty
                                         </TableHead>
                                         <TableHead className="text-right">
@@ -231,7 +243,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                             <TableCell>
                                                 {project.name}
                                             </TableCell>
-                                            <TableCell className="hidden md:inline lg:inline">
+                                            <TableCell className="hidden md:table-cell">
                                                 {project.faculty}
                                             </TableCell>
                                             <TableCell className="text-right">
