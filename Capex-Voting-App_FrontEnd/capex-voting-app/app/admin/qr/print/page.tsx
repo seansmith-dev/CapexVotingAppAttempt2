@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
 import { generateQRCodeDataURL, QRCodeData } from "@/app/utils/qrGenerator";
 import AdminLayout from "@/app/layouts/admin";
+import { QRCodeCanvas } from "qrcode.react";
 
 type QRCode = {
   qr_code_id: string;
   qr_code_voter_id: string;
   leaderboard_type: string;
   qr_code_printed_flag: boolean | null;
+  project_name: string;
+  faculty_name: string;
 };
 
 export default function PrintQRPage() {
@@ -132,80 +135,83 @@ export default function PrintQRPage() {
 
   return (
     <AdminLayout heading="Print QR Codes">
-      {/* Main Content Container */}
-      <div className="flex-1 container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="text-gray-600 hover:text-gray-800 mb-4 flex items-center"
-          >
-            <span className="text-xl mr-1">←</span> Back
-          </button>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Print QR Codes</h1>
-          <p className="text-gray-600">Select and print QR codes for voters</p>
-        </div>
+      <div className="flex-1 flex flex-col justify-center p-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white rounded-lg shadow p-6">
+            {/* Page Header */}
+            <div className="mb-6">
+              <button
+                onClick={() => router.back()}
+                className="text-gray-600 hover:text-gray-800 mb-4 flex items-center"
+              >
+                <span className="text-xl mr-1">←</span> Back
+              </button>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Print QR Codes</h1>
+              <p className="text-gray-600">Select and print QR codes for voters</p>
+            </div>
 
-        {/* QR Codes Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          {qrCodes.length === 0 ? (
-            <p className="text-center text-gray-600">No Unprinted QR Codes Available.</p>
-          ) : (
-            <>
-              {/* Bulk Print Action */}
-              <div className="flex justify-end mb-4">
-                <button
-                  onClick={handleBulkPrint}
-                  disabled={selected.length === 0}
-                  className={`px-4 py-2 rounded-md font-medium text-sm
-                    ${selected.length === 0 
-                      ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                >
-                  Print Selected ({selected.length})
-                </button>
-              </div>
-
-              {/* QR Code Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {qrCodes.map((code) => (
-                  <div
-                    key={code.qr_code_id}
-                    className="border rounded-lg p-4 hover:border-blue-500 transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
+            {/* QR Codes Section */}
+            <div className="space-y-6">
+              {/* Bulk Print Section */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Bulk Print</h2>
+                <div className="flex flex-wrap gap-4">
+                  {qrCodes.map((qr) => (
+                    <div
+                      key={qr.qr_code_id}
+                      className="flex items-center space-x-2 bg-white p-2 rounded border"
+                    >
                       <input
                         type="checkbox"
-                        checked={selected.includes(code.qr_code_id)}
-                        onChange={() => handleSelectionChange(code.qr_code_id)}
-                        className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                        checked={selected.includes(qr.qr_code_id)}
+                        onChange={() => handleSelectionChange(qr.qr_code_id)}
+                        className="h-4 w-4 text-blue-600"
                       />
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">
-                          Voter ID: {code.qr_code_voter_id || 'Not Assigned'}
-                        </p>
-                        <div className="flex items-center mt-1">
-                          <span className="text-sm text-gray-500 mr-2">
-                            {code.leaderboard_type}
-                          </span>
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              code.qr_code_printed_flag
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}
-                          >
-                            {code.qr_code_printed_flag ? 'Printed' : 'Not Printed'}
-                          </span>
-                        </div>
-                      </div>
+                      <span className="text-sm text-gray-700">
+                        {qr.project_name} - {qr.faculty_name}
+                      </span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <button
+                    onClick={handleBulkPrint}
+                    disabled={selected.length === 0}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Print Selected ({selected.length})
+                  </button>
+                </div>
               </div>
-            </>
-          )}
+
+              {/* Individual QR Codes */}
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Individual QR Codes</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {qrCodes.map((qr) => (
+                    <div
+                      key={qr.qr_code_id}
+                      className="bg-white border rounded-lg p-4 flex flex-col items-center"
+                    >
+                      <div className="mb-2">
+                        <QRCodeCanvas value={qr.qr_code_id} size={128} />
+                      </div>
+                      <div className="text-center">
+                        <p className="font-medium text-gray-900">{qr.project_name}</p>
+                        <p className="text-sm text-gray-600">{qr.faculty_name}</p>
+                      </div>
+                      <button
+                        onClick={() => handleSelectionChange(qr.qr_code_id)}
+                        className="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                      >
+                        Select
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </AdminLayout>
