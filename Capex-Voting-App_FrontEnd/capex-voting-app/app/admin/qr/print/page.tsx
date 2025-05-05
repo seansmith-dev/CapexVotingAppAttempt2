@@ -5,6 +5,7 @@ import RegularNavBar from "@/app/components/RegularNavBar";
 import Footer from "@/app/components/Footer";
 import { useRouter } from "next/navigation";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
+import { generateQRCodeDataURL, QRCodeData } from "@/app/utils/qrGenerator";
 
 type QRCode = {
   qr_code_id: string;
@@ -59,12 +60,22 @@ export default function PrintQRPage() {
 
     if (selectedCodes.length > 0) {
       try {
-        // Convert selected codes to QRCodeForPrint format
-        const codesToPrint: QRCodeForPrint[] = selectedCodes.map(code => ({
-          voterId: code.qr_code_voter_id || code.qr_code_id,
-          voterType: code.leaderboard_type,
-          dataUrl: `/api/qr/${code.qr_code_id}` // This assumes you have an API endpoint that returns the QR code image
-        }));
+        // Generate QR code data URLs for each selected code
+        const codesToPrint: QRCodeForPrint[] = await Promise.all(
+          selectedCodes.map(async (code) => {
+            const voterId = code.qr_code_voter_id || code.qr_code_id;
+            const qrData: QRCodeData = {
+              voterId,
+              voterType: code.leaderboard_type
+            };
+            const dataUrl = await generateQRCodeDataURL(qrData);
+            return {
+              voterId,
+              voterType: code.leaderboard_type,
+              dataUrl
+            };
+          })
+        );
 
         // Generate and save PDF
         const doc = generateQRCodesPDF(codesToPrint);
