@@ -4,7 +4,8 @@ import { sql } from '@vercel/postgres';
 
 export async function GET() {
     try {
-        const sessionId = cookies().get('admin_session')?.value;
+        const cookieStore = await cookies();
+        const sessionId = cookieStore.get('admin_session')?.value;
 
         if (!sessionId) {
             return NextResponse.json(
@@ -13,16 +14,17 @@ export async function GET() {
             );
         }
 
-        // Query the database for the admin with this session ID
+        // Check if session exists and is valid
         const result = await sql`
-            SELECT admin_id, admin_username 
-            FROM "Admin" 
-            WHERE admin_session_id = ${sessionId}
+            SELECT a.admin_id, a.admin_username 
+            FROM "Admin" a
+            JOIN "Sessions" s ON a.admin_id = s.admin_id
+            WHERE s.session_id = ${sessionId} AND s.expires_at > CURRENT_TIMESTAMP
         `;
 
         if (result.rows.length === 0) {
             return NextResponse.json(
-                { error: 'Invalid session' },
+                { error: 'Invalid or expired session' },
                 { status: 401 }
             );
         }
