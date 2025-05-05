@@ -22,18 +22,39 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed. Use GET." });
   }
 
+  const { unprintedOnly } = req.query;
   const client = await pool.connect();
   try {
-    const query = `
-      SELECT 
-        p.project_number, 
-        p.project_title, 
-        f.faculty_name
-      FROM "Projects" p
-      JOIN "Facultys" f ON p.faculty_id = f.faculty_id
-      ORDER BY p.project_number ASC;
-    `;
-    const result = await client.query(query);
+    let query;
+    let queryParams = [];
+
+    if (unprintedOnly === 'true') {
+      // Query to get unprinted QR codes with their details
+      query = `
+        SELECT 
+          q.qr_code_id,
+          q.qr_code_printed_flag,
+          q.qr_code_voter_id,
+          l.leaderboard_type
+        FROM "qrcodes" q
+        JOIN "Leaderboards" l ON q.leaderboard_id = l.leaderboard_id
+        WHERE q.qr_code_printed_flag IS NULL OR q.qr_code_printed_flag = false
+        ORDER BY q.qr_code_id;
+      `;
+    } else {
+      // Original query to get all projects
+      query = `
+        SELECT 
+          p.project_number, 
+          p.project_title, 
+          f.faculty_name
+        FROM "Projects" p
+        JOIN "Facultys" f ON p.faculty_id = f.faculty_id
+        ORDER BY p.project_number ASC;
+      `;
+    }
+
+    const result = await client.query(query, queryParams);
 
     console.log("list of projects", result.rows);
     // Return the fetched projects as JSON
