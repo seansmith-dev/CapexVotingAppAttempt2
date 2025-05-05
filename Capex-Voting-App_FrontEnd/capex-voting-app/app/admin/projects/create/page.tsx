@@ -68,10 +68,11 @@ export default function CreateProject() {
     const [file, setFile] = useState<File | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [showNewFacultyInput, setShowNewFacultyInput] = useState(false);
+    const [customFaculties, setCustomFaculties] = useState<string[]>([]);
 
-    // Build unique faculties list from projects
+    // Build unique faculties list from projects and custom faculties
     const uniqueFaculties = Array.from(
-        new Set(projects.map((project) => project.faculty))
+        new Set([...projects.map((project) => project.faculty), ...customFaculties])
     );
 
     useEffect(() => {
@@ -98,13 +99,9 @@ export default function CreateProject() {
 
     const handleAddNewFaculty = () => {
         if (formData.newFaculty.trim()) {
-            // Add the new faculty to the list
-            const newProject = {
-                id: String(projects.length + 1),
-                name: formData.name,
-                faculty: formData.newFaculty.trim(),
-            };
-            setProjects([...projects, newProject]);
+            // Add the new faculty to custom faculties
+            setCustomFaculties([...customFaculties, formData.newFaculty.trim()]);
+            // Update form data
             setFormData({
                 ...formData,
                 faculty: formData.newFaculty.trim(),
@@ -113,25 +110,7 @@ export default function CreateProject() {
             setShowNewFacultyInput(false);
             toast.success("New faculty added successfully!");
         }
-    };  
-    
-    // const handleAddNewFaculty = () => {
-    //     if (formData.newFaculty.trim()) {
-    //         // Add the new faculty to the list
-    //         const newProject = {
-    //             name: formData.name,
-    //             faculty: formData.newFaculty.trim(),
-    //         };
-    //         setProjects([...projects, newProject]);
-    //         setFormData({
-    //             ...formData,
-    //             faculty: formData.newFaculty.trim(),
-    //             newFaculty: "",
-    //         });
-    //         setShowNewFacultyInput(false);
-    //         toast.success("New faculty added successfully!");
-    //     }
-    // };
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
