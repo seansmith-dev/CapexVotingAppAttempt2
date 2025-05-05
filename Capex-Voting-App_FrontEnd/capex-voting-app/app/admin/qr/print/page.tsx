@@ -1,11 +1,10 @@
 "use client";
 //Looks good
 import { useState, useEffect } from "react";
-import RegularNavBar from "@/app/components/RegularNavBar";
-import Footer from "@/app/components/Footer";
 import { useRouter } from "next/navigation";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
 import { generateQRCodeDataURL, QRCodeData } from "@/app/utils/qrGenerator";
+import AdminLayout from "@/app/layouts/admin";
 
 type QRCode = {
   qr_code_id: string;
@@ -113,32 +112,26 @@ export default function PrintQRPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100">
-        <RegularNavBar heading="Capstone Project Expo 2024" />
+      <AdminLayout heading="Print QR Codes">
         <div className="flex-1 container mx-auto px-4 py-8">
           <div className="text-center">Loading QR codes...</div>
         </div>
-        <Footer />
-      </div>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-100">
-        <RegularNavBar heading="Capstone Project Expo 2024" />
+      <AdminLayout heading="Print QR Codes">
         <div className="flex-1 container mx-auto px-4 py-8">
           <div className="text-center text-red-600">{error}</div>
         </div>
-        <Footer />
-      </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      <RegularNavBar heading="Capstone Project Expo 2024" />
-
+    <AdminLayout heading="Print QR Codes">
       {/* Main Content Container */}
       <div className="flex-1 container mx-auto px-4 py-8">
         {/* Page Header */}
@@ -215,8 +208,6 @@ export default function PrintQRPage() {
           )}
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </AdminLayout>
   );
 }
