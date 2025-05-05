@@ -196,7 +196,7 @@ export default function VotePage() {
         // Get user's location
         let latitude, longitude;
         try {
-            const position = await new Promise((resolve, reject) => {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject, {
                     enableHighAccuracy: true,
                     timeout: 5000,
