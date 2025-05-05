@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { sql } from '@vercel/postgres';
 
 export async function middleware(request: NextRequest) {
     // Only protect admin routes
@@ -20,15 +19,14 @@ export async function middleware(request: NextRequest) {
         }
 
         try {
-            // Verify the session token in the database
-            const result = await sql`
-                SELECT admin_id 
-                FROM "Sessions" 
-                WHERE session_id = ${adminSession.value}
-                AND expires_at > CURRENT_TIMESTAMP
-            `;
+            // Use the adminLogin API endpoint for session verification
+            const response = await fetch(new URL('/api/adminLogin', request.url), {
+                headers: {
+                    Cookie: `admin_session=${adminSession.value}`
+                }
+            });
 
-            if (result.rows.length === 0) {
+            if (!response.ok) {
                 // Invalid or expired session, redirect to login
                 return NextResponse.redirect(new URL('/admin', request.url));
             }
