@@ -132,18 +132,21 @@ export default function PrintQRPage() {
 
   return (
     <AdminLayout heading="Print QR Codes">
-      {/* Main Content Container */}
       <div className="flex-1 container mx-auto px-4 py-8">
         {/* Page Header */}
-        <div className="mb-6">
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
           <button
             onClick={() => router.back()}
             className="text-gray-600 hover:text-gray-800 mb-4 flex items-center"
           >
             <span className="text-xl mr-1">←</span> Back
           </button>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Print QR Codes</h1>
-          <p className="text-gray-600">Select and print QR codes for voters</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+            Print QR Codes
+          </h1>
+          <p className="text-gray-600 text-center">
+            Select and print QR codes for voters
+          </p>
         </div>
 
         {/* QR Codes Section */}
@@ -172,7 +175,7 @@ export default function PrintQRPage() {
                 {qrCodes.map((code) => (
                   <div
                     key={code.qr_code_id}
-                    className="border rounded-lg p-4 hover:border-blue-500 transition-colors"
+                    className="border rounded-lg p-4 hover:border-blue-500 transition-colors bg-white"
                   >
                     <div className="flex items-center space-x-3">
                       <input
