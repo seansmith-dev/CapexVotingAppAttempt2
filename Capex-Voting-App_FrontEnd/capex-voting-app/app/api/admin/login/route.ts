@@ -52,7 +52,8 @@ export async function POST(request: Request) {
         `;
 
         // Set the session cookie
-        cookies().set('admin-token', sessionId, {
+        const cookieStore = await cookies();
+        cookieStore.set('admin-token', sessionId, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
