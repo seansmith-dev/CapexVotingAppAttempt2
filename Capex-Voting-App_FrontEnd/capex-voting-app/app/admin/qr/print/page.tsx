@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import RegularNavBar from "@/app/components/RegularNavBar";
 import Footer from "@/app/components/Footer";
 import { useRouter } from "next/navigation";
+import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
 
 type QRCode = {
   qr_code_id: string;
@@ -55,32 +56,46 @@ export default function PrintQRPage() {
     const selectedCodes = qrCodes.filter((code) =>
       selected.includes(code.qr_code_id)
     );
+
     if (selectedCodes.length > 0) {
       try {
-        const response = await fetch("/api/saveSelected", {
+        // Convert selected codes to QRCodeForPrint format
+        const codesToPrint: QRCodeForPrint[] = selectedCodes.map(code => ({
+          voterId: code.qr_code_voter_id || code.qr_code_id,
+          voterType: code.leaderboard_type,
+          dataUrl: `/api/qr/${code.qr_code_id}` // This assumes you have an API endpoint that returns the QR code image
+        }));
+
+        // Generate and save PDF
+        const doc = generateQRCodesPDF(codesToPrint);
+        doc.save("qr-codes.pdf");
+
+        // Update printed status in database
+        const response = await fetch("/api/updatePrintedStatus", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(selectedCodes)
+          body: JSON.stringify({
+            ids: selectedCodes.map(code => code.qr_code_id)
+          })
         });
 
-        console.log("API response status:", response.status);
         if (!response.ok) {
-          throw new Error("Failed to save selected QR codes");
+          throw new Error("Failed to update printed status");
         }
-        console.log("Selected QR codes saved to JSON file successfully.");
 
-        // Update the printed status for each selected QR code
+        // Update local state
         const updatedCodes = qrCodes.map((code) =>
           selected.includes(code.qr_code_id) ? { ...code, qr_code_printed_flag: true } : code
         );
         setQrCodes(updatedCodes);
 
-        // Clear the selection after saving
+        // Clear selection
         setSelected([]);
       } catch (error) {
         console.error("Error printing QR codes:", error);
+        setError("Failed to print QR codes. Please try again.");
       }
     }
   };
