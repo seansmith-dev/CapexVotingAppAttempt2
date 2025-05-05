@@ -19,7 +19,7 @@ export default function AdminLogin() {
     useEffect(() => {
         const checkSession = async () => {
             try {
-                const response = await fetch('/api/checkAdminSession');
+                const response = await fetch('/api/adminLogin');
                 if (response.ok) {
                     window.location.href = '/admin/dashboard';
                 }
