@@ -21,14 +21,17 @@ interface NavBarProps {
         text: string;
         icon: React.ReactNode;
         onClick?: () => void;
+        showOnLarge?: boolean;
     }>;
     transparent?: boolean;
+    className?: string;
 }
 
 export default function NavBar({
     heading,
     links,
     transparent = false,
+    className = "",
 }: NavBarProps) {
     const pathname = usePathname();
 
@@ -38,7 +41,7 @@ export default function NavBar({
                 transparent
                     ? "bg-transparent"
                     : "bg-gray-900 shadow border-gray-700"
-            }`}
+            } ${className}`}
         >
             <div className="w-full flex items-center justify-between mx-auto p-4">
                 <div className="flex items-center space-x-6 flex-1">
@@ -69,10 +72,10 @@ export default function NavBar({
                     <SheetContent
                         side="right"
                         className={`w-3/5 ${
-                transparent
-                    ? "bg-transparent border-transparent"
-                    : "bg-gray-900 shadow border-gray-700"
-            } backdrop-blur-sm shadow-md text-white mt-[22px]`}
+                            transparent
+                                ? "bg-transparent border-transparent"
+                                : "bg-gray-900 shadow border-gray-700"
+                        } backdrop-blur-sm shadow-md text-white mt-[22px]`}
                     >
                         <SheetHeader>
                             <SheetTitle className="text-white hidden">
@@ -113,7 +116,11 @@ export default function NavBar({
                         {links.map((link, index) => {
                             const isActive = pathname === link.href;
                             return (
-                                <li key={index}>
+                                <li 
+                                    key={index}
+                                    data-show-on-large={link.showOnLarge}
+                                    className={link.showOnLarge ? "block" : "hidden md:hidden"}
+                                >
                                     <Link
                                         href={link.href}
                                         onClick={link.onClick}
