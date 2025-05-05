@@ -209,3 +209,5 @@ export default function PrintQRPage() {
         </div>
       </div>
     </AdminLayout>
+  );
+}
