@@ -21,7 +21,7 @@ export default function AdminLogin() {
             try {
                 const response = await fetch('/api/checkAdminSession');
                 if (response.ok) {
-                    router.push('/admin/dashboard');
+                    window.location.href = '/admin/dashboard';
                 }
             } catch (err) {
                 console.error('Session check failed:', err);
@@ -50,8 +50,8 @@ export default function AdminLogin() {
                 throw new Error(data.error || 'Login failed');
             }
 
-            // Successful login
-            router.push('/admin/dashboard');
+            // Successful login - use window.location for a full page reload
+            window.location.href = '/admin/dashboard';
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred during login');
         } finally {

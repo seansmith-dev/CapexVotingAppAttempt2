@@ -13,9 +13,9 @@ export async function middleware(request: NextRequest) {
             return NextResponse.next();
         }
 
-        const adminToken = request.cookies.get('admin-token');
+        const adminSession = request.cookies.get('admin_session');
 
-        if (!adminToken) {
+        if (!adminSession) {
             return NextResponse.redirect(new URL('/admin', request.url));
         }
 
@@ -23,12 +23,13 @@ export async function middleware(request: NextRequest) {
             // Verify the session token in the database
             const result = await sql`
                 SELECT admin_id 
-                FROM "Admin" 
-                WHERE admin_session_id = ${adminToken.value}
+                FROM "Sessions" 
+                WHERE session_id = ${adminSession.value}
+                AND expires_at > CURRENT_TIMESTAMP
             `;
 
             if (result.rows.length === 0) {
-                // Invalid session, redirect to login
+                // Invalid or expired session, redirect to login
                 return NextResponse.redirect(new URL('/admin', request.url));
             }
 
