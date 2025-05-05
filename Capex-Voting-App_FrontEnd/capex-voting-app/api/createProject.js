@@ -96,9 +96,13 @@ export default async function handler(req, res) {
 
     // Insert Project
     const projectQuery = `
-        INSERT INTO "Projects" (project_title, faculty_id)
-        VALUES ($1, $2)
-        RETURNING project_id;
+        WITH max_project_id AS (
+            SELECT COALESCE(MAX(project_id), 0) + 1 as next_id FROM "Projects"
+        )
+        INSERT INTO "Projects" (project_id, project_title, faculty_id)
+        SELECT next_id, $1, $2
+        FROM max_project_id
+        RETURNING project_id, project_number;
     `;
     const projectResult = await client.query(projectQuery, [project_title, facultyId]);
     if (!projectResult.rows[0].project_id) {
@@ -109,7 +113,11 @@ export default async function handler(req, res) {
     console.log("Created project with ID:", projectId);
 
     await client.query("COMMIT"); // Commit transaction
-    res.status(201).json({ message: "Project created successfully!" });
+    res.status(201).json({ 
+      message: "Project created successfully!",
+      projectId: projectResult.rows[0].project_id,
+      projectNumber: projectResult.rows[0].project_number
+    });
 
   } catch (error) {
     await client.query("ROLLBACK"); // Rollback transaction in case of error
