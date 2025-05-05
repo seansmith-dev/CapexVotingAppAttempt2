@@ -408,10 +408,7 @@ export default function VotePage() {
                                 className="mt-6 flex justify-center"
                             >
                                 <Button
-                                    onClick={() => {
-                                        setShowConfirmation(true);
-                                        handleVote();  // <-- call it here
-                                    }}
+                                    onClick={() => setShowConfirmation(true)}
                                     disabled={isVoting || !selectedProject}
                                     className="min-w-[200px] w-full text-lg py-6 font-bold"
                                 >
@@ -436,7 +433,7 @@ export default function VotePage() {
                                             <span className="font-bold">
                                                 {" "}
                                                 {
-                                                    mockProjects.find(
+                                                    projects?.find(
                                                         (p) =>
                                                             p.id ===
                                                             selectedProject
