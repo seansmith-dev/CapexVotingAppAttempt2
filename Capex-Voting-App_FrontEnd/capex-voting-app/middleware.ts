@@ -1,27 +1,42 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { sql } from '@vercel/postgres';
 
-export function middleware(request: NextRequest) {
-    // Get the pathname of the request
-    const path = request.nextUrl.pathname;
+export async function middleware(request: NextRequest) {
+    // Only protect admin routes
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+        // Skip middleware for login page and API routes
+        if (
+            request.nextUrl.pathname === '/admin' ||
+            request.nextUrl.pathname.startsWith('/api/')
+        ) {
+            return NextResponse.next();
+        }
 
-    // Check if it's an admin path
-    if (path.startsWith("/admin")) {
-        // Exclude the login page from protection
+        const adminToken = request.cookies.get('admin-token');
 
-        // Check for the auth token in cookies
-        const token = request.cookies.get("admin-token");
+        if (!adminToken) {
+            return NextResponse.redirect(new URL('/admin', request.url));
+        }
 
-        // If no token is present, redirect to login
-        if (!token) {
-            if (path === "/admin") {
-                return NextResponse.next();
+        try {
+            // Verify the session token in the database
+            const result = await sql`
+                SELECT admin_id 
+                FROM "Admin" 
+                WHERE admin_session_id = ${adminToken.value}
+            `;
+
+            if (result.rows.length === 0) {
+                // Invalid session, redirect to login
+                return NextResponse.redirect(new URL('/admin', request.url));
             }
-            return NextResponse.redirect(new URL("/admin", request.url));
-        } else if (path === "/admin") {
-            return NextResponse.redirect(
-                new URL("/admin/dashboard", request.url)
-            );
+
+            // Valid session, proceed
+            return NextResponse.next();
+        } catch (error) {
+            console.error('Session verification error:', error);
+            return NextResponse.redirect(new URL('/admin', request.url));
         }
     }
 

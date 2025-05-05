@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "../components/Footer";
 import RegularNavBar from "../components/RegularNavBar";
@@ -12,27 +12,50 @@ export default function AdminLogin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
+    // Check for existing session on component mount
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/checkAdminSession');
+                if (response.ok) {
+                    router.push('/admin/dashboard');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+            }
+        };
+        checkSession();
+    }, [router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError("");
 
         try {
-            // this will be an API call to validate credentials
-            if (username === "admin" && password === "password") {
-                // Set cookie with expiration
-                Cookies.set("admin-token", "your-secure-token", {
-                    expires: 1, // 1 day
-                    secure: false,
-                    sameSite: "strict",
-                });
-                router.push("/admin/dashboard");
-            } else {
-                setError("Invalid Username or Password");
+            const response = await fetch('/api/adminLogin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Login failed');
             }
+
+            // Successful login
+            router.push('/admin/dashboard');
         } catch (err) {
-            setError("An error occurred during login");
+            setError(err instanceof Error ? err.message : 'An error occurred during login');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -40,7 +63,7 @@ export default function AdminLogin() {
         <div className="flex flex-col min-h-screen justify-between">
             <RegularNavBar heading="Admin Login"/>
             <div className="flex flex-1 items-center justify-center bg-[url('/background.png')] bg-cover bg-center">
-                <div className=" h-full w-full backdrop-blur-md absolute top-0 left-0"></div>
+                <div className="h-full w-full backdrop-blur-md absolute top-0 left-0"></div>
                 <div className="z-1 bg-white p-8 m-8 rounded-lg shadow-md w-96">
                     <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">
                         Admin Login
@@ -65,6 +88,7 @@ export default function AdminLogin() {
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-1 px-2 text-gray-700"
                                 required
+                                disabled={isLoading}
                             />
                         </div>
                         <div>
@@ -81,13 +105,15 @@ export default function AdminLogin() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-1 px-2 text-gray-700"
                                 required
+                                disabled={isLoading}
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isLoading}
                         >
-                            Login
+                            {isLoading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
                 </div>

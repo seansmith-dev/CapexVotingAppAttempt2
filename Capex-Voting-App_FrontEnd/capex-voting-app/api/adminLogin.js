@@ -1,20 +1,129 @@
-export default function handler(req, res) {
-    if (req.method === "POST") {
-        const { username, password } = req.body;
+import { Pool } from 'pg';
+import crypto from 'crypto';
 
-        // Hardcoded credentials (Mock database)
-        const mockAdmin = {
-            username: "admin",
-            password: "securepassword123"
-        };
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+  max: 20,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
-        if (username === mockAdmin.username && password === mockAdmin.password) {
-            return res.status(200).json({ message: "Login successful!" });
-        } else {
-            return res.status(401).json({ message: "Invalid username or password" });
-        }
+// Helper function to clean up expired sessions
+async function cleanupExpiredSessions() {
+  try {
+    await pool.query('DELETE FROM "Sessions" WHERE expires_at < CURRENT_TIMESTAMP');
+  } catch (error) {
+    console.error('Error cleaning up sessions:', error);
+  }
+}
+
+export default async function handler(req, res) {
+  console.log("DB_HOST: ", process.env.DB_HOST);
+  console.log("DB_USER: ", process.env.DB_USER);
+  console.log("DB_PASSWORD: ", process.env.DB_PASSWORD);
+  console.log("DB_NAME: ", process.env.DB_NAME);
+
+  const requestIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log('Request from IP:', requestIp);
+
+  if (req.headers['x-forwarded-for']) {
+    console.log('Running on Vercel or other cloud provider');
+  } else {
+    console.log('Running locally');
+  }
+
+  // Handle session check
+  if (req.method === "GET") {
+    try {
+      const sessionId = req.cookies?.admin_session;
+
+      if (!sessionId) {
+        return res.status(401).json({ error: 'No session found' });
+      }
+
+      // Clean up expired sessions
+      await cleanupExpiredSessions();
+
+      // Check if session exists and is valid
+      const result = await pool.query(
+        `SELECT a.admin_id, a.admin_username 
+         FROM "Admin" a
+         JOIN "Sessions" s ON a.admin_id = s.admin_id
+         WHERE s.session_id = $1 AND s.expires_at > CURRENT_TIMESTAMP`,
+        [sessionId]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(401).json({ error: 'Invalid or expired session' });
+      }
+
+      return res.status(200).json({
+        success: true,
+        admin_id: result.rows[0].admin_id,
+        username: result.rows[0].admin_username
+      });
+
+    } catch (error) {
+      console.error('Session check error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
+  }
 
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  // Handle login
+  if (req.method === "POST") {
+    try {
+      const { username, password } = req.body;
+
+      // Query the database for the admin
+      const result = await pool.query(
+        'SELECT admin_id, admin_username, admin_password FROM "Admin" WHERE admin_username = $1',
+        [username]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      const admin = result.rows[0];
+
+      // Check password
+      if (password !== admin.admin_password) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // Clean up expired sessions
+      await cleanupExpiredSessions();
+
+      // Generate new session
+      const sessionId = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+
+      // Create new session
+      await pool.query(
+        'INSERT INTO "Sessions" (session_id, admin_id, expires_at) VALUES ($1, $2, $3)',
+        [sessionId, admin.admin_id, expiresAt]
+      );
+
+      // Set the session cookie
+      res.setHeader('Set-Cookie', `admin_session=${sessionId}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Strict${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`);
+
+      return res.status(200).json({
+        success: true,
+        admin_id: admin.admin_id,
+        username: admin.admin_username
+      });
+
+    } catch (error) {
+      console.error('Login error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
 }
