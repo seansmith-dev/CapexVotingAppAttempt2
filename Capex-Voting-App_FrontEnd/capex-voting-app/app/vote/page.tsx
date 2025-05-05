@@ -193,19 +193,54 @@ export default function VotePage() {
             return;
         }
 
+        // Get user's location
+        let latitude, longitude;
         try {
-            const res = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                });
+            });
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+        } catch (error) {
+            alert("Please enable location services to vote. You must be on Swinburne Hawthorn campus to vote.");
+            setIsVoting(false);
+            return;
+        }
+
+        // Validate token and location in one request
+        try {
+            const res = await fetch('/api/validate-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, latitude, longitude })
+            });
             const data = await res.json();
 
-            if (!res.ok || !data.valid) {
-                alert("Invalid or expired token. Access denied.");
-                router.push('/');
-                setIsVoting(false); 
+            if (!res.ok) {
+                if (res.status === 403) {
+                    alert("You must be on Swinburne Hawthorn campus to vote.");
+                } else if (res.status === 401) {
+                    alert("Invalid or expired token. Access denied.");
+                    router.push('/');
+                } else {
+                    alert(data.error || "An error occurred while validating your vote.");
+                }
+                setIsVoting(false);
+                return;
+            }
+
+            if (!data.valid) {
+                alert("Invalid vote attempt. Please try again.");
+                setIsVoting(false);
                 return;
             }
         } catch (error) {
-            alert("Network error occurred while validating token.");
-            setIsVoting(false); 
+            alert("Network error occurred while validating your vote.");
+            setIsVoting(false);
             return;
         }
 

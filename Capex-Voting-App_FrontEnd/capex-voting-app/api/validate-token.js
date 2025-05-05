@@ -14,14 +14,36 @@ const pool = new Pool({
   });
 
 export default async function handler(req, res) {
-    if (req.method !== "GET") {
+    if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { token } = req.query;
+    const { token, latitude, longitude } = req.body;
 
     if (!token) {
         return res.status(400).json({ error: "Token is required" });
+    }
+
+    if (!latitude || !longitude) {
+        return res.status(400).json({ valid: false, error: "Location data is required" });
+    }
+
+    // Swinburne Hawthorn Campus Coordinates (approximate bounding box)
+    const swinburneBounds = {
+        minLat: -37.8245,
+        maxLat: -37.8205,
+        minLng: 145.0350,
+        maxLng: 145.0420,
+    };
+
+    const isOnCampus =
+        latitude >= swinburneBounds.minLat &&
+        latitude <= swinburneBounds.maxLat &&
+        longitude >= swinburneBounds.minLng &&
+        longitude <= swinburneBounds.maxLng;
+
+    if (!isOnCampus) {
+        return res.status(403).json({ valid: false, error: "You must be on Swinburne Hawthorn campus to vote" });
     }
 
     try {
@@ -34,7 +56,7 @@ export default async function handler(req, res) {
             return res.status(401).json({ valid: false, error: "Invalid or expired token" });
         }
 
-        console.log("Token is valid");
+        console.log("Token is valid and user is on campus");
         return res.status(200).json({ valid: true });
 
     } catch (error) {
