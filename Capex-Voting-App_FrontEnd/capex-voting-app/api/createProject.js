@@ -1,213 +1,129 @@
-"use client";
-//Looks good
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
-import { generateQRCodeDataURL, QRCodeData } from "@/app/utils/qrGenerator";
-import AdminLayout from "@/app/layouts/admin";
+import { Pool } from 'pg';    // Default import of the entire 'pg' module
 
-type QRCode = {
-  qr_code_id: string;
-  qr_code_voter_id: string;
-  leaderboard_type: string;
-  qr_code_printed_flag: boolean | null;
-};
 
-export default function PrintQRPage() {
-  const router = useRouter();
-  const [qrCodes, setQrCodes] = useState<QRCode[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+  max: 20,
+  ssl: {
+    rejectUnauthorized: false  // Bypass certificate validation
+  }
+});
 
-  // Fetch unprinted QR codes
-  useEffect(() => {
-    const fetchUnprintedQRCodes = async () => {
-      try {
-        const response = await fetch('/api/getProjectsList?unprintedOnly=true');
-        if (!response.ok) {
-          throw new Error('Failed to fetch QR codes');
-        }
-        const data = await response.json();
-        setQrCodes(data);
-      } catch (err) {
-        console.error('Error fetching QR codes:', err);
-        setError('Failed to load QR codes. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+export default async function handler(req, res) {
+  console.log("DB_HOST: ", process.env.DB_HOST);
+  console.log("DB_USER: ", process.env.DB_USER);
+  console.log("DB_PASSWORD: ", process.env.DB_PASSWORD);
+  console.log("DB_NAME: ", process.env.DB_NAME);
 
-    fetchUnprintedQRCodes();
-  }, []);
+  const requestIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log('Request from IP:', requestIp);
 
-  // Toggle selection for a QR code
-  const handleSelectionChange = (id: string) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((x) => x !== id);
-      }
-      return [...prev, id];
-    });
-  };
+  if (req.headers['x-forwarded-for']) {
+    console.log('Running on Vercel or other cloud provider');
+  } else {
+    console.log('Running locally');
+  }
 
-  // Bulk print the selected QR codes
-  const handleBulkPrint = async () => {
-    const selectedCodes = qrCodes.filter((code) =>
-      selected.includes(code.qr_code_id)
-    );
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-    if (selectedCodes.length > 0) {
-      try {
-        // Generate QR code data URLs for each selected code
-        const codesToPrint: QRCodeForPrint[] = await Promise.all(
-          selectedCodes.map(async (code) => {
-            const voterId = code.qr_code_voter_id || code.qr_code_id;
-            const qrData: QRCodeData = {
-              voterId,
-              voterType: code.leaderboard_type
-            };
-            const dataUrl = await generateQRCodeDataURL(qrData);
-            return {
-              voterId,
-              voterType: code.leaderboard_type,
-              dataUrl
-            };
-          })
-        );
+  let startTime = Date.now(); // How long does connection take
 
-        // Generate and save PDF
-        const doc = generateQRCodesPDF(codesToPrint);
-        doc.save("qr-codes.pdf");
+  pool.on('connect', (client) => {
+    console.log('Connected to database'); // Is it actually connecting?
+  });
 
-        // Update printed status in database
-        const response = await fetch("/api/updatePrintedStatus", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            ids: selectedCodes.map(code => code.qr_code_voter_id)
-          })
-        });
+  pool.on('error', (err) => {
+    console.error('Database error:', err);
+  });
 
-        if (!response.ok) {
-          throw new Error("Failed to update printed status");
-        }
+  // Destructure the constants from req.body
+  const { project_title, faculty_name } = req.body;
+  const client = await pool.connect();
 
-        // Update local state
-        const updatedCodes = qrCodes.map((code) =>
-          selected.includes(code.qr_code_id) ? { ...code, qr_code_printed_flag: true } : code
-        );
-        setQrCodes(updatedCodes);
+  let facultyId, projectId
 
-        // Clear selection
-        setSelected([]);
-      } catch (error) {
-        console.error("Error printing QR codes:", error);
-        setError("Failed to print QR codes. Please try again.");
+  console.log("Received project data:", req.body);
+
+
+
+  // Check if a project with the same title already exists
+  const checkTitleQuery = `
+        SELECT project_id 
+        FROM "Projects"
+        WHERE project_title = $1;
+    `;
+  const existingTitleResult = await client.query(checkTitleQuery, [project_title]);
+
+  if (existingTitleResult.rows.length > 0) {
+    console.log("same project title");
+    return res.status(409).json({ message: "A project with this title already exists." });
+  }
+
+  try {
+
+    await client.query("BEGIN"); // Start transaction
+
+
+    // Insert Faculty (or get existing one)
+    const facultyQuery = `
+        INSERT INTO "Facultys" (faculty_name)
+        VALUES ($1)
+        ON CONFLICT (faculty_name) DO NOTHING
+        RETURNING faculty_id;
+    `;
+    const facultyResult = await client.query(facultyQuery, [faculty_name]);
+    if (facultyResult.rows.length > 0) {
+      facultyId = facultyResult.rows[0].faculty_id;
+    } else {
+      // If no rows were returned, try to fetch the faculty_id explicitly
+      const facultySelectQuery = `
+          SELECT faculty_id FROM "Facultys" WHERE faculty_name = $1;
+      `;
+      const facultySelectResult = await client.query(facultySelectQuery, [faculty_name]);
+
+      if (facultySelectResult.rows.length > 0) {
+        facultyId = facultySelectResult.rows[0].faculty_id;
+      } else {
+        throw new Error("Faculty not found or failed to insert.");
       }
     }
-  };
 
-  if (isLoading) {
-    return (
-      <AdminLayout heading="Print QR Codes">
-        <div className="flex-1 container mx-auto px-4 py-8">
-          <div className="text-center">Loading QR codes...</div>
-        </div>
-      </AdminLayout>
-    );
+    // Insert Project
+    const projectQuery = `
+        WITH max_project_id AS (
+            SELECT COALESCE(MAX(project_id), 0) + 1 as next_id FROM "Projects"
+        )
+        INSERT INTO "Projects" (project_id, project_title, faculty_id)
+        SELECT next_id, $1, $2
+        FROM max_project_id
+        RETURNING project_id, project_number;
+    `;
+    const projectResult = await client.query(projectQuery, [project_title, facultyId]);
+    if (!projectResult.rows[0].project_id) {
+      throw new Error('Failed to create project.');
+    }
+
+    projectId = projectResult.rows[0].project_id; // Assigned projectId correctly here
+    console.log("Created project with ID:", projectId);
+
+    await client.query("COMMIT"); // Commit transaction
+    res.status(201).json({ 
+      message: "Project created successfully!",
+      projectId: projectResult.rows[0].project_id,
+      projectNumber: projectResult.rows[0].project_number
+    });
+
+  } catch (error) {
+    await client.query("ROLLBACK"); // Rollback transaction in case of error
+    console.error("Error inserting project:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    client.release();
   }
-
-  if (error) {
-    return (
-      <AdminLayout heading="Print QR Codes">
-        <div className="flex-1 container mx-auto px-4 py-8">
-          <div className="text-center text-red-600">{error}</div>
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  return (
-    <AdminLayout heading="Print QR Codes">
-      {/* Main Content Container */}
-      <div className="flex-1 container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="text-gray-600 hover:text-gray-800 mb-4 flex items-center"
-          >
-            <span className="text-xl mr-1">←</span> Back
-          </button>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Print QR Codes</h1>
-          <p className="text-gray-600">Select and print QR codes for voters</p>
-        </div>
-
-        {/* QR Codes Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          {qrCodes.length === 0 ? (
-            <p className="text-center text-gray-600">No Unprinted QR Codes Available.</p>
-          ) : (
-            <>
-              {/* Bulk Print Action */}
-              <div className="flex justify-end mb-4">
-                <button
-                  onClick={handleBulkPrint}
-                  disabled={selected.length === 0}
-                  className={`px-4 py-2 rounded-md font-medium text-sm
-                    ${selected.length === 0 
-                      ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                >
-                  Print Selected ({selected.length})
-                </button>
-              </div>
-
-              {/* QR Code Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {qrCodes.map((code) => (
-                  <div
-                    key={code.qr_code_id}
-                    className="border rounded-lg p-4 hover:border-blue-500 transition-colors"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(code.qr_code_id)}
-                        onChange={() => handleSelectionChange(code.qr_code_id)}
-                        className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                      />
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">
-                          Voter ID: {code.qr_code_voter_id || 'Not Assigned'}
-                        </p>
-                        <div className="flex items-center mt-1">
-                          <span className="text-sm text-gray-500 mr-2">
-                            {code.leaderboard_type}
-                          </span>
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              code.qr_code_printed_flag
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}
-                          >
-                            {code.qr_code_printed_flag ? 'Printed' : 'Not Printed'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </AdminLayout>
-  );
 }
