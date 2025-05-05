@@ -269,10 +269,22 @@ export default function CreateProject() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate form data
+        if (!formData.name.trim()) {
+            toast.error("Please enter a project name");
+            return;
+        }
+
+        if (!formData.faculty.trim()) {
+            toast.error("Please select a faculty");
+            return;
+        }
+
         const projectData = {
-            project_title: formData.name,
-            faculty_name: formData.faculty,
+            project_title: formData.name.trim(),
+            faculty_name: formData.faculty.trim(),
         };
+
         try {
             const response = await fetch('/api/createProject', {
                 method: 'POST',
@@ -284,28 +296,35 @@ export default function CreateProject() {
 
             console.log("Sending project data:", JSON.stringify(projectData, null, 2));
 
-
-            const responseData = await response.json(); // Extract JSON data
+            const responseData = await response.json();
 
             if (response.status === 201) {
-                alert('Project created successfully!');
-                console.log("201 response status executed");
+                toast.success('Project created successfully!');
+                // Clear form
+                setFormData({ name: "", faculty: "", newFaculty: "" });
+                // Refresh projects list
+                const projectsResponse = await fetch("/api/getProjectsList");
+                if (projectsResponse.ok) {
+                    const data = await projectsResponse.json();
+                    const formattedProjects = data.map((item: any) => ({
+                        name: item.project_title,
+                        faculty: item.faculty_name,
+                    }));
+                    setProjects(formattedProjects);
+                }
             }
             else if (response.status === 409) {
-                console.log("The alert executed");
-                alert(responseData.message || 'Project with this title already exists!');
+                toast.error(responseData.message || 'Project with this title already exists!');
             }
             else if (response.status === 408) {
-                console.log("The response 408 executed");
-                alert(responseData.message || 'Your team has already created a project.');
+                toast.error(responseData.message || 'Your team has already created a project.');
             }
             else {
-                console.log("The alert executed");
-                alert('Something went wrong.');
+                toast.error('Something went wrong. Please try again.');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred.');
+            toast.error('An error occurred while creating the project.');
         }
     };
 
