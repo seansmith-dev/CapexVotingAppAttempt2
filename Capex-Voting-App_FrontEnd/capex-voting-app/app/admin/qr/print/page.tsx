@@ -88,7 +88,7 @@ export default function PrintQRPage() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            ids: selectedCodes.map(code => code.qr_code_id)
+            ids: selectedCodes.map(code => code.qr_code_voter_id)
           })
         });
 
