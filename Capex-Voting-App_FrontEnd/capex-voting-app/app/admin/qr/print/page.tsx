@@ -1,5 +1,5 @@
 "use client";
-
+//Looks good
 import { useState } from "react";
 import RegularNavBar from "@/app/components/RegularNavBar";
 import Footer from "@/app/components/Footer";
