@@ -140,34 +140,32 @@ export default function CreateProject() {
         setIsLoading(true);
 
         try {
-            /*
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
-
-            const response = await fetch("/api/projects", {
+            const response = await fetch("/api/createProject", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${adminToken}`,
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    project_title: formData.name,
+                    faculty_name: formData.faculty,
+                }),
             });
 
             if (!response.ok) {
                 throw new Error("Failed to create project");
             }
-            */
 
-            // Add new project to the list
-            const newProject: Project = {
-                name: formData.name,
-                faculty: formData.faculty,
-            };
-            setProjects([...projects, newProject]);
+            // Fetch updated projects list
+            const projectsResponse = await fetch("/api/getProjectsList");
+            if (!projectsResponse.ok) {
+                throw new Error("Failed to fetch updated projects");
+            }
+            const data = await projectsResponse.json();
+            const formattedProjects = data.map((item: any) => ({
+                name: item.project_title,
+                faculty: item.faculty_name,
+            }));
+            setProjects(formattedProjects);
 
             toast.success("Project created successfully!");
             // Clear form
@@ -371,20 +369,14 @@ export default function CreateProject() {
                                                         <SelectValue placeholder="Select faculty" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {uniqueFaculties.map(
-                                                            (faculty) => (
-                                                                <SelectItem
-                                                                    key={
-                                                                        faculty
-                                                                    }
-                                                                    value={
-                                                                        faculty
-                                                                    }
-                                                                >
-                                                                    {faculty}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
+                                                        {uniqueFaculties.map((faculty) => (
+                                                            <SelectItem
+                                                                key={faculty}
+                                                                value={faculty || "default"}
+                                                            >
+                                                                {faculty}
+                                                            </SelectItem>
+                                                        ))}
                                                     </SelectContent>
                                                 </Select>
                                                 <Button
