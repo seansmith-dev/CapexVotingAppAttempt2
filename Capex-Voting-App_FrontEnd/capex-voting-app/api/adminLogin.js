@@ -125,19 +125,19 @@ export default async function handler(req, res) {
         httpOnly: true,
         path: '/',
         maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days in milliseconds
-        sameSite: 'strict'
+        sameSite: 'lax'
       };
 
       if (process.env.NODE_ENV === 'production') {
         cookieOptions.secure = true;
-        cookieOptions.domain = 'capex-voting-app-attempt2.vercel.app';
       }
 
-      res.setHeader('Set-Cookie', `admin_session=${sessionId}; ${Object.entries(cookieOptions)
+      // Format cookie string properly
+      const cookieString = `admin_session=${sessionId}; ${Object.entries(cookieOptions)
         .map(([key, value]) => `${key}=${value}`)
-        .join('; ')}`);
+        .join('; ')}`;
 
-      console.log('Setting session cookie with options:', cookieOptions);
+      res.setHeader('Set-Cookie', cookieString);
 
       return res.status(200).json({
         success: true,
