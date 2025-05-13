@@ -275,6 +275,7 @@ export default function CreateProject() {
                     setProjects(formattedProjects);
                 }
 
+                // Reset states after successful upload
                 setFile(null);
                 setIsLoading(false);
             };
@@ -282,6 +283,7 @@ export default function CreateProject() {
             reader.onerror = () => {
                 toast.error("Failed to read file");
                 setIsLoading(false);
+                setFile(null);
             };
 
             reader.readAsText(file);
@@ -289,6 +291,7 @@ export default function CreateProject() {
             console.error("Error uploading projects:", error);
             toast.error("Failed to upload projects. Please try again.");
             setIsLoading(false);
+            setFile(null);
         }
     };
 
