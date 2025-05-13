@@ -43,6 +43,7 @@ export default async function handler(req, res) {
     try {
       const sessionId = req.cookies?.admin_session;
       console.log('Checking session:', sessionId);
+      console.log('All cookies:', req.cookies);
 
       if (!sessionId) {
         console.log('No session found');
@@ -54,14 +55,18 @@ export default async function handler(req, res) {
 
       // Check if session exists and is valid
       const result = await pool.query(
-        `SELECT a.admin_id, a.admin_username 
+        `SELECT a.admin_id, a.admin_username, s.expires_at 
          FROM "Admin" a
          JOIN "Sessions" s ON a.admin_id = s.admin_id
          WHERE s.session_id = $1 AND s.expires_at > CURRENT_TIMESTAMP`,
         [sessionId]
       );
 
-      console.log('Session check result:', result.rows.length > 0 ? 'valid' : 'invalid');
+      console.log('Session check result:', {
+        found: result.rows.length > 0,
+        expiresAt: result.rows[0]?.expires_at,
+        currentTime: new Date()
+      });
 
       if (result.rows.length === 0) {
         return res.status(401).json({ error: 'Invalid or expired session' });
@@ -116,7 +121,23 @@ export default async function handler(req, res) {
       );
 
       // Set the session cookie
-      res.setHeader('Set-Cookie', `admin_session=${sessionId}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}; SameSite=Strict${process.env.NODE_ENV === 'production' ? '; Secure' : ''}; Domain=${process.env.NODE_ENV === 'production' ? '.vercel.app' : 'localhost'}`);
+      const cookieOptions = {
+        httpOnly: true,
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days in milliseconds
+        sameSite: 'strict'
+      };
+
+      if (process.env.NODE_ENV === 'production') {
+        cookieOptions.secure = true;
+        cookieOptions.domain = 'capex-voting-app-attempt2.vercel.app';
+      }
+
+      res.setHeader('Set-Cookie', `admin_session=${sessionId}; ${Object.entries(cookieOptions)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('; ')}`);
+
+      console.log('Setting session cookie with options:', cookieOptions);
 
       return res.status(200).json({
         success: true,

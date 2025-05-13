@@ -21,7 +21,7 @@ export default function AdminLogin() {
             try {
                 const response = await fetch('/api/adminLogin');
                 if (response.ok) {
-                    window.location.href = '/admin/dashboard';
+                    router.push('/admin/dashboard');
                 }
             } catch (err) {
                 console.error('Session check failed:', err);
