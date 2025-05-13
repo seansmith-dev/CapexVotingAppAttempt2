@@ -217,6 +217,17 @@ export default function CreateProject() {
 
                 const csvData = event.target.result as string;
                 
+                // Validate CSV format before sending
+                const lines = csvData.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                const requiredHeaders = ['project_name', 'project_code', 'faculty_name'];
+                
+                if (!requiredHeaders.every(header => headers.includes(header))) {
+                    toast.error(`CSV must have headers: ${requiredHeaders.join(', ')}`);
+                    setIsLoading(false);
+                    return;
+                }
+                
                 console.log("Sending CSV data:", csvData);
                 
                 const response = await fetch("/api/createProject", {
@@ -552,9 +563,9 @@ export default function CreateProject() {
                                                         {/* Format example using <pre> */}
                                                         <pre className="p-3 rounded-md bg-muted/50 text-left text-xs font-mono text-foreground/80 max-w-xs w-full sm:max-w-sm overflow-x-auto">
                                                             <code>
-                                                                name,faculty
+                                                                project_name,project_code,faculty_name
                                                                 {"\n"}
-                                                                project_name,faculty_name
+                                                                "AI-Powered Tutor","CS101","Computing"
                                                             </code>
                                                         </pre>
                                                     </>

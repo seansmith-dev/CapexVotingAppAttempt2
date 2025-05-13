@@ -135,16 +135,20 @@ export default async function handler(req, res) {
       }
 
       console.log("Received CSV data:", csvData);
+      console.log("CSV data type:", typeof csvData);
+      console.log("CSV data length:", csvData.length);
       
       const results = Papa.parse(csvData, {
         header: true,
-        skipEmptyLines: true
+        skipEmptyLines: true,
+        transformHeader: (header) => header.trim() // Add trim to handle any whitespace
       });
 
       console.log("Papa Parse results:", {
         fields: results.meta.fields,
         errors: results.errors,
-        data: results.data
+        data: results.data,
+        rawHeaders: results.meta.fields
       });
 
       if (results.errors.length > 0) {
@@ -155,6 +159,12 @@ export default async function handler(req, res) {
       // Validate headers
       const requiredHeaders = ['project_name', 'project_code', 'faculty_name'];
       const headers = results.meta.fields;
+      
+      console.log("Checking headers:", {
+        required: requiredHeaders,
+        received: headers,
+        match: requiredHeaders.every(header => headers.includes(header))
+      });
       
       if (!headers || !requiredHeaders.every(header => headers.includes(header))) {
         return res.status(400).json({ 
