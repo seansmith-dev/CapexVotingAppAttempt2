@@ -107,6 +107,23 @@ export default function Leaderboard({ params }: LeaderboardProps) {
         resolvedParams.type === "industry" ? "Industry" : "Guest";
 
     useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/adminLogin');
+                if (!response.ok) {
+                    toast.error("Please login to view leaderboard");
+                    router.push('/admin');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+                toast.error("Session check failed. Please login again.");
+                router.push('/admin');
+            }
+        };
+        checkSession();
+    }, [router]);
+
+    useEffect(() => {
         // Commented out actual fetch call
         fetchLeaderboard();
 
