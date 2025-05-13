@@ -13,38 +13,11 @@ const pool = new Pool({
   },
 });
 
-// Helper function to validate session
-async function validateSession(sessionId) {
-  try {
-    const result = await pool.query(
-      `SELECT a.admin_id, a.admin_username 
-       FROM "Admin" a
-       JOIN "Sessions" s ON a.admin_id = s.admin_id
-       WHERE s.session_id = $1 AND s.expires_at > CURRENT_TIMESTAMP`,
-      [sessionId]
-    );
-    return result.rows.length > 0;
-  } catch (error) {
-    console.error('Session validation error:', error);
-    return false;
-  }
-}
-
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed. Use GET." });
   }
 
-  // Validate session
-  const sessionId = req.cookies?.admin_session;
-  if (!sessionId) {
-    return res.status(401).json({ error: 'No session found' });
-  }
-
-  const isValidSession = await validateSession(sessionId);
-  if (!isValidSession) {
-    return res.status(401).json({ error: 'Invalid or expired session' });
-  }
 
   const { leaderboard_type } = req.query;
 

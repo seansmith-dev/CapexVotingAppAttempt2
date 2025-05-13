@@ -141,11 +141,10 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     const fetchLeaderboard = async () => {
         try {
-            
             const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
                 {                                   
                     headers: {
-                        Authorization: `Bearer ${adminToken}`,
+                        
                     },
                 }
             );
