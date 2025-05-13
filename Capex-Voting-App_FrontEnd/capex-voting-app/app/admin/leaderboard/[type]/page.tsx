@@ -124,7 +124,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
             if (!adminToken) {
                 console.log("No admin token found in cookie");
                 toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
+                router.push(`/admin?redirect=/admin/leaderboard/${type}`);
                 return;
             }
 
@@ -141,6 +141,11 @@ export default function Leaderboard({ params }: LeaderboardProps) {
             console.log("Leaderboard response data:", data);
 
             if (!response.ok) {
+                if (response.status === 401) {
+                    toast.error("Admin session expired. Please login again.");
+                    router.push(`/admin?redirect=/admin/leaderboard/${type}`);
+                    return;
+                }
                 throw new Error(data.error || "Failed to fetch leaderboard");
             }
 

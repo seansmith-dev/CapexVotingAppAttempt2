@@ -30,30 +30,33 @@ export default function AdminLogin() {
         checkSession();
     }, [router]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError("");
 
         try {
-            const response = await fetch('/api/adminLogin', {
-                method: 'POST',
+            const response = await fetch("/api/adminLogin", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ username, password }),
+                credentials: "include",
             });
 
             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+            if (response.ok) {
+                // Get the redirect URL from query parameters
+                const searchParams = new URLSearchParams(window.location.search);
+                const redirectUrl = searchParams.get('redirect') || '/admin/dashboard';
+                router.push(redirectUrl);
+            } else {
+                setError(data.error || "Login failed");
             }
-
-            // Successful login - use window.location for a full page reload
-            window.location.href = '/admin/dashboard';
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred during login');
+            setError("An error occurred during login");
         } finally {
             setIsLoading(false);
         }
@@ -73,7 +76,7 @@ export default function AdminLogin() {
                             {error}
                         </div>
                     )}
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleLogin} className="space-y-4">
                         <div>
                             <Label
                                 htmlFor="username"
