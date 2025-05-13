@@ -25,9 +25,9 @@ interface Project {
 }
 
 interface LeaderboardProps {
-    params: Promise<{
+    params: {
         type: string;
-    }>;
+    };
 }
 
 // Mock data for guest leaderboard
@@ -121,8 +121,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
     useEffect(() => {
         const initializeLeaderboard = async () => {
             try {
-                const resolvedParams = await params;
-                await fetchLeaderboard(resolvedParams.type);
+                await fetchLeaderboard(params.type);
             } catch (error) {
                 console.error("Error initializing leaderboard:", error);
                 toast.error("Failed to load leaderboard");
@@ -130,7 +129,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
         };
 
         initializeLeaderboard();
-    }, [params]);
+    }, [params.type]);
 
     const fetchLeaderboard = async (type: string) => {
         try {
