@@ -25,9 +25,9 @@ interface Project {
 }
 
 interface LeaderboardProps {
-    params: {
+    params: Promise<{
         type: string;
-    };
+    }>;
 }
 
 // Mock data for guest leaderboard
@@ -99,13 +99,24 @@ export default function Leaderboard({ params }: LeaderboardProps) {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
-    const leaderboardType = params.type === "industry" ? "Industry" : "Guest";
+    const [leaderboardType, setLeaderboardType] = useState<string>("");
 
     useEffect(() => {
-        fetchLeaderboard();
-    }, [params.type]);
+        const initializeLeaderboard = async () => {
+            try {
+                const resolvedParams = await params;
+                setLeaderboardType(resolvedParams.type === "industry" ? "Industry" : "Guest");
+                await fetchLeaderboard(resolvedParams.type);
+            } catch (error) {
+                console.error("Error initializing leaderboard:", error);
+                toast.error("Failed to load leaderboard");
+            }
+        };
 
-    const fetchLeaderboard = async () => {
+        initializeLeaderboard();
+    }, [params]);
+
+    const fetchLeaderboard = async (type: string) => {
         try {
             const adminToken = Cookies.get("admin_session");
             console.log("Admin token from cookie:", adminToken);
@@ -117,8 +128,8 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                 return;
             }
 
-            console.log("Fetching leaderboard for type:", params.type);
-            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${params.type}`, {
+            console.log("Fetching leaderboard for type:", type);
+            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${type}`, {
                 credentials: 'include',
                 headers: {
                     'Cookie': `admin_session=${adminToken}`
