@@ -14,8 +14,6 @@ import {
 import AdminLayout from "../../../layouts/admin";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
-import { use } from "react";
-
 import { Search, Trophy } from "lucide-react";
 
 interface Project {
@@ -27,11 +25,10 @@ interface Project {
 }
 
 interface LeaderboardProps {
-    params: Promise<{
+    params: {
         type: string;
-    }>;
+    };
 }
-
 
 // Mock data for guest leaderboard
 const mockProjects: Project[] = [
@@ -98,50 +95,43 @@ const mockProjects: Project[] = [
 ];
 
 export default function Leaderboard({ params }: LeaderboardProps) {
-    const resolvedParams = use(params);
     const router = useRouter();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
-    const leaderboardType =
-        resolvedParams.type === "industry" ? "Industry" : "Guest";
+    const leaderboardType = params.type === "industry" ? "Industry" : "Guest";
 
     useEffect(() => {
-        // Commented out actual fetch call
         fetchLeaderboard();
-
-        // Using mock data instead
-        // mockProjects.map((project) => {
-        //     project.votes = Math.floor(Math.random() * 1000);
-        // });
-        // mockProjects.sort((a, b) => b.votes - a.votes);
-        // mockProjects.forEach((project, index) => {
-        //     project.rank = index + 1;
-        // });
-        // setProjects(mockProjects);
-        setLoading(false);
-    }, []);
+    }, [params.type]);
 
     const fetchLeaderboard = async () => {
         try {
             const adminToken = Cookies.get("admin_session");
+            console.log("Admin token from cookie:", adminToken);
+            
             if (!adminToken) {
+                console.log("No admin token found in cookie");
                 toast.error("Admin session expired. Please login again.");
                 router.push("/admin");
                 return;
             }
 
-            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`, {
-                credentials: 'include' // This will send the cookies with the request
+            console.log("Fetching leaderboard for type:", params.type);
+            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${params.type}`, {
+                credentials: 'include',
+                headers: {
+                    'Cookie': `admin_session=${adminToken}`
+                }
             });
             
+            console.log("Leaderboard response status:", response.status);
             const data = await response.json();
+            console.log("Leaderboard response data:", data);
 
             if (!response.ok) {
-                throw new Error("Failed to fetch leaderboard");
+                throw new Error(data.error || "Failed to fetch leaderboard");
             }
-
-            console.log("This is the data retrieved",data)
 
             const transformedProjects: Project[] = data.projects.map(
                 (project: any, index: number) => ({
@@ -170,7 +160,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     return (
         <AdminLayout heading={`${leaderboardType} Leaderboard`}>
-            <div className=" p-8">
+            <div className="p-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <div className="mb-6">
@@ -179,9 +169,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                 <Input
                                     placeholder="Search projects..."
                                     value={searchQuery}
-                                    onChange={(e) =>
-                                        setSearchQuery(e.target.value)
-                                    }
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                     className="pl-10"
                                 />
                             </div>
@@ -199,16 +187,10 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="w-16">
-                                            Rank
-                                        </TableHead>
+                                        <TableHead className="w-16">Rank</TableHead>
                                         <TableHead>Project Name</TableHead>
-                                        <TableHead className="hidden table-cell">
-                                            Faculty
-                                        </TableHead>
-                                        <TableHead className="text-right">
-                                            Votes
-                                        </TableHead>
+                                        <TableHead className="hidden table-cell">Faculty</TableHead>
+                                        <TableHead className="text-right">Votes</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -216,15 +198,12 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                         <TableRow key={project.id}>
                                             <TableCell>
                                                 <div className="flex justify-center">
-                                                    {project.rank &&
-                                                    project.rank <= 3 ? (
+                                                    {project.rank && project.rank <= 3 ? (
                                                         <Trophy
                                                             className={`h-4 w-4 ${
-                                                                project.rank ===
-                                                                1
+                                                                project.rank === 1
                                                                     ? "text-yellow-500"
-                                                                    : project.rank ===
-                                                                      2
+                                                                    : project.rank === 2
                                                                     ? "text-gray-400"
                                                                     : "text-amber-700"
                                                             }`}
@@ -236,9 +215,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                                                     )}
                                                 </div>
                                             </TableCell>
-                                            <TableCell>
-                                                {project.name}
-                                            </TableCell>
+                                            <TableCell>{project.name}</TableCell>
                                             <TableCell className="hidden md:table-cell">
                                                 {project.faculty}
                                             </TableCell>
