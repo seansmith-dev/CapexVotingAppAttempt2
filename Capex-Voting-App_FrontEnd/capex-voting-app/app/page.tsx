@@ -26,75 +26,7 @@ export default function Home() {
 
     const handleVoteClick = async () => {
         try {
-            if ("geolocation" in navigator) {
-                /* geolocation is available */
-                console.log("Geolocation is available");
-            } else {
-                /* geolocation IS NOT available */
-                console.log("Geolocation is not available");
-            }
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    console.log("Getting current position");
-                    const { latitude, longitude } = position.coords;
-                    console.log(
-                        `Latitude: ${latitude}, Longitude: ${longitude}`
-                    );
-
-                    alert("Latitude: " + latitude + " Longitude: " + longitude);
-                    // const response = await fetch("/api/check-location", {
-                    //     method: "POST",
-                    //     body: JSON.stringify({ latitude, longitude }),
-                    // });
-
-                    // const data = await response.json();
-                    const data = {
-                        allowed: true,
-                    };
-                    console.log(data);
-
-                    if (data.allowed) {
-                        console.log("Showing scanner, " + showScanner);
-                        setShowScanner(true);
-                    } else {
-                        alert(
-                            "You are not on campus. Please go to the Swinburne Hawthorn Campus to vote."
-                        );
-                    }
-                },
-                (error) => {
-                    // Error Callback
-                    console.error(
-                        `Geolocation error: ${error.message} (Code: ${error.code})`,
-                        error
-                    );
-                    let message = "Unable to retrieve your location.";
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED: // 1
-                            message =
-                                "Location permission denied by user. Please enable location access for this site in your browser settings.";
-                            break;
-                        case error.POSITION_UNAVAILABLE: // 2
-                            message =
-                                "Location information is unavailable. Check network or GPS settings.";
-                            break;
-                        case error.TIMEOUT: // 3
-                            message =
-                                "The request to get user location timed out. Please try again.";
-                            break;
-                        default:
-                            message = `An unknown error occurred (Code: ${error.code}).`;
-                            break;
-                    }
-                    alert(`Geolocation Error: ${message}`);
-                },
-                {
-                    // Geolocation Options
-                    enableHighAccuracy: true, // Request higher accuracy
-                    timeout: 15000, // 15 seconds timeout
-                    maximumAge: 0, // Don't use cached location
-                }
-            );
+            setShowScanner(true);
         } catch (error) {
             console.error("Error accessing camera:", error);
             alert(
