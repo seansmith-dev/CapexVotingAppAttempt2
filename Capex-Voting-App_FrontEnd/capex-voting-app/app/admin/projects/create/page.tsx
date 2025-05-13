@@ -64,6 +64,7 @@ export default function CreateProject() {
         name: "",
         faculty: "",
         newFaculty: "",
+        projectCode: "",
     });
     const [file, setFile] = useState<File | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -186,7 +187,7 @@ export default function CreateProject() {
 
             toast.success("Project created successfully!");
             // Clear form
-            setFormData({ name: "", faculty: "", newFaculty: "" });
+            setFormData({ name: "", faculty: "", newFaculty: "", projectCode: "" });
             setShowNewFacultyInput(false);
         } catch (error) {
             console.error("Error creating project:", error);
@@ -297,9 +298,15 @@ export default function CreateProject() {
             return;
         }
 
+        if (!formData.projectCode.trim()) {
+            toast.error("Please enter a project code");
+            return;
+        }
+
         const projectData = {
             project_title: formData.name.trim(),
             faculty_name: formData.faculty.trim(),
+            project_code: formData.projectCode.trim(),
         };
 
         try {
@@ -318,7 +325,7 @@ export default function CreateProject() {
             if (response.status === 201) {
                 toast.success('Project created successfully!');
                 // Clear form
-                setFormData({ name: "", faculty: "", newFaculty: "" });
+                setFormData({ name: "", faculty: "", newFaculty: "", projectCode: "" });
                 // Refresh projects list
                 const projectsResponse = await fetch("/api/getProjectsList");
                 if (projectsResponse.ok) {
@@ -383,6 +390,24 @@ export default function CreateProject() {
                                                 })
                                             }
                                             placeholder="Enter project name"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="projectCode">
+                                            Project Code
+                                        </Label>
+                                        <Input
+                                            id="projectCode"
+                                            value={formData.projectCode}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    projectCode: e.target.value,
+                                                })
+                                            }
+                                            placeholder="Enter project code"
                                             required
                                         />
                                     </div>

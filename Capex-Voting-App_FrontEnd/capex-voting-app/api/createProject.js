@@ -43,14 +43,12 @@ export default async function handler(req, res) {
   });
 
   // Destructure the constants from req.body
-  const { project_title, faculty_name } = req.body;
+  const { project_title, faculty_name, project_code } = req.body;
   const client = await pool.connect();
 
   let facultyId, projectId
 
   console.log("Received project data:", req.body);
-
-
 
   // Check if a project with the same title already exists
   const checkTitleQuery = `
@@ -65,10 +63,21 @@ export default async function handler(req, res) {
     return res.status(409).json({ message: "A project with this title already exists." });
   }
 
+  // Check if a project with the same code already exists
+  const checkCodeQuery = `
+        SELECT project_id 
+        FROM "Projects"
+        WHERE project_code = $1;
+    `;
+  const existingCodeResult = await client.query(checkCodeQuery, [project_code]);
+
+  if (existingCodeResult.rows.length > 0) {
+    console.log("same project code");
+    return res.status(409).json({ message: "A project with this code already exists." });
+  }
+
   try {
-
     await client.query("BEGIN"); // Start transaction
-
 
     // Insert Faculty (or get existing one)
     const facultyQuery = `
@@ -99,12 +108,12 @@ export default async function handler(req, res) {
         WITH max_project_id AS (
             SELECT COALESCE(MAX(project_id), 0) + 1 as next_id FROM "Projects"
         )
-        INSERT INTO "Projects" (project_id, project_title, faculty_id)
-        SELECT next_id, $1, $2
+        INSERT INTO "Projects" (project_id, project_title, faculty_id, project_code)
+        SELECT next_id, $1, $2, $3
         FROM max_project_id
         RETURNING project_id, project_number;
     `;
-    const projectResult = await client.query(projectQuery, [project_title, facultyId]);
+    const projectResult = await client.query(projectQuery, [project_title, facultyId, project_code]);
     if (!projectResult.rows[0].project_id) {
       throw new Error('Failed to create project.');
     }
