@@ -1,8 +1,31 @@
+"use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PlusCircle, FileUp, Pencil, QrCode, Printer, BarChart, BarChart2 } from "lucide-react";
 import AdminLayout from "@/app/layouts/admin";
+import { toast } from "sonner";
+
 export default function AdminDashboard() {
+    const router = useRouter();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/adminLogin');
+                if (!response.ok) {
+                    toast.error("Please login to access the admin dashboard");
+                    router.push('/admin');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+                toast.error("Session check failed. Please login again.");
+                router.push('/admin');
+            }
+        };
+        checkSession();
+    }, [router]);
 
     return (
         <AdminLayout heading="Admin Dashboard">

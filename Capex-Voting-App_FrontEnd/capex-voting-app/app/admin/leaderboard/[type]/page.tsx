@@ -99,13 +99,29 @@ export default function Leaderboard({ params }: LeaderboardProps) {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
-    const [leaderboardType, setLeaderboardType] = useState<string>("");
+    const leaderboardType = params.type === "industry" ? "Industry" : "Guest";
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/adminLogin');
+                if (!response.ok) {
+                    toast.error("Please login to view leaderboards");
+                    router.push('/admin');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+                toast.error("Session check failed. Please login again.");
+                router.push('/admin');
+            }
+        };
+        checkSession();
+    }, [router]);
 
     useEffect(() => {
         const initializeLeaderboard = async () => {
             try {
                 const resolvedParams = await params;
-                setLeaderboardType(resolvedParams.type === "industry" ? "Industry" : "Guest");
                 await fetchLeaderboard(resolvedParams.type);
             } catch (error) {
                 console.error("Error initializing leaderboard:", error);

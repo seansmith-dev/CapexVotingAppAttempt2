@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
 import { generateQRCodeDataURL, QRCodeData } from "@/app/utils/qrGenerator";
 import AdminLayout from "@/app/layouts/admin";
+import { toast } from "sonner";
 
 type QRCode = {
   qr_code_id: string;
@@ -19,6 +20,23 @@ export default function PrintQRPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/adminLogin');
+        if (!response.ok) {
+          toast.error("Please login to print QR codes");
+          router.push('/admin');
+        }
+      } catch (err) {
+        console.error('Session check failed:', err);
+        toast.error("Session check failed. Please login again.");
+        router.push('/admin');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   // Fetch unprinted QR codes
   useEffect(() => {

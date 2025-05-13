@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { generateQRCodeDataURL } from "@/app/utils/qrGenerator";
 import { generateQRCodesPDF, QRCodeForPrint } from "@/app/utils/pdfGenerator";
 import AdminLayout from "@/app/layouts/admin";
+import { toast } from "sonner";
+
 export default function GenerateQRPage() {
+    const router = useRouter();
     const [industryCount, setIndustryCount] = useState<number>(0);
     const [guestCount, setGuestCount] = useState<number>(0);
     const [generatedCodes, setGeneratedCodes] = useState<QRCodeForPrint[]>([]);
@@ -12,6 +16,23 @@ export default function GenerateQRPage() {
     const [printGuestCount, setPrintGuestCount] = useState<number>(0);
     const [isGenerating, setIsGenerating] = useState(false);
     const [showPrintDialog, setShowPrintDialog] = useState(false);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/adminLogin');
+                if (!response.ok) {
+                    toast.error("Please login to generate QR codes");
+                    router.push('/admin');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+                toast.error("Session check failed. Please login again.");
+                router.push('/admin');
+            }
+        };
+        checkSession();
+    }, [router]);
 
     const generateQRCodes = async () => {
         setIsGenerating(true);

@@ -107,6 +107,23 @@ export default function EditProjects() {
     });
 
     useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/adminLogin');
+                if (!response.ok) {
+                    toast.error("Please login to edit projects");
+                    router.push('/admin');
+                }
+            } catch (err) {
+                console.error('Session check failed:', err);
+                toast.error("Session check failed. Please login again.");
+                router.push('/admin');
+            }
+        };
+        checkSession();
+    }, [router]);
+
+    useEffect(() => {
         fetch(`/api/getProjectsList`)
             .then((response) => {
                 if (!response.ok) {
