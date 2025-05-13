@@ -130,15 +130,25 @@ export default async function handler(req, res) {
       // Handle CSV upload
       const csvData = req.body.csvData;
       if (!csvData) {
+        console.log("No CSV data provided in request body");
         return res.status(400).json({ error: "No CSV data provided" });
       }
 
+      console.log("Received CSV data:", csvData);
+      
       const results = Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true
       });
 
+      console.log("Papa Parse results:", {
+        fields: results.meta.fields,
+        errors: results.errors,
+        data: results.data
+      });
+
       if (results.errors.length > 0) {
+        console.log("CSV parsing errors:", results.errors);
         return res.status(400).json({ error: "Invalid CSV format" });
       }
 

@@ -217,6 +217,8 @@ export default function CreateProject() {
 
                 const csvData = event.target.result as string;
                 
+                console.log("Sending CSV data:", csvData);
+                
                 const response = await fetch("/api/createProject", {
                     method: "PUT",
                     headers: {
@@ -227,6 +229,7 @@ export default function CreateProject() {
 
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error("Upload failed:", errorData);
                     throw new Error(errorData.error || "Failed to upload projects");
                 }
 
