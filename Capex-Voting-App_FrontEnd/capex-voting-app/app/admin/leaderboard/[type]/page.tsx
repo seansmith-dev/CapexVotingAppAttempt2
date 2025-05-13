@@ -8,7 +8,7 @@ type Props = {
     searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function LeaderboardPage({ params }: Props) {
+export default async function LeaderboardPage({ params }: Props) {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <LeaderboardClient type={params.type} />
