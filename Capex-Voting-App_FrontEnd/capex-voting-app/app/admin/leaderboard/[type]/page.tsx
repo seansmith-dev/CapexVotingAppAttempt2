@@ -131,13 +131,9 @@ export default function Leaderboard({ params }: LeaderboardProps) {
                 return;
             }
 
-            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
-                {                                   
-                    headers: {
-                        Authorization: `Bearer ${adminToken}`,
-                    },
-                }
-            );
+            const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`, {
+                credentials: 'include' // This will send the cookies with the request
+            });
             
             const data = await response.json();
 
