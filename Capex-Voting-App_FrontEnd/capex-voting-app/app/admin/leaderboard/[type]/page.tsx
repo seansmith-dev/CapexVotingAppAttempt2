@@ -141,13 +141,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     const fetchLeaderboard = async () => {
         try {
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
-
+            
             const response = await fetch(`/api/getLeaderboard?leaderboard_type=${resolvedParams.type}`,
                 {                                   
                     headers: {
