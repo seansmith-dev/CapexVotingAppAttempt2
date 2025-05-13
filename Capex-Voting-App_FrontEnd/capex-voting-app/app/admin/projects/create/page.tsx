@@ -207,79 +207,73 @@ export default function CreateProject() {
         setIsLoading(true);
 
         try {
-            // Commented out actual API call
-            /*
-            const adminToken = Cookies.get("admin-token");
-            if (!adminToken) {
-                toast.error("Admin session expired. Please login again.");
-                router.push("/admin");
-                return;
-            }
-            */
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                if (!event.target?.result) {
+                    toast.error("Failed to read file");
+                    setIsLoading(false);
+                    return;
+                }
 
-            Papa.parse(file, {
-                fastMode: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: async (results) => {
-                    // Validate headers
-                    const headers = results.meta.fields;
-                    if (
-                        !headers ||
-                        !headers.includes("name") ||
-                        !headers.includes("faculty")
-                    ) {
+                const csvData = event.target.result as string;
+                
+                const response = await fetch("/api/createProject", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ csvData }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to upload projects");
+                }
+
+                const result = await response.json();
+                
+                // Show success message with summary
+                toast.success(
+                    `Successfully processed ${result.successful.length} projects. ${
+                        result.failed.length > 0
+                            ? `${result.failed.length} projects failed to process.`
+                            : ""
+                    }`
+                );
+
+                // If there were any failures, show them in a toast
+                if (result.failed.length > 0) {
+                    result.failed.forEach((failure: any) => {
                         toast.error(
-                            "CSV file must have headers 'name' and 'faculty'"
+                            `Failed to process project "${failure.project.project_name}": ${failure.error}`
                         );
-                        setIsLoading(false);
-                        return;
-                    }
+                    });
+                }
 
-                    const newProjects: Project[] = results.data.map((row: any) => ({
-                        name: row["name"],
-                        faculty: row["faculty"],
+                // Refresh the projects list
+                const projectsResponse = await fetch("/api/getProjectsList");
+                if (projectsResponse.ok) {
+                    const data = await projectsResponse.json();
+                    const formattedProjects = data.map((item: any) => ({
+                        name: item.project_title,
+                        faculty: item.faculty_name,
                     }));
+                    setProjects(formattedProjects);
+                }
 
-                    // Add new projects to the list
-                    setProjects([...projects, ...newProjects]);
+                setFile(null);
+                setIsLoading(false);
+            };
 
-                    // const response = await fetch("/api/projects/upload", {
-                    //     method: "POST",
-                    //     headers: {
-                    //         Authorization: `Bearer ${adminToken}`,
-                    //     },
-                    //     body: formData,
-                    // });
+            reader.onerror = () => {
+                toast.error("Failed to read file");
+                setIsLoading(false);
+            };
 
-                    // if (!response.ok) {
-                    //     throw new Error("Failed to upload projects");
-                    // }
-
-                    // Add new projects to the list
-                    setProjects([...projects, ...newProjects]);
-                    // Add any new faculties to the unique faculties list
-                    const newFaculties = new Set(
-                        newProjects.map((project) => project.faculty)
-                    );
-                    const currentFaculties = new Set(
-                        projects.map((project) => project.faculty)
-                    );
-
-                    toast.success("Projects uploaded successfully!");
-                    setFile(null);
-                },
-                error: (error) => {
-                    console.error("Error parsing CSV:", error);
-                    toast.error(
-                        "Failed to parse CSV file. Please check the format."
-                    );
-                },
-            });
+            reader.readAsText(file);
         } catch (error) {
             console.error("Error uploading projects:", error);
             toast.error("Failed to upload projects. Please try again.");
-        } finally {
             setIsLoading(false);
         }
     };
