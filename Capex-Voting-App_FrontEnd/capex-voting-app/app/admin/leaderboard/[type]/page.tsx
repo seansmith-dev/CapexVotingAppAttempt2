@@ -124,7 +124,7 @@ export default function Leaderboard({ params }: LeaderboardProps) {
 
     const fetchLeaderboard = async () => {
         try {
-            const adminToken = Cookies.get("admin-token");
+            const adminToken = Cookies.get("admin_session");
             if (!adminToken) {
                 toast.error("Admin session expired. Please login again.");
                 router.push("/admin");
