@@ -79,6 +79,13 @@ export default async function handler(req, res) {
 
       await client.query("BEGIN");
 
+      // Get the next available project number
+      const maxProjectNumberQuery = `
+        SELECT COALESCE(MAX(project_number), 0) + 1 as next_project_number FROM "Projects";
+      `;
+      const maxProjectNumberResult = await client.query(maxProjectNumberQuery);
+      const nextProjectNumber = maxProjectNumberResult.rows[0].next_project_number;
+
       // Insert Faculty (or get existing one)
       const facultyQuery = `
         INSERT INTO "Facultys" (faculty_name)
@@ -105,15 +112,11 @@ export default async function handler(req, res) {
 
       // Insert Project
       const projectQuery = `
-        WITH max_project_id AS (
-          SELECT COALESCE(MAX(project_id), 0) + 1 as next_id FROM "Projects"
-        )
-        INSERT INTO "Projects" (project_id, project_title, faculty_id, project_code)
-        SELECT next_id, $1, $2, $3
-        FROM max_project_id
+        INSERT INTO "Projects" (project_id, project_title, faculty_id, project_code, project_number)
+        VALUES (COALESCE((SELECT MAX(project_id) FROM "Projects"), 0) + 1, $1, $2, $3, $4)
         RETURNING project_id, project_number;
       `;
-      const projectResult = await client.query(projectQuery, [project_title, facultyId, project_code]);
+      const projectResult = await client.query(projectQuery, [project_title, facultyId, project_code, nextProjectNumber]);
       
       if (!projectResult.rows[0].project_id) {
         throw new Error('Failed to create project.');
@@ -180,6 +183,13 @@ export default async function handler(req, res) {
 
       await client.query("BEGIN");
 
+      // Get the starting project number for the batch
+      const maxProjectNumberQuery = `
+        SELECT COALESCE(MAX(project_number), 0) + 1 as next_project_number FROM "Projects";
+      `;
+      const maxProjectNumberResult = await client.query(maxProjectNumberQuery);
+      let currentProjectNumber = maxProjectNumberResult.rows[0].next_project_number;
+
       for (const project of projects) {
         try {
           // Validate required fields
@@ -243,19 +253,19 @@ export default async function handler(req, res) {
 
           // Insert project
           const projectQuery = `
-            WITH max_project_id AS (
-              SELECT COALESCE(MAX(project_id), 0) + 1 as next_id FROM "Projects"
-            )
-            INSERT INTO "Projects" (project_id, project_title, faculty_id, project_code)
-            SELECT next_id, $1, $2, $3
-            FROM max_project_id
+            INSERT INTO "Projects" (project_id, project_title, faculty_id, project_code, project_number)
+            VALUES (COALESCE((SELECT MAX(project_id) FROM "Projects"), 0) + 1, $1, $2, $3, $4)
             RETURNING project_id, project_number;
           `;
           const projectResult = await client.query(projectQuery, [
             project.project_name,
             facultyId,
-            project.project_code
+            project.project_code,
+            currentProjectNumber
           ]);
+
+          // Increment the project number for the next project in the batch
+          currentProjectNumber++;
 
           processingResults.successful.push({
             project: project,
