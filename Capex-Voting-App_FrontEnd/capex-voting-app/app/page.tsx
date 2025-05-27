@@ -8,6 +8,7 @@ import RegularNavBar from "./components/RegularNavBar";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { config } from '../config';
 
 export default function Home() {
     const router = useRouter();
@@ -40,7 +41,7 @@ export default function Home() {
         console.log("this is the decoded text:", decodedText);
     
         // Strip the base URL from the decodedText to get just the path and query string
-        const baseUrl = window.location.origin;  // e.g., 'https://capex-voting-app-attempt2.vercel.app'
+        const baseUrl = config.baseUrl;  // Use the base URL from config
         const strippedUrl = decodedText.replace(baseUrl, '');  // Remove the base URL from the decoded text
     
         console.log("Stripped URL (path + query):", strippedUrl);

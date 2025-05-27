@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import { config } from '../../config';
 
 // export type VoterType = 'INDUSTRY' | 'GUEST';
 
@@ -9,7 +10,9 @@ export interface QRCodeData {
 
 export async function generateQRCodeDataURL(data: QRCodeData): Promise<string> {
     try {
-        return await QRCode.toDataURL(JSON.stringify(data));
+        // Create the full URL with the base URL
+        const fullUrl = `${config.baseUrl}/vote?token=${data.voterId}`;
+        return await QRCode.toDataURL(fullUrl);
     } catch (err) {
         throw new Error('QR Code generation failed');
     }
