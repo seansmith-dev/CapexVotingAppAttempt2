@@ -64,19 +64,6 @@ export default async function handler(req, res) {
         return res.status(409).json({ message: "A project with this title already exists." });
       }
 
-      // Check if a project with the same code already exists
-      const checkCodeQuery = `
-        SELECT project_id 
-        FROM "Projects"
-        WHERE project_code = $1;
-      `;
-      const existingCodeResult = await client.query(checkCodeQuery, [project_code]);
-
-      if (existingCodeResult.rows.length > 0) {
-        console.log("same project code");
-        return res.status(409).json({ message: "A project with this code already exists." });
-      }
-
       await client.query("BEGIN");
 
       // Get the next available project number
@@ -212,21 +199,6 @@ export default async function handler(req, res) {
             processingResults.failed.push({
               project: project,
               error: "Project title already exists"
-            });
-            continue;
-          }
-
-          // Check for duplicate project code
-          const checkCodeQuery = `
-            SELECT project_id 
-            FROM "Projects"
-            WHERE project_code = $1;
-          `;
-          const existingCodeResult = await client.query(checkCodeQuery, [project.project_code]);
-          if (existingCodeResult.rows.length > 0) {
-            processingResults.failed.push({
-              project: project,
-              error: "Project code already exists"
             });
             continue;
           }
