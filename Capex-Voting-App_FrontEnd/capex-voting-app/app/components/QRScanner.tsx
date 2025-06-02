@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
 
 import styles from "./QRScanner.module.css";
 
@@ -26,6 +26,11 @@ export default function QRScanner({
                 qrbox: { width: 300, height: 300 },
                 rememberLastUsedCamera: false,
                 showTorchButtonIfSupported: true,
+                defaultZoomValueIfSupported: 2,
+                formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+                videoConstraints: {
+                    facingMode: { exact: "environment" }
+                }
             },
             false
         );
