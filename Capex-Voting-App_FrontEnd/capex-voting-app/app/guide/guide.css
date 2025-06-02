@@ -29,6 +29,46 @@ button:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Section Headers */
+h3 {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #3b82f6;
+    transition: width 0.3s ease-in-out;
+}
+
+section:hover h3::after {
+    width: 100px;
+}
+
+/* FAQ Section */
+h4 {
+    transition: color 0.2s ease-in-out;
+}
+
+h4:hover {
+    color: #2563eb;
+}
+
+/* Important Notes Section */
+.bg-yellow-50 {
+    transition: all 0.3s ease-in-out;
+}
+
+.bg-yellow-50:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
     h3 {
@@ -60,4 +100,20 @@ button:hover {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Print Styles */
+@media print {
+    section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    button {
+        display: none;
+    }
+
+    .bg-yellow-50 {
+        border: 1px solid #eab308;
+    }
 } 
