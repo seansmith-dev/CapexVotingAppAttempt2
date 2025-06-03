@@ -1,0 +1,339 @@
+/* Guide Page Styles */
+
+/* Section Transitions */
+section {
+    transition: transform 0.3s ease-in-out;
+}
+
+section:hover {
+    transform: translateY(-5px);
+}
+
+/* List Item Animations */
+.list-disc li {
+    transition: all 0.2s ease-in-out;
+}
+
+.list-disc li:hover {
+    color: #3b82f6;
+    transform: translateX(5px);
+}
+
+/* Button Hover Effect */
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Headers */
+h3 {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(to right, black, red);
+    transition: width 0.3s ease-in-out;
+}
+
+section:hover h3::after {
+    width: 100px;
+}
+
+/* FAQ Section */
+h4 {
+    transition: color 0.2s ease-in-out;
+}
+
+h4:hover {
+    color: #2563eb;
+}
+
+/* Important Notes Section */
+.bg-yellow-50 {
+    transition: all 0.3s ease-in-out;
+}
+
+.bg-yellow-50:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    h3 {
+        font-size: 1.5rem;
+    }
+    
+    h4 {
+        font-size: 1.2rem;
+    }
+    
+    p, li {
+        font-size: 0.9rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Print Styles */
+@media print {
+    section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    button {
+        display: none;
+    }
+
+    .bg-yellow-50 {
+        border: 1px solid #eab308;
+    }
+}
+
+/* Banner Styles */
+.banner-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0.7)
+    );
+    z-index: 1;
+}
+
+.banner-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    margin-bottom: 1rem;
+    z-index: 2;
+    animation: fadeInDown 1s ease-out;
+}
+
+.banner-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-title {
+        font-size: 2.5rem;
+    }
+    .banner-subtitle {
+        font-size: 1.2rem;
+    }
+}
+
+/* FAQ Section: Professional, Modern, Premium Styles */
+.faq-search-input {
+  background: #f8fafc;
+  border: 1.5px solid #e0e7ef;
+  color: #312e81;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.faq-search-input:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 2px #ede9fe;
+  outline: none;
+}
+
+.faq-category-btn {
+  background: #fff;
+  border: 1.5px solid #e0e7ef;
+  color: #6b7280;
+  font-weight: 600;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+}
+.faq-category-btn.active, .faq-category-btn:focus {
+  background: #ede9fe;
+  border-color: #a78bfa;
+  color: #6d28d9;
+}
+.faq-category-btn:hover:not(.active) {
+  background: #f3f4f6;
+  color: #312e81;
+}
+
+/* FAQ Container */
+.faq-container {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.faq-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.faq-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.faq-container::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+.faq-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.faq-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.25rem;
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.faq-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.faq-card.open {
+    background: #f8fafc;
+    border-color: #a78bfa;
+    box-shadow: 0 10px 15px -3px rgba(167, 139, 250, 0.1), 0 4px 6px -2px rgba(167, 139, 250, 0.05);
+}
+
+.faq-question-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding: 0.75rem;
+    font-weight: 600;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+}
+
+.faq-question-btn:hover {
+    color: #4f46e5;
+    background: #f3f4f6;
+}
+
+.faq-answer {
+    padding: 1.25rem;
+    color: #4b5563;
+    line-height: 1.7;
+    animation: faqFadeIn 0.3s ease-out;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+@keyframes faqFadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@media (max-width: 600px) {
+    .faq-answer {
+        padding: 1rem;
+    }
+    
+    .faq-question-btn {
+        font-size: 0.95rem;
+        padding: 0.5rem;
+    }
+}
+
+/*
+All section-specific styles for:
+- Purpose of the Application
+- How to Vote – Step-by-Step Guide
+- Frequently Asked Questions
+- Important Notes
+have been removed as per request.
+*/ 
+
+.guide-back-button {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(105, 105, 105, 0.9);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease-in-out;
+  color: white;
+  font-weight: bold;
+}
+
+.guide-back-button:hover {
+  background-color: #fff;
+  border-color: rgba(105, 105, 105, 1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
